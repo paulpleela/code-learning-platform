@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
                     + self.ui.full_menu_widget.findChildren(QPushButton)
         
         for btn in btn_list:
-            if index in [5, 6]:
+            if index in [0, 1, 2,3 , 4, 5, 6]:
                 btn.setAutoExclusive(False)
                 btn.setChecked(False)
             else:
