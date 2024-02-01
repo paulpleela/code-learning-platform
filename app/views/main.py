@@ -15,6 +15,25 @@ class MainWindow(QMainWindow):
         self.ui.icon_only_widget.hide()
         self.ui.stackedWidget.setCurrentIndex(0)
         self.ui.home_btn_2.setChecked(True)
+        
+        self.ui.customers_btn_1.clicked.connect(self.on_customers_btn_toggled)
+        self.ui.customers_btn_2.clicked.connect(self.on_customers_btn_toggled)
+        
+        self.ui.home_btn_1.clicked.connect(self.on_home_btn_toggled)
+        self.ui.home_btn_2.clicked.connect(self.on_home_btn_toggled)
+        
+        self.ui.dashborad_btn_1.clicked.connect(self.on_dashborad_btn_toggled)
+        self.ui.dashborad_btn_2.clicked.connect(self.on_dashborad_btn_toggled)
+        
+        self.ui.orders_btn_1.clicked.connect(self.on_orders_btn_toggled)
+        self.ui.orders_btn_2.clicked.connect(self.on_orders_btn_toggled)
+        
+        self.ui.products_btn_1.clicked.connect(self.on_products_btn_toggled)
+        self.ui.products_btn_2.clicked.connect(self.on_products_btn_toggled)
+        
+        self.ui.search_btn.clicked.connect(self.on_search_btn_clicked)
+        
+        self.ui.user_btn.clicked.connect(self.on_user_btn_clicked)
 
     ## Function for searching
     def on_search_btn_clicked(self):
@@ -40,34 +59,19 @@ class MainWindow(QMainWindow):
                 btn.setAutoExclusive(True)
             
     ## functions for changing menu page
-    def on_home_btn_1_toggled(self):
-        self.ui.stackedWidget.setCurrentIndex(0)
-    
-    def on_home_btn_2_toggled(self):
+    def on_home_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(0)
 
-    def on_dashborad_btn_1_toggled(self):
+    def on_dashborad_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)
 
-    def on_dashborad_btn_2_toggled(self):
-        self.ui.stackedWidget.setCurrentIndex(1)
-
-    def on_orders_btn_1_toggled(self):
+    def on_orders_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(2)
 
-    def on_orders_btn_2_toggled(self):
-        self.ui.stackedWidget.setCurrentIndex(2)
-
-    def on_products_btn_1_toggled(self):
+    def on_products_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
 
-    def on_products_btn_2_toggled(self, ):
-        self.ui.stackedWidget.setCurrentIndex(3)
-
-    def on_customers_btn_1_toggled(self):
-        self.ui.stackedWidget.setCurrentIndex(4)
-
-    def on_customers_btn_2_toggled(self):
+    def on_customers_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(4)
 
 
