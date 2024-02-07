@@ -399,7 +399,7 @@ class Sidebar(object):
         self.exit_btn_2.clicked.connect(MainWindow.close)
         self.exit_btn_1.clicked.connect(MainWindow.close)
 
-        self.stackedWidget.setCurrentIndex(5)
+        self.stackedWidget.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
