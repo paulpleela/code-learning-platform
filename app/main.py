@@ -8,6 +8,15 @@ from views.register_window import RegisterWindow
 def authenticate():
     if True:
         widget.setCurrentIndex(2)
+        widget.setWindowTitle("PyQuizT")
+
+def go_to_register():
+    widget.setCurrentIndex(1)
+    widget.setWindowTitle("Register | PyQuizT")
+
+def go_to_login():
+    widget.setCurrentIndex(0)
+    widget.setWindowTitle("Login | PyQuizT")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -29,8 +38,8 @@ if __name__ == "__main__":
     main_window = MainWindow()
 
     login_window.login_button.clicked.connect(authenticate)
-    login_window.register_button.clicked.connect(lambda: widget.setCurrentIndex(1))
-    register_window.login_button.clicked.connect(lambda: widget.setCurrentIndex(0))
+    login_window.register_button.clicked.connect(go_to_register)
+    register_window.login_button.clicked.connect(go_to_login)
 
     widget.addWidget(login_window)
     widget.addWidget(register_window)
@@ -38,6 +47,7 @@ if __name__ == "__main__":
 
     widget.setFixedHeight(600)
     widget.setFixedWidth(950)
+    widget.setWindowTitle("Login | PyQuizT")
     widget.show()
 
     sys.exit(app.exec())
