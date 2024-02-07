@@ -1,15 +1,13 @@
-import sys
-from PySide6.QtWidgets import QMainWindow, QApplication, QPushButton
-from PySide6.QtCore import QFile, QTextStream
+from PySide6.QtWidgets import QMainWindow, QPushButton
 
-from sidebar_ui import Ui_MainWindow
+from .sidebar import Sidebar
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.ui = Ui_MainWindow()
+        self.ui = Sidebar()
         self.ui.setupUi(self)
 
         self.ui.icon_only_widget.hide()
@@ -73,27 +71,3 @@ class MainWindow(QMainWindow):
 
     def on_customers_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(4)
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-
-    ## loading style file
-    # with open("style.qss", "r") as style_file:
-    #     style_str = style_file.read()
-    # app.setStyleSheet(style_str)
-
-    ## loading style file, Example 2
-    style_file = QFile("style.qss")
-    style_file.open(QFile.ReadOnly | QFile.Text)
-    style_stream = QTextStream(style_file)
-    app.setStyleSheet(style_stream.readAll())
-
-
-    window = MainWindow()
-    window.show()
-
-    sys.exit(app.exec())
-
-
-
