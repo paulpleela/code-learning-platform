@@ -36,6 +36,9 @@ if __name__ == "__main__":
     login_window = LoginWindow()
     register_window = RegisterWindow()
     main_window = MainWindow()
+    
+    main_window.ui.exit_btn_1.clicked.connect(go_to_login)
+    main_window.ui.exit_btn_2.clicked.connect(go_to_login)
 
     login_window.login_button.clicked.connect(authenticate)
     login_window.register_button.clicked.connect(go_to_register)
