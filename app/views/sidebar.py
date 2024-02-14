@@ -20,6 +20,8 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
 import views.resource_rc
 
+from views.test import Test
+
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
@@ -276,15 +278,13 @@ class Sidebar(object):
 
         self.stackedWidget = QStackedWidget(self.widget_3)
         self.stackedWidget.setObjectName(u"stackedWidget")
-
-        self.page = QWidget()
+        test = Test()
+        self.page = test
+        
         self.page.setObjectName(u"page")
         self.gridLayout_2 = QGridLayout(self.page)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         
-        self.button = QPushButton("click")
-
-
         self.label_4 = QLabel(self.page)
         self.label_4.setObjectName(u"label_4")
         font1 = QFont()
@@ -293,7 +293,6 @@ class Sidebar(object):
         self.label_4.setAlignment(Qt.AlignCenter)
 
         self.gridLayout_2.addWidget(self.label_4, 0, 0, 1, 1)
-        self.gridLayout_2.addWidget(self.button)
 
         self.stackedWidget.addWidget(self.page)
         self.page_2 = QWidget()
@@ -416,9 +415,9 @@ class Sidebar(object):
         self.exit_btn_2.setText(QCoreApplication.translate("MainWindow", u"Logout", None))
         self.change_btn.setText("")
         # self.user_btn.setText("")
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Calendar Page", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Enrolled Page", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Teaching Page", None))
+        # self.label_4.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
+        # self.label_5.setText(QCoreApplication.translate("MainWindow", u"Calendar Page", None))
+        # self.label_6.setText(QCoreApplication.translate("MainWindow", u"Enrolled Page", None))
+        # self.label_7.setText(QCoreApplication.translate("MainWindow", u"Teaching Page", None))
     # retranslateUi
 
