@@ -21,13 +21,13 @@ def go_to_login():
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    ## loading style file
+    # loading style file
     # with open("style.qss", "r") as style_file:
     #     style_str = style_file.read()
     # app.setStyleSheet(style_str)
 
     ## loading style file, Example 2
-    style_file = QFile("style.qss")
+    style_file = QFile("views/style.qss")
     style_file.open(QFile.ReadOnly | QFile.Text)
     style_stream = QTextStream(style_file)
     app.setStyleSheet(style_stream.readAll())
@@ -36,17 +36,19 @@ if __name__ == "__main__":
     login_window = LoginWindow()
     register_window = RegisterWindow()
     main_window = MainWindow()
+    
+    main_window.ui.exit_btn_1.clicked.connect(go_to_login)
+    main_window.ui.exit_btn_2.clicked.connect(go_to_login)
 
     login_window.login_button.clicked.connect(authenticate)
-    login_window.register_button.clicked.connect(go_to_register)
-    register_window.login_button.clicked.connect(go_to_login)
+    login_window.goto_register_button.clicked.connect(go_to_register)
+    register_window.goto_login_button.clicked.connect(go_to_login)
 
     widget.addWidget(login_window)
     widget.addWidget(register_window)
     widget.addWidget(main_window)
 
-    widget.setFixedHeight(600)
-    widget.setFixedWidth(950)
+    widget.resize(950, 600)
     widget.setWindowTitle("Login | PyQuizT")
     widget.show()
 
