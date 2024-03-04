@@ -1,7 +1,7 @@
 import sys
 import subprocess
 import re
-from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QTextEdit, QPushButton, QPlainTextEdit, QTextEdit, QSplitter
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTextEdit, QPushButton, QPlainTextEdit, QTextEdit, QSplitter, QHBoxLayout
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont, QPainter, QTextFormat
 from PySide6.QtCore import Qt, QRect, QSize
 
@@ -122,14 +122,11 @@ class PythonSyntaxHighlighter(QSyntaxHighlighter):
                 self.setFormat(match.start(), match.end() - match.start(), format)
 
 
-class CodeRunner(QMainWindow):
+class QuizPage(QMainWindow):
     def __init__(self):
         super().__init__()
-
-        self.setWindowTitle("Python Code Editor")
         self.resize(800, 550)
 
-        # Create text input box with syntax highlighting
         font = QFont()
         font.setFamily("Courier")
         font.setStyleHint(QFont.Monospace)
@@ -140,23 +137,32 @@ class CodeRunner(QMainWindow):
         self.input_text.setTabStopDistance(20)
         self.highlighter = PythonSyntaxHighlighter(self.input_text.document())
 
-        # Create output text area
         self.output_text = QTextEdit()
         self.output_text.setFont(font)
         self.output_text.setReadOnly(True)
 
-        # Create a button to run the code
         self.run_button = QPushButton("Run Code")
         self.run_button.clicked.connect(self.run_code)
 
-        # Create a splitter to resize input and output areas
-        self.splitter = QSplitter(Qt.Vertical)
-        self.splitter.addWidget(self.input_text)
-        self.splitter.addWidget(self.output_text)
+        instructions = QVBoxLayout()
+        instruction_text = QTextEdit()
+        instruction_text.setPlainText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
+        instruction_text.setReadOnly(True)
+        instructions.addWidget(instruction_text)
+
+        code_runner = QVBoxLayout()
+        splitter = QSplitter(Qt.Vertical)
+        splitter.addWidget(self.input_text)
+        splitter.addWidget(self.output_text)
+        code_runner.addWidget(self.run_button)
+        code_runner.addWidget(splitter)
+
+        main_layout = QHBoxLayout()
+        main_layout.addLayout(code_runner, 70)
+        main_layout.addLayout(instructions, 30)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.run_button)
-        layout.addWidget(self.splitter)
+        layout.addLayout(main_layout)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -164,15 +170,11 @@ class CodeRunner(QMainWindow):
 
     def run_code(self):
         code = self.input_text.toPlainText()
-
-        # Run the Python code using subprocess
         result = subprocess.run(["python", "-c", code], capture_output=True, text=True)
 
-        # Display output or error
         if result.returncode == 0:
             self.output_text.setTextColor(Qt.black)
             self.output_text.setText(result.stdout)
         else:
             self.output_text.setTextColor(Qt.red)
             self.output_text.setText("Error:\n" + result.stderr)
-

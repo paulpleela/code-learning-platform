@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
 import views.resource_rc
 
-from views.code_runner import CodeRunner
+from views.quiz_page import QuizPage
 from views.list_item import ListItem
 
 class Sidebar(object):
@@ -279,8 +279,8 @@ class Sidebar(object):
         self.stackedWidget = QStackedWidget(self.widget_3)
         self.stackedWidget.setObjectName(u"stackedWidget")
         
-        code_runner = CodeRunner()
-        self.page = code_runner
+        quiz_page = QuizPage()
+        self.page = quiz_page
         
         self.page.setObjectName(u"page")
         self.gridLayout_2 = QGridLayout(self.page)
