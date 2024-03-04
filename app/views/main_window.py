@@ -12,19 +12,19 @@ class MainWindow(QMainWindow):
 
         self.ui.icon_only_widget.hide()
         self.ui.stackedWidget.setCurrentIndex(0)
-        self.ui.home_btn_2.setChecked(True)
+        self.ui.dashboard_btn_2.setChecked(True)
         
-        self.ui.home_btn_1.clicked.connect(self.on_home_btn_toggled)
-        self.ui.home_btn_2.clicked.connect(self.on_home_btn_toggled)
+        self.ui.dashboard_btn_1.clicked.connect(self.on_dashboard_btn_toggled)
+        self.ui.dashboard_btn_2.clicked.connect(self.on_dashboard_btn_toggled)
         
         self.ui.calendar_btn_1.clicked.connect(self.on_calendar_btn_toggled)
         self.ui.calendar_btn_2.clicked.connect(self.on_calendar_btn_toggled)
         
-        self.ui.enrolled_btn_1.clicked.connect(self.on_enrolled_btn_toggled)
-        self.ui.enrolled_btn_2.clicked.connect(self.on_enrolled_btn_toggled)
+        self.ui.mycourses_btn_1.clicked.connect(self.on_mycourses_btn_toggled)
+        self.ui.mycourses_btn_2.clicked.connect(self.on_mycourses_btn_toggled)
         
-        self.ui.teaching_btn_1.clicked.connect(self.on_teaching_btn_toggled)
-        self.ui.teaching_btn_2.clicked.connect(self.on_teaching_btn_toggled)
+        self.ui.certificates_btn_1.clicked.connect(self.on_certificates_btn_toggled)
+        self.ui.certificates_btn_2.clicked.connect(self.on_certificates_btn_toggled)
         
     #     self.ui.user_btn.clicked.connect(self.on_user_btn_clicked)
 
@@ -45,16 +45,16 @@ class MainWindow(QMainWindow):
                 btn.setAutoExclusive(True)
             
     ## functions for changing menu page
-    def on_home_btn_toggled(self):
+    def on_dashboard_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(0)
 
     def on_calendar_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)
 
-    def on_enrolled_btn_toggled(self):
+    def on_mycourses_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(2)
 
-    def on_teaching_btn_toggled(self):
+    def on_certificates_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
 
     # def on_customers_btn_toggled(self):

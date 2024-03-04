@@ -130,12 +130,19 @@ class CodeRunner(QMainWindow):
         self.resize(800, 550)
 
         # Create text input box with syntax highlighting
+        font = QFont()
+        font.setFamily("Courier")
+        font.setStyleHint(QFont.Monospace)
+        font.setFixedPitch(True)
+        font.setPointSize(10)
         self.input_text = CodeEditor()
+        self.input_text.setFont(font)
         self.input_text.setTabStopDistance(20)
         self.highlighter = PythonSyntaxHighlighter(self.input_text.document())
 
         # Create output text area
         self.output_text = QTextEdit()
+        self.output_text.setFont(font)
         self.output_text.setReadOnly(True)
 
         # Create a button to run the code
@@ -148,8 +155,8 @@ class CodeRunner(QMainWindow):
         self.splitter.addWidget(self.output_text)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.splitter)
         layout.addWidget(self.run_button)
+        layout.addWidget(self.splitter)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -163,7 +170,9 @@ class CodeRunner(QMainWindow):
 
         # Display output or error
         if result.returncode == 0:
+            self.output_text.setTextColor(Qt.black)
             self.output_text.setText(result.stdout)
         else:
+            self.output_text.setTextColor(Qt.red)
             self.output_text.setText("Error:\n" + result.stderr)
 
