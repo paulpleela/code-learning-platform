@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
 import views.resource_rc
 
 from views.code_runner import CodeRunner
-
+from views.list_item import ListItem
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
@@ -278,6 +278,7 @@ class Sidebar(object):
 
         self.stackedWidget = QStackedWidget(self.widget_3)
         self.stackedWidget.setObjectName(u"stackedWidget")
+        
         code_runner = CodeRunner()
         self.page = code_runner
         
@@ -295,7 +296,11 @@ class Sidebar(object):
         self.gridLayout_2.addWidget(self.label_4, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page)
-        self.page_2 = QWidget()
+        
+        #################
+        list_item = ListItem()
+        self.page_2 = list_item
+        
         self.page_2.setObjectName(u"page_2")
         self.gridLayout_3 = QGridLayout(self.page_2)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
@@ -307,6 +312,7 @@ class Sidebar(object):
         self.gridLayout_3.addWidget(self.label_5, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_2)
+        ###################
         self.page_3 = QWidget()
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)
@@ -317,8 +323,9 @@ class Sidebar(object):
         self.label_6.setAlignment(Qt.AlignCenter)
 
         self.gridLayout_4.addWidget(self.label_6, 0, 0, 1, 1)
-
+        
         self.stackedWidget.addWidget(self.page_3)
+        #####################
         self.page_4 = QWidget()
         self.page_4.setObjectName(u"page_4")
         self.gridLayout_5 = QGridLayout(self.page_4)
@@ -331,6 +338,7 @@ class Sidebar(object):
         self.gridLayout_5.addWidget(self.label_7, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_4)
+        #####################
         self.page_5 = QWidget()
         self.page_5.setObjectName(u"page_5")
         self.gridLayout_6 = QGridLayout(self.page_5)
@@ -343,6 +351,7 @@ class Sidebar(object):
         self.gridLayout_6.addWidget(self.label_8, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_5)
+        #####################
         self.page_6 = QWidget()
         self.page_6.setObjectName(u"page_6")
         self.gridLayout_7 = QGridLayout(self.page_6)
@@ -355,6 +364,7 @@ class Sidebar(object):
         self.gridLayout_7.addWidget(self.label_9, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_6)
+        ####################
         self.page_7 = QWidget()
         self.page_7.setObjectName(u"page_7")
         self.gridLayout_8 = QGridLayout(self.page_7)
@@ -367,6 +377,7 @@ class Sidebar(object):
         self.gridLayout_8.addWidget(self.label_10, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_7)
+        #####################
 
         self.verticalLayout_5.addWidget(self.stackedWidget)
 
