@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # app.setStyleSheet(style_str)
 
     ## loading style file, Example 2
-    style_file = QFile("views/style.qss")
+    style_file = QFile("app/views/style.qss")
     style_file.open(QFile.ReadOnly | QFile.Text)
     style_stream = QTextStream(style_file)
     app.setStyleSheet(style_stream.readAll())
