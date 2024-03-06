@@ -5,6 +5,8 @@ from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTextEdit, QPus
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont, QPainter, QTextFormat
 from PySide6.QtCore import Qt, QRect, QSize
 
+from views.navigation import NavigationBar
+
 class LineNumberArea(QWidget):
     def __init__(self, editor):
         super().__init__(editor)
@@ -164,6 +166,12 @@ class QuizPage(QMainWindow):
         layout = QVBoxLayout()
         layout.addLayout(main_layout)
 
+        self.nav_bar = NavigationBar()
+        layout.addWidget(self.nav_bar, alignment=Qt.AlignBottom)
+
+        self.nav_bar.previous_button.clicked.connect(self.previous_page)
+        self.nav_bar.next_button.clicked.connect(self.next_page)
+        
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
@@ -178,3 +186,9 @@ class QuizPage(QMainWindow):
         else:
             self.output_text.setTextColor(Qt.red)
             self.output_text.setText("Error:\n" + result.stderr)
+
+    def previous_page(self):
+        print("Go to previous page")
+
+    def next_page(self):
+        print("Go to next page")

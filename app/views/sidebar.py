@@ -22,6 +22,7 @@ import views.resource_rc
 
 from views.quiz_page import QuizPage
 from views.list_item import ListItem
+from views.lesson_pdf import LessonPDF
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
@@ -313,7 +314,8 @@ class Sidebar(object):
 
         self.stackedWidget.addWidget(self.page_2)
         ###################
-        self.page_3 = QWidget()
+        lesson_pdf = LessonPDF()
+        self.page_3 = lesson_pdf
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
