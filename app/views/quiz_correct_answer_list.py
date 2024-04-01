@@ -16,9 +16,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
-    QScrollArea, QSizePolicy, QSpacerItem, QWidget)
+    QScrollArea, QSizePolicy, QSpacerItem, QWidget, QMainWindow)
 
-class Ui_Form(object):
+from PySide6 import QtCore, QtGui, QtWidgets
+
+class Quiz_wrong_answer_list(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")

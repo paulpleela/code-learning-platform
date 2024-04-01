@@ -16,9 +16,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
-    QScrollArea, QSizePolicy, QSpacerItem, QWidget)
+    QScrollArea, QSizePolicy, QSpacerItem, QWidget, QMainWindow)
 
-class Ui_Form(object):
+from PySide6 import QtCore, QtGui, QtWidgets
+
+class Lesson_Quiz_list(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
@@ -136,16 +141,16 @@ class Ui_Form(object):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.pushButton_2.setText(QCoreApplication.translate("Form", u"PushButton", None))
         self.pushButton.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.label.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label.setText(QCoreApplication.translate("Form", u"Complete?", None))
         self.pushButton_3.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.label_2.setText(QCoreApplication.translate("Form", u"TextLabel", None))
-        self.label_3.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_2.setText(QCoreApplication.translate("Form", u"Complete?", None))
+        self.label_3.setText(QCoreApplication.translate("Form", u"Complete?", None))
         self.return_2.setText(QCoreApplication.translate("Form", u"Return to ...", None))
         self.pushButton_4.setText(QCoreApplication.translate("Form", u"PushButton", None))
         self.pushButton_5.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.label_4.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"Complete?", None))
         self.pushButton_6.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.label_5.setText(QCoreApplication.translate("Form", u"TextLabel", None))
-        self.label_6.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_5.setText(QCoreApplication.translate("Form", u"Complete?", None))
+        self.label_6.setText(QCoreApplication.translate("Form", u"Complete?", None))
     # retranslateUi
 
