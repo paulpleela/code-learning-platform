@@ -23,6 +23,9 @@ import views.resource_rc
 from views.quiz_page import QuizPage
 from views.list_item import ListItem
 from views.lesson_pdf import LessonPDF
+from views.course_list import Course_list
+from views.lesson_quiz_list import Lesson_Quiz_list
+from views.stacked_course import Stacked_Course
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
@@ -314,8 +317,9 @@ class Sidebar(object):
 
         self.stackedWidget.addWidget(self.page_2)
         ###################
-        lesson_pdf = LessonPDF()
-        self.page_3 = lesson_pdf
+        
+        stack_course = Stacked_Course()
+        self.page_3 = stack_course
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
@@ -323,10 +327,36 @@ class Sidebar(object):
         self.label_6.setObjectName(u"label_6")
         self.label_6.setFont(font1)
         self.label_6.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout_4.addWidget(self.label_6, 0, 0, 1, 1)
         
+        
+        # self.page_3 = QStackedWidget()
+        # self.course_list = Course_list()
+        # self.course_list.setObjectName(u"page_3")
+        # self.gridLayout_4 = QGridLayout(self.course_list)
+        # self.gridLayout_4.setObjectName(u"gridLayout_4")
+        # self.label_6 = QLabel(self.course_list)
+        # self.label_6.setObjectName(u"label_6")
+        # self.label_6.setFont(font1)
+        # self.label_6.setAlignment(Qt.AlignCenter)
+
+        # self.gridLayout_4.addWidget(self.label_6, 0, 0, 1, 1)
+    
+        
+        # self.page_3.addWidget(self.course_list)
+        
+        # self.lq_list = Lesson_Quiz_list()
+        # self.lq_list.setObjectName(u"page_3_5")
+        # self.gridLayout_4 = QGridLayout(self.lq_list)
+        # self.gridLayout_4.setObjectName(u"gridLayout_4")
+        # self.label_6 = QLabel(self.lq_list)
+        # self.label_6.setObjectName(u"label_6")
+        # self.label_6.setFont(font1)
+        # self.label_6.setAlignment(Qt.AlignCenter)
+        
+        # self.page_3.addWidget(self.lq_list)
         self.stackedWidget.addWidget(self.page_3)
+        
+        
         #####################
         self.page_4 = QWidget()
         self.page_4.setObjectName(u"page_4")
@@ -409,7 +439,6 @@ class Sidebar(object):
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
-
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.logo_label_1.setText("")
