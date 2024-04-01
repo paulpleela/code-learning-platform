@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-class Ui_Form(QtWidgets.QWidget):
+class course_list(QtWidgets.QWidget):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
