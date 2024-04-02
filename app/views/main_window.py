@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QMainWindow, QPushButton
-
+from PySide6.QtWidgets import QMainWindow, QPushButton, QApplication
+from PySide6.QtCore import QEvent, QTimer
 from .sidebar import Sidebar
 
 
@@ -53,6 +53,7 @@ class MainWindow(QMainWindow):
 
     def on_mycourses_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(2)
+
 
     def on_certificates_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
