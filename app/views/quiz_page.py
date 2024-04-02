@@ -178,6 +178,11 @@ class QuizPage(QMainWindow):
 
     def run_code(self):
         code = self.input_text.toPlainText()
+        if "input(" in code:
+            self.output_text.setTextColor(Qt.red)
+            self.output_text.setText("Error:\n" + "input() function not allowed")
+            return
+        
         result = subprocess.run(["python", "-c", code], capture_output=True, text=True)
 
         if result.returncode == 0:
