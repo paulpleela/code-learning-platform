@@ -26,6 +26,7 @@ from views.lesson_pdf import LessonPDF
 from views.course_list import Course_list
 from views.lesson_quiz_list import Lesson_Quiz_list
 from views.stacked_course import Stacked_Course
+from views.teacher_stacked_course import Teacher_Stacked_Course
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
