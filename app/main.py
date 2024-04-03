@@ -14,7 +14,7 @@ def authenticate():
         "password": login_window.password_input.text()
     }
 
-    response = requests.post(url + "/login", json=data)
+    response = requests.post(url + "/api/user/login", json=data)
 
     if response.status_code == 200:
         response_data = response.json()
@@ -35,7 +35,7 @@ def register():
     data = {
         "username": register_window.username_input.text(),
         "password": register_window.password_input.text(),
-        "email": ""
+        "role": register_window.role_selector.currentText()
     }
 
     if register_window.password_input.text() != register_window.confirm_input.text():
@@ -50,11 +50,10 @@ def register():
         print("Please enter a username")
         return 
     
-    response = requests.post(url + "/register", json=data)
-
+    response = requests.post(url + "/api/user/register", json=data)
+    print(response)
     if response.status_code == 200:
         response_data = response.json()
-        print(response_data)
         go_to_login()
     else:
         try:
