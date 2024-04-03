@@ -2,3 +2,13 @@ __pycache__/
 *.py[cod]
 
 server/PyQuizzt_env/
+mydatabase.fs
+mydatabase.fs.index
+mydatabase.fs.lock
+mydatabase.fs.tmp
+server/venv
+
+test_mydatabase.fs
+test_mydatabase.fs.index
+test_mydatabase.fs.lock
+test_mydatabase.fs.tmp
