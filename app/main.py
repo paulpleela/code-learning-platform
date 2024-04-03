@@ -9,10 +9,10 @@ import requests
 url = "http://127.0.0.1:8000"
 
 def authenticate():
+    # widget.setCurrentIndex(2)
     data = {
         "username": login_window.username_input.text(),
-        "password": login_window.password_input.text(),
-        
+        "password": login_window.password_input.text()
     }
 
     response = requests.post(url + "/api/user/login", json=data)

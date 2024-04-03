@@ -40,6 +40,8 @@ class Stacked_Course(QMainWindow):
         
         self.course_list.enroll_btn.clicked.connect(self.enroll_course)
         
+        ##########################################
+        
         self.lq_list = Lesson_Quiz_list()
         self.stacked.addWidget(self.lq_list)
         self.lq_list.return_2.clicked.connect(self.go_to_course)
@@ -61,19 +63,22 @@ class Stacked_Course(QMainWindow):
     
     
     def enroll_course(self):
-        self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
-        button = QPushButton(self.course_list.scrollAreaWidgetContents)
-        self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
-        button.setText(self.course_list.lineEdit.text())
-        self.course_list.buttons.append(button)
-        button.clicked.connect(self.go_to_lesson_quiz)
-        
-        label = QLabel(self.course_list.scrollAreaWidgetContents)
-        label.setObjectName(f"label_{self.course_list.index+1}")
-        label.setText(QCoreApplication.translate("Form", u"Complete?", None))
+        # if self.course_list.lineEdit.text() != '' :
+            self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
+            button = QPushButton(self.course_list.scrollAreaWidgetContents)
+            self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
+            button.setText(self.course_list.lineEdit.text())
+            self.course_list.buttons.append(button)
+            button.clicked.connect(self.go_to_lesson_quiz)
+            
+            label = QLabel(self.course_list.scrollAreaWidgetContents)
+            label.setObjectName(f"label_{self.course_list.index+1}")
+            label.setText(QCoreApplication.translate("Form", u"Complete?", None))
+            
+            self.course_list.lineEdit.clear()
 
-        self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
-        
-        self.course_list.index += 1
+            self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
+            
+            self.course_list.index += 1
 
-        self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+            self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
