@@ -10,7 +10,7 @@
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
+    QSize, QTime, QUrl, Qt, QObject, Signal)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
@@ -436,7 +436,7 @@ class Sidebar(object):
 
         self.stackedWidget.setCurrentIndex(4)
 
-
+        MainWindow.calendarResizeSignal.connect(calendar.handle_calendar_resize)  # Connect slot
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
     def retranslateUi(self, MainWindow):

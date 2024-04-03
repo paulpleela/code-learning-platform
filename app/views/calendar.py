@@ -4,6 +4,7 @@ from PySide6.QtGui import QFont, QColor
 import sys
 from PySide6.QtGui import QFontMetrics
 import textwrap
+from PySide6.QtCore import QObject, Slot
 
 class CalendarTable(QWidget):
     def __init__(self):
@@ -160,3 +161,9 @@ class Calendar(QMainWindow):
         central_widget.setLayout(layout)
 
         self.show()
+
+    @Slot()
+    def handle_calendar_resize(self):
+        # Call the resizeEvent method of the calendar widget
+        self.calendar.resizeEvent(None)
+        
