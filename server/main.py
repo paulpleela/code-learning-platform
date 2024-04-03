@@ -38,24 +38,27 @@ async def register_user(user: UserRegister):
 
     # Add student to the database
     if (user.role == "student"):
-        student = Student(student.username, student.password, student.role, [],)
-        db_helper.add_student(user.username, user)
+        student = Student(user.username, user.password, user.role, [],)
+        db_helper.add_student(student.username, student)
     
     if (user.role == "teacher"):
-        teacher = Teacher(teacher.username, teacher.password, teacher.role, [])
-        db_helper.add_user(user.username, user)
+        teacher = Teacher(user.username, user.password, user.role, [])
+        db_helper.add_teacher(teacher.username, teacher)
 
     return {"message": "user registered successfully"}
 
-@app.post("api/user/login")
+@app.post("/api/user/login")
 async def login_student(student: UserLogin):
-    existing_student = db_helper.get_student(student.username)
-    if not existing_student or existing_student["password"] != student.password:
+    existing_student = db_helper.get_student(student.username)  # object
+    # self.root.students[str(student_name): student obj]
+    print("existing_student", existing_student)
+    if not existing_student or existing_student.password != student.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    return {"message": "Login successful", "username": student.username}
+    return {"message": "Login successful", "username": existing_student.username}
 
-'''----------------------------------    Course      ---------------------------------- '''
+'''----------------------------------    Course      ---------------------------------- 
+    '''
 @app.post("api/teacher/course")
 async def course(course: CourseCreated):
     
@@ -78,13 +81,10 @@ async def course(course: CourseCreated):
         
     return {"message": "Course created successfully"}
 
-@app.get("/course/{courseName}")
-async def get_course(courseName: str):
-    existing_course = db_helper.get_course(courseName)
-    if not existing_course:
-        raise HTTPException(status_code=404, detail="Course not found")
-
-    return existing_course
+@app.get("/courses")
+async def get_course():
+    courses = db_helper.get_courses()
+    return {"courses": courses}
 
 @app.put("/course/{courseName}")
 async def update_course(courseName: str, course: CourseCreated):

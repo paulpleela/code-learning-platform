@@ -105,7 +105,8 @@ class ZODBHelper:
 
     def get_student(self, student_name):
         if hasattr(self.root, 'students'):
-            return self.root.students.get(str(student_name))
+            print("self.root.students", self.root.students)
+            return self.root.students.get(str(student_name)) # self.root.students.get('')
         return None
 
     def update_student(self, student_name, new_student):
@@ -117,14 +118,6 @@ class ZODBHelper:
         if hasattr(self.connection.root, 'students'):
             del self.connection.root.students[str(student_name)]
             transaction.commit()
-
-
-    # Teacher Registration and Login
-    def add_teacher(self, teacher_name, teacher):
-        if not hasattr(self.connection.root, 'teachers'):
-            self.connection.root.teachers = BTrees.OOBTree.BTree()
-        self.connection.root.teachers[str(teacher_name)] = teacher
-        transaction.commit()
 
     ''' Course operations'''
     def store_course(self, course):
