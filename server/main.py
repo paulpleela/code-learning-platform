@@ -15,25 +15,15 @@ db_helper = ZODBHelper('mydatabase.fs')
  
  # Base model for student registration, login, and course creation
 
-class StudentRegister(BaseModel):
-    username: str
-    password: str
-    role: str
-    
-class StudentLogin(BaseModel):
+class UserRegister(BaseModel):
     username: str
     password: str
     role: str
 
-class TeacherRegister(BaseModel):
+class UserLogin(BaseModel):
     username: str
     password: str
-    role: str
-    
-class TeacherLogin(BaseModel):
-    username: str
-    password: str
-    role: str
+
 
 class CourseCreated(BaseModel):
     courseName: str
@@ -41,45 +31,29 @@ class CourseCreated(BaseModel):
     
 
 @app.post("/api/user/register")
-async def register_student(student: StudentRegister):
-    existing_student = db_helper.get_student(student.username)
-    if existing_student:
+async def register_user(user: UserRegister):
+    existing_user = db_helper.get_student(user.username)
+    if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
 
     # Add student to the database
+    if (user.role == "student"):
+        student = Student(student.username, student.password, student.role, [],)
+        db_helper.add_student(user.username, user)
     
-    student = Student(student.username, student.password, "student", [],)
-    db_helper.add_student(student.username, student.dict())
+    if (user.role == "teacher"):
+        teacher = Teacher(teacher.username, teacher.password, teacher.role, [])
+        db_helper.add_user(user.username, user)
 
-    return {"message": "Student registered successfully"}
+    return {"message": "user registered successfully"}
 
 @app.post("api/user/login")
-async def login_student(student: StudentLogin):
+async def login_student(student: UserLogin):
     existing_student = db_helper.get_student(student.username)
     if not existing_student or existing_student["password"] != student.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     return {"message": "Login successful", "username": student.username}
-
-@app.post("/api/teacher/register")
-async def register_teacher(teacher: TeacherRegister):
-    existing_teacher = db_helper.get_teacher(teacher.username)
-    if existing_teacher:
-        raise HTTPException(status_code=400, detail="Username already exists")
-
-    # Add teacher to the database
-    teacher = Teacher(teacher.username, teacher.password, "teacher", [])
-    db_helper.add_teacher(teacher.username, teacher.dict())
-
-    return {"message": "Teacher registered successfully"}
-
-@app.post("api/teacher/login")
-async def login_teacher(teacher: TeacherLogin):
-    existing_teacher = db_helper.get_teacher(teacher.username)
-    if not existing_teacher or existing_teacher["password"] != teacher.password:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    return {"message": "Login successful", "username": teacher.username}
 
 '''----------------------------------    Course      ---------------------------------- '''
 @app.post("api/teacher/course")

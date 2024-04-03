@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from views.course_list import Course_list
-from views.lesson_quiz_list import Lesson_Quiz_list
+from views.Lesson_Quiz_list import Lesson_Quiz_list
 
 class Stacked_Course(QMainWindow):
     def __init__(self):

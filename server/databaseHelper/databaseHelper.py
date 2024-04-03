@@ -83,7 +83,9 @@ class CourseCodeGenerator:
                 return course_code
 
 
-class ZODBConnection:
+
+# Helper class which has logic to interact with the ZODB database
+class ZODBHelper:
     def __init__(self, db_file):
         self.db_file = db_file
         self.storage = FileStorage.FileStorage(self.db_file)
@@ -94,21 +96,16 @@ class ZODBConnection:
     def close(self):
         self.connection.close()
 
-# Helper class which has logic to interact with the ZODB database
-class ZODBHelper:
-    def __init__(self, zodb_connection):
-        self.connection = zodb_connection
-
     # Student Registration and Login
     def add_student(self, student_name, student):
-        if not hasattr(self.connection.root, 'students'):
-            self.connection.root.students = BTrees.OOBTree.BTree()
-        self.connection.root.students[str(student_name)] = student
+        if not hasattr(self.root, 'students'):
+            self.root.students = BTrees.OOBTree.BTree()
+        self.root.students[str(student_name)] = student
         transaction.commit()
 
     def get_student(self, student_name):
-        if hasattr(self.connection.root, 'students'):
-            return self.connection.root.students.get(str(student_name))
+        if hasattr(self.root, 'students'):
+            return self.root.students.get(str(student_name))
         return None
 
     def update_student(self, student_name, new_student):
@@ -120,28 +117,14 @@ class ZODBHelper:
         if hasattr(self.connection.root, 'students'):
             del self.connection.root.students[str(student_name)]
             transaction.commit()
-            
+
+
     # Teacher Registration and Login
     def add_teacher(self, teacher_name, teacher):
         if not hasattr(self.connection.root, 'teachers'):
             self.connection.root.teachers = BTrees.OOBTree.BTree()
         self.connection.root.teachers[str(teacher_name)] = teacher
         transaction.commit()
-    
-    def get_teacher(self, teacher_name):
-        if hasattr(self.connection.root, 'teachers'):
-            return self.connection.root.teachers.get(str(teacher_name))
-        return None
-    
-    def update_teacher(self, teacher_name, new_teacher):
-        if hasattr(self.connection.root, 'teachers'):
-            self.connection.root.teachers[str(teacher_name)] = new_teacher
-            transaction.commit()
-        
-    def delete_teacher(self, teacher_name):
-        if hasattr(self.connection.root, 'teachers'):
-            del self.connection.root.teachers[str(teacher_name)]
-            transaction.commit()
 
     ''' Course operations'''
     def store_course(self, course):
