@@ -29,7 +29,7 @@ class Teacher_Course_list(QMainWindow):
         
         self.edit_buttons = []
         
-        self.delete_buttons = []      
+        self.delete_buttons = {}      
         
         self.setupUi(self)
         
@@ -51,7 +51,7 @@ class Teacher_Course_list(QMainWindow):
         self.gridLayout.setObjectName(u"gridLayout")
         
         # for loop making pushButton and Label
-        for _ in range(len(self.course)):
+        for i in range(len(self.course)):
             button = QPushButton(self.scrollAreaWidgetContents)
             button.setObjectName(f"course_{self.index + 1}")
             button.setText(self.course[self.index])
@@ -60,16 +60,19 @@ class Teacher_Course_list(QMainWindow):
             
             edit = QPushButton(self.scrollAreaWidgetContents)
             edit.setObjectName(f"edit_{self.index + 1}")
-            edit.setText(self.course[self.index])
+            edit.setText('Edit')
             self.gridLayout.addWidget(edit, self.index, 1, 1, 1)
             self.edit_buttons.append(edit)
             
             delete = QPushButton(self.scrollAreaWidgetContents)
             delete.setObjectName(f"delete_{self.index + 1}")
-            delete.setText(self.course[self.index])
-            self.gridLayout.addWidget(delete, self.index, 2, 1, 1)
-            self.delete_buttons.append(delete)
+            delete.setText('Delete')
+            self.delete_buttons[delete] = self.index
             
+            # delete.clicked.connect(lambda i = i: self.delete_course(i))
+            delete.clicked.connect(self.delete_course)
+            
+            self.gridLayout.addWidget(delete, self.index, 2, 1, 1)
             self.index += 1
         # makes verticleSpacer
         self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -92,3 +95,21 @@ class Teacher_Course_list(QMainWindow):
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
+    def delete_course(self, row):
+            # print(row)
+        sender_button = self.sender()
+        
+        # print(self.delete_buttons.values())
+        
+        position = None
+        if sender_button in self.delete_buttons:
+            position = self.delete_buttons[sender_button]
+        
+        if position:
+            for j in range(self.gridLayout.columnCount()):
+                item = self.gridLayout.itemAtPosition(position, j)
+                # item = self.gridLayout.itemAtPosition(row, j)
+                if item:
+                    widget = item.widget()
+                    self.gridLayout.removeWidget(widget)
+                    widget.deleteLater()
