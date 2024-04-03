@@ -1,9 +1,11 @@
-from PySide6.QtWidgets import QMainWindow, QPushButton
-
+from PySide6.QtWidgets import QMainWindow, QPushButton, QApplication
 from .sidebar import Sidebar
-
+from PySide6.QtCore import QObject, Signal
 
 class MainWindow(QMainWindow):
+
+    calendarResizeSignal = Signal()
+
     def __init__(self):
         super(MainWindow, self).__init__()
 
@@ -50,6 +52,7 @@ class MainWindow(QMainWindow):
 
     def on_calendar_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)
+        self.calendarResizeSignal.emit()
 
     def on_mycourses_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(2)

@@ -10,7 +10,7 @@
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
+    QSize, QTime, QUrl, Qt, QObject, Signal)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
 import views.resource_rc
 
 from views.quiz_page import QuizPage
-from views.list_item import ListItem
+from views.calendar import Calendar
 from views.lesson_pdf import LessonPDF
 from views.course_list import Course_list
 from views.lesson_quiz_list import Lesson_Quiz_list
@@ -302,9 +302,9 @@ class Sidebar(object):
         self.stackedWidget.addWidget(self.page)
         
         #################
-        list_item = ListItem()
-        self.page_2 = list_item
-        
+        calendar = Calendar()
+        self.page_2 = calendar
+
         self.page_2.setObjectName(u"page_2")
         self.gridLayout_3 = QGridLayout(self.page_2)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
@@ -436,7 +436,7 @@ class Sidebar(object):
 
         self.stackedWidget.setCurrentIndex(4)
 
-
+        MainWindow.calendarResizeSignal.connect(calendar.handle_calendar_resize)  # Connect slot
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
     def retranslateUi(self, MainWindow):
@@ -456,6 +456,7 @@ class Sidebar(object):
         self.certificates_btn_2.setText(QCoreApplication.translate("MainWindow", u"Certificates", None))
         self.exit_btn_2.setText(QCoreApplication.translate("MainWindow", u"Logout", None))
         self.change_btn.setText("")
+        
         # self.user_btn.setText("")
         # self.label_4.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
         # self.label_5.setText(QCoreApplication.translate("MainWindow", u"Calendar Page", None))
