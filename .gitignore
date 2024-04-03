@@ -2,4 +2,4 @@ __pycache__/
 *.py[cod]
 
 server/PyQuizzt_env/
-server/mydatabase.fs.lock
+server/mydatabase.fs*
