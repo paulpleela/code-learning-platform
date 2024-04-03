@@ -9,26 +9,26 @@ import requests
 url = "http://127.0.0.1:8000"
 
 def authenticate():
-    widget.setCurrentIndex(2)
-    # data = {
-    #     "username": login_window.username_input.text(),
-    #     "password": login_window.password_input.text()
-    # }
+    # widget.setCurrentIndex(2)
+    data = {
+        "username": login_window.username_input.text(),
+        "password": login_window.password_input.text()
+    }
 
-    # response = requests.post(url + "/api/user/login", json=data)
+    response = requests.post(url + "/api/user/login", json=data)
 
-    # if response.status_code == 200:
-    #     response_data = response.json()
-    #     print(response_data)
-    #     widget.setCurrentIndex(2)
-    #     widget.setWindowTitle("PyQuizT")
-    # else:
-    #     try:
-    #         response_data = response.json()
-    #         error_detail = response_data.get('detail', 'No detail provided')
-    #     except ValueError:
-    #         error_detail = 'Error parsing response JSON'
-    #     print("Error:", error_detail)
+    if response.status_code == 200:
+        response_data = response.json()
+        print(response_data)
+        widget.setCurrentIndex(2)
+        widget.setWindowTitle("PyQuizT")
+    else:
+        try:
+            response_data = response.json()
+            error_detail = response_data.get('detail', 'No detail provided')
+        except ValueError:
+            error_detail = 'Error parsing response JSON'
+        print("Error:", error_detail)
 
 
 
