@@ -8,7 +8,7 @@ model_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'model
 sys.path.append(model_dir)
 
 from model.user import *
-from server.databaseHelper.databaseHelper import ZODBHelper
+from databaseHelper.databaseHelper import *
 
 from model.user import *
 from model.course import *

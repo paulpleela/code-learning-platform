@@ -40,3 +40,9 @@ class Teacher(User):
       def unown_course(self, course):
             self.ownedCourseList.remove(course)
 
+      # check course by course name
+      def getCourse(self, courseName):
+            for course in self.ownedCourseList:
+                  if course.courseName == courseName:
+                        return course
+            return None

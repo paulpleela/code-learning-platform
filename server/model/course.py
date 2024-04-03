@@ -36,4 +36,11 @@ class Course:
       def remove_quizz(self, quizz):
             self.quizzList.remove(quizz)
 
+      def print_details(self):
+            print("Course Name: ", self.courseName)
+            print("Course Code: ", self.courseCode)
+            print("Course Teacher Name: ", self.courseTeacherName)
+            print("Student List: ", self.studentList)
+            print("Module List: ", self.moduleList)
+            print("Quizz List: ", self.quizzList)
       

@@ -10,33 +10,28 @@ class TestZODBHelper(unittest.TestCase):
     def setUp(self):
         # Initialize the database
         self.db_file = 'test_database.fs'
-        self.storage = FileStorage.FileStorage(self.db_file)
-        self.db = DB(self.storage)
-        self.connection = self.db.open()
-        self.root = self.connection.root
-
         # Create a ZODBHelper instance
         self.db_helper = ZODBHelper(self.db_file)
 
     def tearDown(self):
         # Close the database connection and remove the test database file
-        self.connection.close()
-        self.storage.close()
+        self.db_helper.close()
         os.remove(self.db_file)
 
     def test_student_operations(self):
         # Define a test student
-        test_student = Student("John Doe", "johndoe@gmail.com", "password", "student", 1, [])
+        # name, password, role,  enrolledCourseList
+        test_student = Student("John Doe", "password", "student", ["Math", "Science"])
 
         # Add the student
-        self.db_helper.add_student("John Doe", test_student)
+        self.db_helper.add_student(test_student.name, test_student)
 
         # Retrieve the student
         retrieved_student = self.db_helper.get_student("John Doe")
         self.assertEqual(retrieved_student, test_student)
 
         # Update the student
-        updated_student = Student("John Doe", "johndoe@gmail.com", "newpassword", "student", 1, ["Math", "English"])
+        updated_student = Student("John Doe", "newpassword", "student", ["Math", "English"])
         self.db_helper.update_student("John Doe", updated_student)
 
         # Retrieve the updated student

@@ -3,107 +3,70 @@ import transaction
 import sys
 import os
 import BTrees.OOBTree
-
-model_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'model'))
-sys.path.append(model_dir)
-
-
-
-'''
-# ZODB database setup
-storage = FileStorage.FileStorage('mydatabase.fs')
-db = DB(storage)
-connection = db.open()
-root = connection.root
-
-# Ensure that the 'students' key exists in the root object
-if not hasattr(root, 'students'):
-    root.students = BTrees.OOBTree.BTree()
-
-# Create a new student object
-# name, email, password, role, studentID, enrolledCourseList
-student1 = Student("John Doe", "johndoe@gmail.com", "password", "student", 1, [])
-
-# Add the student object to the 'students' BTree
-root.students['customer-1'] = student1
-
-# Commit the transaction
-transaction.commit()
-
-# Retrieve and print the stored student object
-if hasattr(root, 'students'):
-    stored_student = root.students.get('customer-1')
-    if stored_student:
-        print("Student ID:", stored_student.studentID)
-        print("Name:", stored_student.name)
-        print("Email:", stored_student.email)
-        print("Enrolled Courses:", stored_student.enrolledCourseList)
-    else:
-        print("Student not found in the database.")
-else:
-    print("No students stored in the database.")
-
-# Close the connection
-connection.close()
-'''
-class ZODBHelper:
-    def __init__(self, db_file):
-        self.db_file = db_file
-        self.storage = FileStorage.FileStorage(self.db_file)
-        self.db = DB(self.storage)
-        self.connection = self.db.open()
-        self.root = self.connection.root
-
-    def close(self):
-        self.connection.close()
-
-    # Student
-    def add_student(self, student_name, student):
-        if not hasattr(self.root, 'students'):
-            self.root.students = BTrees.OOBTree.BTree()
-        self.root.students[str(student_name)] = student
-        transaction.commit()
-
-    def get_student(self, student_name):
-        if hasattr(self.root, 'students'):
-            return self.root.students.get(str(student_name))
-        return None
-
-    def update_student(self, student_name, new_student):
-        if hasattr(self.root, 'students'):
-            self.root.students[str(student_name)] = new_student
-            transaction.commit()
-
-    def delete_student(self, student_name):
-        if hasattr(self.root, 'students'):
-            del self.root.students[str(student_name)]
-            transaction.commit()
-            
-    # Course
-    def add_course(self, course_name, course):
-        if not hasattr(self.root, 'courses'):
-            self.root.courses = BTrees.OOBTree.BTree()
-        self.root.courses[str(course_name)] = course
-        transaction.commit()
-    
-    def get_course(self, course_name):
-        if hasattr(self.root, 'courses'):
-            return self.root.courses.get(str(course_name))
-        return None
-    
-    def update_course(self, course_name, new_course):
-        if hasattr(self.root, 'courses'):
-            self.root.courses[str(course_name)] = new_course
-            transaction.commit()
-        
-    def delete_course(self, course_name):
-        if hasattr(self.root, 'courses'):
-            del self.root.courses[str(course_name)]
-            transaction.commit()
-
 import random
 import string
+'''
+Database stored in ZODB
 
+Teacher
+    - name
+    - password
+    - role
+    - ownedCourseList
+
+Student
+    - name
+    - password
+    - role
+    - enrolledCourseList
+
+Course
+    - name
+    - teacherName
+    - courseCode
+    - lessonList
+    - studentList
+    - moduleList
+    - quizzList
+
+Lesson
+    - name
+    - lessonContent
+    - lessonType
+    - lessonDate
+
+Module
+    - name
+    - lessonList
+
+Quizz
+    - name
+    - questionList
+
+Question
+    - question
+    - answerList
+
+Answer
+    - answer
+    - isCorrect
+
+Submission
+    - studentName
+    - quizzName
+    - answerList
+
+TestCase
+    - input
+    - output
+
+TestCaseResult
+    - studentName
+    - quizzName
+    - testCaseList
+    - result
+
+'''
 class CourseCodeGenerator:
     def __init__(self):
         self.used_course_codes = set()
@@ -119,3 +82,95 @@ class CourseCodeGenerator:
                 self.used_course_codes.add(course_code)
                 return course_code
 
+
+class ZODBConnection:
+    def __init__(self, db_file):
+        self.db_file = db_file
+        self.storage = FileStorage.FileStorage(self.db_file)
+        self.db = DB(self.storage)
+        self.connection = self.db.open()
+        self.root = self.connection.root
+
+    def close(self):
+        self.connection.close()
+
+# Helper class which has logic to interact with the ZODB database
+class ZODBHelper:
+    def __init__(self, zodb_connection):
+        self.connection = zodb_connection
+
+    # Student Registration and Login
+    def add_student(self, student_name, student):
+        if not hasattr(self.connection.root, 'students'):
+            self.connection.root.students = BTrees.OOBTree.BTree()
+        self.connection.root.students[str(student_name)] = student
+        transaction.commit()
+
+    def get_student(self, student_name):
+        if hasattr(self.connection.root, 'students'):
+            return self.connection.root.students.get(str(student_name))
+        return None
+
+    def update_student(self, student_name, new_student):
+        if hasattr(self.connection.root, 'students'):
+            self.connection.root.students[str(student_name)] = new_student
+            transaction.commit()
+
+    def delete_student(self, student_name):
+        if hasattr(self.connection.root, 'students'):
+            del self.connection.root.students[str(student_name)]
+            transaction.commit()
+            
+    # Teacher Registration and Login
+    def add_teacher(self, teacher_name, teacher):
+        if not hasattr(self.connection.root, 'teachers'):
+            self.connection.root.teachers = BTrees.OOBTree.BTree()
+        self.connection.root.teachers[str(teacher_name)] = teacher
+        transaction.commit()
+    
+    def get_teacher(self, teacher_name):
+        if hasattr(self.connection.root, 'teachers'):
+            return self.connection.root.teachers.get(str(teacher_name))
+        return None
+    
+    def update_teacher(self, teacher_name, new_teacher):
+        if hasattr(self.connection.root, 'teachers'):
+            self.connection.root.teachers[str(teacher_name)] = new_teacher
+            transaction.commit()
+        
+    def delete_teacher(self, teacher_name):
+        if hasattr(self.connection.root, 'teachers'):
+            del self.connection.root.teachers[str(teacher_name)]
+            transaction.commit()
+
+    ''' Course operations'''
+    def store_course(self, course):
+        if not hasattr(self.connection.root, 'courses'):
+            self.connection.root.courses = BTrees.OOBTree.BTree()
+        self.connection.root.courses[str(course.courseName)] = course
+        transaction.commit()
+
+    def get_course(self, courseCode):
+        if hasattr(self.connection.root, 'courses'):
+            return self.connection.root.courses.get(str(courseCode))
+        return None
+    
+    # Course Creation, Update, and Deletion by each teacher
+    def create_courseBy_teacher(self, course, course):
+        
+    
+    # check if the course exists in a teacher's ownedCourseList
+    def get_course(self, course_name, teacher_name):
+
+        self.connection.root.teachers.get(str(teacher_name)).ownedCourseList
+
+    
+    def update_course(self, course_name, new_course):
+        if hasattr(self.connection.root, 'courses'):
+            self.connection.root.courses[str(course_name)] = new_course
+            transaction.commit()
+        
+    def delete_course(self, course_name):
+        if hasattr(self.connection.root, 'courses'):
+            del self.connection.root.courses[str(course_name)]
+            transaction.commit()
