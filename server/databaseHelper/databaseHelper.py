@@ -143,22 +143,32 @@ class ZODBHelper:
             del self.connection.root.teachers[str(teacher_name)]
             transaction.commit()
 
-    ''' Course operations'''
-    def store_course(self, course):
-        if not hasattr(self.connection.root, 'courses'):
-            self.connection.root.courses = BTrees.OOBTree.BTree()
-        self.connection.root.courses[str(course.courseName)] = course
-        transaction.commit()
-
-    def get_course(self, courseCode):
-        if hasattr(self.connection.root, 'courses'):
-            return self.connection.root.courses.get(str(courseCode))
+    
+    ''' Course operations by each teacher'''
+    def create_courseBy_teacher(self, courseCode, course):
+        # "John" : Teacher object
+        self.connection.root.courses[str(courseCode)] = course
+        # "John" : Teacher("John", "password", "teacher", [])
+        self.connection.root.teachers.get(str(course.teacherName)).ownedCourseList.append(courseCode)
+        
+    def fetch_OwnedCourseList(self, teacher_name):
+        if hasattr(self.connection.root, 'teachers'):
+            return self.connection.root.teachers.get(str(teacher_name)).ownedCourseList
         return None
     
-    # Course Creation, Update, and Deletion by each teacher
-    def create_courseBy_teacher(self, course, course):
+    def update_courseBy_teacher(self, teacherName, courseCode, new_course):
         
-    
+        if hasattr(self.connection.root, 'teachers'):
+            # root.teachers[TeacherName] = teacher objet
+            self.connection.root.teachers.courses[str(courseCode)] = new_course
+        transaction.commit()
+
+    def delete_courseBy_teacher(self, courseCode, teacher_name):
+        if hasattr(self.connection.root, 'courses'):
+            del self.connection.root.courses[str(courseCode)]
+            self.connection.root.teachers.get(str(teacher_name)).ownedCourseList.remove(courseCode)
+            transaction.commit()
+
     # check if the course exists in a teacher's ownedCourseList
     def get_course(self, course_name, teacher_name):
 

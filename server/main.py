@@ -84,37 +84,28 @@ async def login_teacher(teacher: TeacherLogin):
 '''----------------------------------    Course      ---------------------------------- '''
 @app.post("api/teacher/course")
 async def course(course: CourseCreated):
-    
-    # Use teacherName to search for the teacher in the database
-    # check if the course exists in a teacher's ownedCourseList
-    existing_course = db_helper.get_course(course.courseName, course.teacherName)
-    if existing_course:
-        raise HTTPException(status_code=400, detail="Course already exists in the teacher's ownedCourseList")
-
     # Add course to the database
     # courseName, courseCreatedDate, courseCode, courseTeacherName, studentList, moduleList, quizzList
     createdDate = datetime.datetime.now()
     courseCode = code_generator.generate_course_code()
+
     print("Course code: ", courseCode)
     newCourse = Course(courseName=course.name, courseCreatedDate=createdDate, courseCode=courseCode, courseTeacherName=course.teacherName, 
-                       studentList=[], moduleList=[], quizzList=[])
+                       studentList=[], moduleList=[])
 
-    db_helper.add_course(course.name, newCourse)
+    db_helper.create_courseBy_teacher(courseCode, newCourse)
     newCourse.print_details()
         
     return {"message": "Course created successfully"}
 
-@app.get("/course/{courseName}")
-async def get_course(courseName: str):
-    existing_course = db_helper.get_course(courseName)
-    if not existing_course:
-        raise HTTPException(status_code=404, detail="Course not found")
+@app.get("api/teacher/course/{teacherName}")
+async def get_OwnedCourseList(teacherName: str):
+    existing_OwnedCourseList = db_helper.fetch_OwnedCourseList(teacherName)
+    return existing_OwnedCourseList # [{"courseName": "Math", "courseCode": "C123456", "courseTeacherName": "John"}, ...]
 
-    return existing_course
-
-@app.put("/course/{courseName}")
-async def update_course(courseName: str, course: CourseCreated):
-    existing_course = db_helper.get_course(courseName)
+@app.put("api/teacher/course/{courseCode}")
+async def update_course(courseCode: str, course: CourseCreated):
+    existing_course = db_helper.update_courseBy_teacher(courseName)
     if not existing_course:
         raise HTTPException(status_code=404, detail="Course not found")
 
@@ -126,7 +117,7 @@ async def update_course(courseName: str, course: CourseCreated):
 
     return {"message": "Course updated successfully"}
 
-@app.delete("/course/{courseName}")
+@app.delete("api/teacher/course/{courseCode}")
 async def delete_course(courseName: str):
     existing_course = db_helper.get_course(courseName)
     if not existing_course:

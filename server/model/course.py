@@ -7,8 +7,7 @@ class Course:
 
             self.studentList = studentList
             self.moduleList = moduleList
-            self.quizzList = quizzList
- 
+
 
       def edit_details(self, courseName, courseCode, courseTeacherName):
             self.courseName = courseName

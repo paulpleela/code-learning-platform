@@ -18,16 +18,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QPushButton, QSizePolicy,
     QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
-import views.resource_rc
+import resource_rc
+import resource_rc
 
-from views.quiz_page import QuizPage
-from views.list_item import ListItem
-from views.lesson_pdf import LessonPDF
-from views.course_list import Course_list
-from views.Lesson_Quiz_list import Lesson_Quiz_list
-from views.stacked_course import Stacked_Course
-
-class Sidebar(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -61,65 +55,65 @@ class Sidebar(object):
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.dashboard_btn_1 = QPushButton(self.icon_only_widget)
-        self.dashboard_btn_1.setObjectName(u"dashboard_btn_1")
+        self.home_btn_1 = QPushButton(self.icon_only_widget)
+        self.home_btn_1.setObjectName(u"home_btn_1")
         icon = QIcon()
         icon.addFile(u":/icon/icon/home-4-32.ico", QSize(), QIcon.Normal, QIcon.Off)
         icon.addFile(u":/icon/icon/home-4-48.ico", QSize(), QIcon.Normal, QIcon.On)
-        self.dashboard_btn_1.setIcon(icon)
-        self.dashboard_btn_1.setIconSize(QSize(20, 20))
-        self.dashboard_btn_1.setCheckable(True)
-        self.dashboard_btn_1.setAutoExclusive(True)
+        self.home_btn_1.setIcon(icon)
+        self.home_btn_1.setIconSize(QSize(20, 20))
+        self.home_btn_1.setCheckable(True)
+        self.home_btn_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.dashboard_btn_1)
+        self.verticalLayout.addWidget(self.home_btn_1)
 
-        self.calendar_btn_1 = QPushButton(self.icon_only_widget)
-        self.calendar_btn_1.setObjectName(u"calendar_btn_1")
+        self.dashborad_btn_1 = QPushButton(self.icon_only_widget)
+        self.dashborad_btn_1.setObjectName(u"dashborad_btn_1")
         icon1 = QIcon()
         icon1.addFile(u":/icon/icon/dashboard-5-32.ico", QSize(), QIcon.Normal, QIcon.Off)
         icon1.addFile(u":/icon/icon/dashboard-5-48.ico", QSize(), QIcon.Normal, QIcon.On)
-        self.calendar_btn_1.setIcon(icon1)
-        self.calendar_btn_1.setIconSize(QSize(20, 20))
-        self.calendar_btn_1.setCheckable(True)
-        self.calendar_btn_1.setAutoExclusive(True)
+        self.dashborad_btn_1.setIcon(icon1)
+        self.dashborad_btn_1.setIconSize(QSize(20, 20))
+        self.dashborad_btn_1.setCheckable(True)
+        self.dashborad_btn_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.calendar_btn_1)
+        self.verticalLayout.addWidget(self.dashborad_btn_1)
 
-        self.mycourses_btn_1 = QPushButton(self.icon_only_widget)
-        self.mycourses_btn_1.setObjectName(u"mycourses_btn_1")
+        self.orders_btn_1 = QPushButton(self.icon_only_widget)
+        self.orders_btn_1.setObjectName(u"orders_btn_1")
         icon2 = QIcon()
         icon2.addFile(u":/icon/icon/activity-feed-32.ico", QSize(), QIcon.Normal, QIcon.Off)
         icon2.addFile(u":/icon/icon/activity-feed-48.ico", QSize(), QIcon.Normal, QIcon.On)
-        self.mycourses_btn_1.setIcon(icon2)
-        self.mycourses_btn_1.setIconSize(QSize(20, 20))
-        self.mycourses_btn_1.setCheckable(True)
-        self.mycourses_btn_1.setAutoExclusive(True)
+        self.orders_btn_1.setIcon(icon2)
+        self.orders_btn_1.setIconSize(QSize(20, 20))
+        self.orders_btn_1.setCheckable(True)
+        self.orders_btn_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.mycourses_btn_1)
+        self.verticalLayout.addWidget(self.orders_btn_1)
 
-        self.certificates_btn_1 = QPushButton(self.icon_only_widget)
-        self.certificates_btn_1.setObjectName(u"certificates_btn_1")
+        self.products_btn_1 = QPushButton(self.icon_only_widget)
+        self.products_btn_1.setObjectName(u"products_btn_1")
         icon3 = QIcon()
         icon3.addFile(u":/icon/icon/product-32.ico", QSize(), QIcon.Normal, QIcon.Off)
         icon3.addFile(u":/icon/icon/product-48.ico", QSize(), QIcon.Normal, QIcon.On)
-        self.certificates_btn_1.setIcon(icon3)
-        self.certificates_btn_1.setIconSize(QSize(20, 20))
-        self.certificates_btn_1.setCheckable(True)
-        self.certificates_btn_1.setAutoExclusive(True)
+        self.products_btn_1.setIcon(icon3)
+        self.products_btn_1.setIconSize(QSize(20, 20))
+        self.products_btn_1.setCheckable(True)
+        self.products_btn_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.certificates_btn_1)
+        self.verticalLayout.addWidget(self.products_btn_1)
 
-        # self.customers_btn_1 = QPushButton(self.icon_only_widget)
-        # self.customers_btn_1.setObjectName(u"customers_btn_1")
-        # icon4 = QIcon()
-        # icon4.addFile(u":/icon/icon/group-32.ico", QSize(), QIcon.Normal, QIcon.Off)
-        # icon4.addFile(u":/icon/icon/group-48.ico", QSize(), QIcon.Normal, QIcon.On)
-        # self.customers_btn_1.setIcon(icon4)
-        # self.customers_btn_1.setIconSize(QSize(20, 20))
-        # self.customers_btn_1.setCheckable(True)
-        # self.customers_btn_1.setAutoExclusive(True)
+        self.customers_btn_1 = QPushButton(self.icon_only_widget)
+        self.customers_btn_1.setObjectName(u"customers_btn_1")
+        icon4 = QIcon()
+        icon4.addFile(u":/icon/icon/group-32.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon4.addFile(u":/icon/icon/group-48.ico", QSize(), QIcon.Normal, QIcon.On)
+        self.customers_btn_1.setIcon(icon4)
+        self.customers_btn_1.setIconSize(QSize(20, 20))
+        self.customers_btn_1.setCheckable(True)
+        self.customers_btn_1.setAutoExclusive(True)
 
-        # self.verticalLayout.addWidget(self.customers_btn_1)
+        self.verticalLayout.addWidget(self.customers_btn_1)
 
 
         self.verticalLayout_3.addLayout(self.verticalLayout)
@@ -131,7 +125,7 @@ class Sidebar(object):
         self.exit_btn_1 = QPushButton(self.icon_only_widget)
         self.exit_btn_1.setObjectName(u"exit_btn_1")
         icon5 = QIcon()
-        icon5.addFile(u":/icon/icon/account-logout-64.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon5.addFile(u":/icon/icon/close-window-64.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.exit_btn_1.setIcon(icon5)
         self.exit_btn_1.setIconSize(QSize(20, 20))
 
@@ -170,50 +164,50 @@ class Sidebar(object):
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.dashboard_btn_2 = QPushButton(self.full_menu_widget)
-        self.dashboard_btn_2.setObjectName(u"dashboard_btn_2")
-        self.dashboard_btn_2.setIcon(icon)
-        self.dashboard_btn_2.setIconSize(QSize(14, 14))
-        self.dashboard_btn_2.setCheckable(True)
-        self.dashboard_btn_2.setAutoExclusive(True)
+        self.home_btn_2 = QPushButton(self.full_menu_widget)
+        self.home_btn_2.setObjectName(u"home_btn_2")
+        self.home_btn_2.setIcon(icon)
+        self.home_btn_2.setIconSize(QSize(14, 14))
+        self.home_btn_2.setCheckable(True)
+        self.home_btn_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.dashboard_btn_2)
+        self.verticalLayout_2.addWidget(self.home_btn_2)
 
-        self.calendar_btn_2 = QPushButton(self.full_menu_widget)
-        self.calendar_btn_2.setObjectName(u"calendar_btn_2")
-        self.calendar_btn_2.setIcon(icon1)
-        self.calendar_btn_2.setIconSize(QSize(14, 14))
-        self.calendar_btn_2.setCheckable(True)
-        self.calendar_btn_2.setAutoExclusive(True)
+        self.dashborad_btn_2 = QPushButton(self.full_menu_widget)
+        self.dashborad_btn_2.setObjectName(u"dashborad_btn_2")
+        self.dashborad_btn_2.setIcon(icon1)
+        self.dashborad_btn_2.setIconSize(QSize(14, 14))
+        self.dashborad_btn_2.setCheckable(True)
+        self.dashborad_btn_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.calendar_btn_2)
+        self.verticalLayout_2.addWidget(self.dashborad_btn_2)
 
-        self.mycourses_btn_2 = QPushButton(self.full_menu_widget)
-        self.mycourses_btn_2.setObjectName(u"mycourses_btn_2")
-        self.mycourses_btn_2.setIcon(icon2)
-        self.mycourses_btn_2.setIconSize(QSize(14, 14))
-        self.mycourses_btn_2.setCheckable(True)
-        self.mycourses_btn_2.setAutoExclusive(True)
+        self.orders_btn_2 = QPushButton(self.full_menu_widget)
+        self.orders_btn_2.setObjectName(u"orders_btn_2")
+        self.orders_btn_2.setIcon(icon2)
+        self.orders_btn_2.setIconSize(QSize(14, 14))
+        self.orders_btn_2.setCheckable(True)
+        self.orders_btn_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.mycourses_btn_2)
+        self.verticalLayout_2.addWidget(self.orders_btn_2)
 
-        self.certificates_btn_2 = QPushButton(self.full_menu_widget)
-        self.certificates_btn_2.setObjectName(u"certificates_btn_2")
-        self.certificates_btn_2.setIcon(icon3)
-        self.certificates_btn_2.setIconSize(QSize(14, 14))
-        self.certificates_btn_2.setCheckable(True)
-        self.certificates_btn_2.setAutoExclusive(True)
+        self.products_btn_2 = QPushButton(self.full_menu_widget)
+        self.products_btn_2.setObjectName(u"products_btn_2")
+        self.products_btn_2.setIcon(icon3)
+        self.products_btn_2.setIconSize(QSize(14, 14))
+        self.products_btn_2.setCheckable(True)
+        self.products_btn_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.certificates_btn_2)
+        self.verticalLayout_2.addWidget(self.products_btn_2)
 
-        # self.customers_btn_2 = QPushButton(self.full_menu_widget)
-        # self.customers_btn_2.setObjectName(u"customers_btn_2")
-        # self.customers_btn_2.setIcon(icon4)
-        # self.customers_btn_2.setIconSize(QSize(14, 14))
-        # self.customers_btn_2.setCheckable(True)
-        # self.customers_btn_2.setAutoExclusive(True)
+        self.customers_btn_2 = QPushButton(self.full_menu_widget)
+        self.customers_btn_2.setObjectName(u"customers_btn_2")
+        self.customers_btn_2.setIcon(icon4)
+        self.customers_btn_2.setIconSize(QSize(14, 14))
+        self.customers_btn_2.setCheckable(True)
+        self.customers_btn_2.setAutoExclusive(True)
 
-        # self.verticalLayout_2.addWidget(self.customers_btn_2)
+        self.verticalLayout_2.addWidget(self.customers_btn_2)
 
 
         self.verticalLayout_4.addLayout(self.verticalLayout_2)
@@ -262,6 +256,19 @@ class Sidebar(object):
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setSpacing(10)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.search_input = QLineEdit(self.widget)
+        self.search_input.setObjectName(u"search_input")
+
+        self.horizontalLayout.addWidget(self.search_input)
+
+        self.search_btn = QPushButton(self.widget)
+        self.search_btn.setObjectName(u"search_btn")
+        icon7 = QIcon()
+        icon7.addFile(u":/icon/icon/search-13-48.ico", QSize(), QIcon.Normal, QIcon.Off)
+        self.search_btn.setIcon(icon7)
+
+        self.horizontalLayout.addWidget(self.search_btn)
+
 
         self.horizontalLayout_4.addLayout(self.horizontalLayout)
 
@@ -269,27 +276,23 @@ class Sidebar(object):
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
 
-        # self.user_btn = QPushButton(self.widget)
-        # self.user_btn.setObjectName(u"user_btn")
-        # icon8 = QIcon()
-        # icon8.addFile(u":/icon/icon/user-48.ico", QSize(), QIcon.Normal, QIcon.Off)
-        # self.user_btn.setIcon(icon8)
+        self.user_btn = QPushButton(self.widget)
+        self.user_btn.setObjectName(u"user_btn")
+        icon8 = QIcon()
+        icon8.addFile(u":/icon/icon/user-48.ico", QSize(), QIcon.Normal, QIcon.Off)
+        self.user_btn.setIcon(icon8)
 
-        # self.horizontalLayout_4.addWidget(self.user_btn)
+        self.horizontalLayout_4.addWidget(self.user_btn)
 
 
         self.verticalLayout_5.addWidget(self.widget)
 
         self.stackedWidget = QStackedWidget(self.widget_3)
         self.stackedWidget.setObjectName(u"stackedWidget")
-        
-        quiz_page = QuizPage()
-        self.page = quiz_page
-        
+        self.page = QWidget()
         self.page.setObjectName(u"page")
         self.gridLayout_2 = QGridLayout(self.page)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        
         self.label_4 = QLabel(self.page)
         self.label_4.setObjectName(u"label_4")
         font1 = QFont()
@@ -300,11 +303,7 @@ class Sidebar(object):
         self.gridLayout_2.addWidget(self.label_4, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page)
-        
-        #################
-        list_item = ListItem()
-        self.page_2 = list_item
-        
+        self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
         self.gridLayout_3 = QGridLayout(self.page_2)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
@@ -316,10 +315,7 @@ class Sidebar(object):
         self.gridLayout_3.addWidget(self.label_5, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_2)
-        ###################
-        
-        stack_course = Stacked_Course()
-        self.page_3 = stack_course
+        self.page_3 = QWidget()
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
@@ -327,37 +323,10 @@ class Sidebar(object):
         self.label_6.setObjectName(u"label_6")
         self.label_6.setFont(font1)
         self.label_6.setAlignment(Qt.AlignCenter)
-        
-        
-        # self.page_3 = QStackedWidget()
-        # self.course_list = Course_list()
-        # self.course_list.setObjectName(u"page_3")
-        # self.gridLayout_4 = QGridLayout(self.course_list)
-        # self.gridLayout_4.setObjectName(u"gridLayout_4")
-        # self.label_6 = QLabel(self.course_list)
-        # self.label_6.setObjectName(u"label_6")
-        # self.label_6.setFont(font1)
-        # self.label_6.setAlignment(Qt.AlignCenter)
 
-        # self.gridLayout_4.addWidget(self.label_6, 0, 0, 1, 1)
-    
-        
-        # self.page_3.addWidget(self.course_list)
-        
-        # self.lq_list = Lesson_Quiz_list()
-        # self.lq_list.setObjectName(u"page_3_5")
-        # self.gridLayout_4 = QGridLayout(self.lq_list)
-        # self.gridLayout_4.setObjectName(u"gridLayout_4")
-        # self.label_6 = QLabel(self.lq_list)
-        # self.label_6.setObjectName(u"label_6")
-        # self.label_6.setFont(font1)
-        # self.label_6.setAlignment(Qt.AlignCenter)
-        
-        # self.page_3.addWidget(self.lq_list)
+        self.gridLayout_4.addWidget(self.label_6, 0, 0, 1, 1)
+
         self.stackedWidget.addWidget(self.page_3)
-        
-        
-        #####################
         self.page_4 = QWidget()
         self.page_4.setObjectName(u"page_4")
         self.gridLayout_5 = QGridLayout(self.page_4)
@@ -370,7 +339,6 @@ class Sidebar(object):
         self.gridLayout_5.addWidget(self.label_7, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_4)
-        #####################
         self.page_5 = QWidget()
         self.page_5.setObjectName(u"page_5")
         self.gridLayout_6 = QGridLayout(self.page_5)
@@ -383,7 +351,6 @@ class Sidebar(object):
         self.gridLayout_6.addWidget(self.label_8, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_5)
-        #####################
         self.page_6 = QWidget()
         self.page_6.setObjectName(u"page_6")
         self.gridLayout_7 = QGridLayout(self.page_6)
@@ -396,7 +363,6 @@ class Sidebar(object):
         self.gridLayout_7.addWidget(self.label_9, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_6)
-        ####################
         self.page_7 = QWidget()
         self.page_7.setObjectName(u"page_7")
         self.gridLayout_8 = QGridLayout(self.page_7)
@@ -409,7 +375,6 @@ class Sidebar(object):
         self.gridLayout_8.addWidget(self.label_10, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_7)
-        #####################
 
         self.verticalLayout_5.addWidget(self.stackedWidget)
 
@@ -421,16 +386,16 @@ class Sidebar(object):
         self.retranslateUi(MainWindow)
         self.change_btn.toggled.connect(self.icon_only_widget.setVisible)
         self.change_btn.toggled.connect(self.full_menu_widget.setHidden)
-        self.dashboard_btn_1.toggled.connect(self.dashboard_btn_2.setChecked)
-        self.calendar_btn_1.toggled.connect(self.calendar_btn_2.setChecked)
-        self.mycourses_btn_1.toggled.connect(self.mycourses_btn_2.setChecked)
-        self.certificates_btn_1.toggled.connect(self.certificates_btn_2.setChecked)
-        # self.customers_btn_1.toggled.connect(self.customers_btn_2.setChecked)
-        self.dashboard_btn_2.toggled.connect(self.dashboard_btn_1.setChecked)
-        self.calendar_btn_2.toggled.connect(self.calendar_btn_1.setChecked)
-        self.mycourses_btn_2.toggled.connect(self.mycourses_btn_1.setChecked)
-        self.certificates_btn_2.toggled.connect(self.certificates_btn_1.setChecked)
-        # self.customers_btn_2.toggled.connect(self.customers_btn_1.setChecked)
+        self.home_btn_1.toggled.connect(self.home_btn_2.setChecked)
+        self.dashborad_btn_1.toggled.connect(self.dashborad_btn_2.setChecked)
+        self.orders_btn_1.toggled.connect(self.orders_btn_2.setChecked)
+        self.products_btn_1.toggled.connect(self.products_btn_2.setChecked)
+        self.customers_btn_1.toggled.connect(self.customers_btn_2.setChecked)
+        self.home_btn_2.toggled.connect(self.home_btn_1.setChecked)
+        self.dashborad_btn_2.toggled.connect(self.dashborad_btn_1.setChecked)
+        self.orders_btn_2.toggled.connect(self.orders_btn_1.setChecked)
+        self.products_btn_2.toggled.connect(self.products_btn_1.setChecked)
+        self.customers_btn_2.toggled.connect(self.customers_btn_1.setChecked)
         self.exit_btn_2.clicked.connect(MainWindow.close)
         self.exit_btn_1.clicked.connect(MainWindow.close)
 
@@ -439,27 +404,34 @@ class Sidebar(object):
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
+
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.logo_label_1.setText("")
-        self.dashboard_btn_1.setText("")
-        self.calendar_btn_1.setText("")
-        self.mycourses_btn_1.setText("")
-        self.certificates_btn_1.setText("")
-        # self.customers_btn_1.setText("")
+        self.home_btn_1.setText("")
+        self.dashborad_btn_1.setText("")
+        self.orders_btn_1.setText("")
+        self.products_btn_1.setText("")
+        self.customers_btn_1.setText("")
         self.exit_btn_1.setText("")
         self.logo_label_2.setText("")
-        self.logo_label_3.setText(QCoreApplication.translate("MainWindow", u"PyQuizT", None))
-        self.dashboard_btn_2.setText(QCoreApplication.translate("MainWindow", u"Dashboard", None))
-        self.calendar_btn_2.setText(QCoreApplication.translate("MainWindow", u"Calendar", None))
-        self.mycourses_btn_2.setText(QCoreApplication.translate("MainWindow", u"My Courses", None))
-        self.certificates_btn_2.setText(QCoreApplication.translate("MainWindow", u"Certificates", None))
-        self.exit_btn_2.setText(QCoreApplication.translate("MainWindow", u"Logout", None))
+        self.logo_label_3.setText(QCoreApplication.translate("MainWindow", u"Sidebar", None))
+        self.home_btn_2.setText(QCoreApplication.translate("MainWindow", u"Home", None))
+        self.dashborad_btn_2.setText(QCoreApplication.translate("MainWindow", u"Dashboard", None))
+        self.orders_btn_2.setText(QCoreApplication.translate("MainWindow", u"Orders", None))
+        self.products_btn_2.setText(QCoreApplication.translate("MainWindow", u"Products", None))
+        self.customers_btn_2.setText(QCoreApplication.translate("MainWindow", u"Customers", None))
+        self.exit_btn_2.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.change_btn.setText("")
-        # self.user_btn.setText("")
-        # self.label_4.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
-        # self.label_5.setText(QCoreApplication.translate("MainWindow", u"Calendar Page", None))
-        # self.label_6.setText(QCoreApplication.translate("MainWindow", u"Enrolled Page", None))
-        # self.label_7.setText(QCoreApplication.translate("MainWindow", u"Teaching Page", None))
+        self.search_input.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Search...", None))
+        self.search_btn.setText("")
+        self.user_btn.setText("")
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Dashboard Page", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Orders Page", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Product Page", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Customers Page", None))
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Search Page", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"User Page", None))
     # retranslateUi
 
