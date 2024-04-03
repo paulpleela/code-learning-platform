@@ -29,7 +29,7 @@ class Teacher_Course_list(QMainWindow):
         
         self.edit_buttons = []
         
-        self.delete_buttons = {}      
+        self.delete_buttons = {}   
         
         self.setupUi(self)
         
@@ -67,7 +67,7 @@ class Teacher_Course_list(QMainWindow):
             delete = QPushButton(self.scrollAreaWidgetContents)
             delete.setObjectName(f"delete_{self.index + 1}")
             delete.setText('Delete')
-            self.delete_buttons[delete] = self.index
+            self.delete_buttons[delete]  = self.index
             
             # delete.clicked.connect(lambda i = i: self.delete_course(i))
             delete.clicked.connect(self.delete_course)
@@ -98,14 +98,13 @@ class Teacher_Course_list(QMainWindow):
     def delete_course(self, row):
             # print(row)
         sender_button = self.sender()
-        
-        # print(self.delete_buttons.values())
-        
+                
         position = None
         if sender_button in self.delete_buttons:
             position = self.delete_buttons[sender_button]
+            # print(sender_button)
         
-        if position:
+        if position != None:
             for j in range(self.gridLayout.columnCount()):
                 item = self.gridLayout.itemAtPosition(position, j)
                 # item = self.gridLayout.itemAtPosition(row, j)
