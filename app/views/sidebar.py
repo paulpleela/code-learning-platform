@@ -26,6 +26,7 @@ from views.lesson_pdf import LessonPDF
 from views.course_list import Course_list
 from views.Lesson_Quiz_list import Lesson_Quiz_list
 from views.stacked_course import Stacked_Course
+from views.teacher_course_list import Teacher_Course_list
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
@@ -318,7 +319,8 @@ class Sidebar(object):
         self.stackedWidget.addWidget(self.page_2)
         ###################
         
-        stack_course = Stacked_Course()
+        # stack_course = Stacked_Course()
+        stack_course = Teacher_Course_list()
         self.page_3 = stack_course
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)
@@ -327,7 +329,7 @@ class Sidebar(object):
         self.label_6.setObjectName(u"label_6")
         self.label_6.setFont(font1)
         self.label_6.setAlignment(Qt.AlignCenter)
-        
+        self.stackedWidget.addWidget(self.page_3)
         
         # self.page_3 = QStackedWidget()
         # self.course_list = Course_list()
@@ -354,8 +356,6 @@ class Sidebar(object):
         # self.label_6.setAlignment(Qt.AlignCenter)
         
         # self.page_3.addWidget(self.lq_list)
-        self.stackedWidget.addWidget(self.page_3)
-        
         
         #####################
         self.page_4 = QWidget()
