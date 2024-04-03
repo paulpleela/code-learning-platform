@@ -156,8 +156,11 @@ class ZODBHelper:
         return None
     
     # Course Creation, Update, and Deletion by each teacher
-    def create_courseBy_teacher(self, course, course):
-        
+    def create_courseBy_teacher(self, courseCode, course):
+        # "John" : Teacher object
+        self.connection.root.courses[str(courseCode)] = course
+        # "John" : Teacher("John", "password", "teacher", [])
+        self.connection.root.teachers.get(str(course.teacherName)).ownedCourseList.append(courseCode)
     
     # check if the course exists in a teacher's ownedCourseList
     def get_course(self, course_name, teacher_name):

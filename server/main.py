@@ -40,7 +40,7 @@ class CourseCreated(BaseModel):
     teacherName: str
     
 
-@app.post("/api/student/register")
+@app.post("/api/user/register")
 async def register_student(student: StudentRegister):
     existing_student = db_helper.get_student(student.username)
     if existing_student:
@@ -53,7 +53,7 @@ async def register_student(student: StudentRegister):
 
     return {"message": "Student registered successfully"}
 
-@app.post("api/student/login")
+@app.post("api/user/login")
 async def login_student(student: StudentLogin):
     existing_student = db_helper.get_student(student.username)
     if not existing_student or existing_student["password"] != student.password:
@@ -99,7 +99,7 @@ async def course(course: CourseCreated):
     newCourse = Course(courseName=course.name, courseCreatedDate=createdDate, courseCode=courseCode, courseTeacherName=course.teacherName, 
                        studentList=[], moduleList=[], quizzList=[])
 
-    db_helper.add_course(course.name, newCourse)
+    db_helper.create_courseBy_teacher(courseCode, newCourse)
     newCourse.print_details()
         
     return {"message": "Course created successfully"}
