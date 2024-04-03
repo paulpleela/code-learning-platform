@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional, Dict
+import persistent
 
 # abstract class User and two clases, student and teacher, inherit from it
-class User:
+class User(persistent.Persistent):
       def __init__(self, name, password, role):
             self.name = name
 
@@ -14,7 +15,7 @@ class User:
 
             self.password = password
 
-class Student(User):
+class Student(User, persistent.Persistent):
       def __init__(self, name, password, role,  enrolledCourseList):
             super().__init__(name, password, role)
   
@@ -26,9 +27,14 @@ class Student(User):
       def unenroll_course(self, course):
             self.enrolledCourseList.remove(course)
 
+      def print_details(self):
+            print("Name:", self.name)
+            print("Role:", self.role)
+            print("Enrolled Courses:", self.enrolledCourseList)
+
       
 
-class Teacher(User):
+class Teacher(User, persistent.Persistent):
       def __init__(self, name, password, role,  ownedCourseList):
             super().__init__(name, password, role)
 
@@ -46,3 +52,8 @@ class Teacher(User):
                   if course.courseName == courseName:
                         return course
             return None
+
+      def print_details(self):
+            print("Name:", self.name)
+            print("Role:", self.role)
+            print("Owned Courses:", self.ownedCourseList)

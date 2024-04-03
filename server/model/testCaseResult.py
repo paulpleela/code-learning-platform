@@ -1,4 +1,6 @@
-class textCaseResult:
+import persistent
+
+class textCaseResult(persistent.Persistent):
       def __init__(self, textCase, result, message, timeTaken, status):
             self.textCase = textCase
             self.result = result        # output of the test case

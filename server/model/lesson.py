@@ -1,4 +1,6 @@
-class Lesson:
+import persistent
+
+class Lesson(persistent.Persistent):
       def __init__(self, video, text, image, files):
             self.video = video
             self.text = text
