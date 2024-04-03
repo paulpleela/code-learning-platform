@@ -8,6 +8,7 @@ model_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'model
 sys.path.append(model_dir)
 
 
+
 '''
 # ZODB database setup
 storage = FileStorage.FileStorage('mydatabase.fs')
@@ -56,51 +57,65 @@ class ZODBHelper:
     def close(self):
         self.connection.close()
 
-    def add_student(self, student_id, student):
+    # Student
+    def add_student(self, student_name, student):
         if not hasattr(self.root, 'students'):
             self.root.students = BTrees.OOBTree.BTree()
-        self.root.students[str(student_id)] = student
+        self.root.students[str(student_name)] = student
         transaction.commit()
 
-    def get_student(self, student_id):
+    def get_student(self, student_name):
         if hasattr(self.root, 'students'):
-            return self.root.students.get(str(student_id))
+            return self.root.students.get(str(student_name))
         return None
 
-    def update_student(self, student_id, new_student):
+    def update_student(self, student_name, new_student):
         if hasattr(self.root, 'students'):
-            self.root.students[str(student_id)] = new_student
+            self.root.students[str(student_name)] = new_student
             transaction.commit()
 
-    def delete_student(self, student_id):
+    def delete_student(self, student_name):
         if hasattr(self.root, 'students'):
-            del self.root.students[str(student_id)]
+            del self.root.students[str(student_name)]
+            transaction.commit()
+            
+    # Course
+    def add_course(self, course_name, course):
+        if not hasattr(self.root, 'courses'):
+            self.root.courses = BTrees.OOBTree.BTree()
+        self.root.courses[str(course_name)] = course
+        transaction.commit()
+    
+    def get_course(self, course_name):
+        if hasattr(self.root, 'courses'):
+            return self.root.courses.get(str(course_name))
+        return None
+    
+    def update_course(self, course_name, new_course):
+        if hasattr(self.root, 'courses'):
+            self.root.courses[str(course_name)] = new_course
+            transaction.commit()
+        
+    def delete_course(self, course_name):
+        if hasattr(self.root, 'courses'):
+            del self.root.courses[str(course_name)]
             transaction.commit()
 
-# Example usage:
-if __name__ == "__main__":
-      # Create an instance of the helper class
-      db_helper = ZODBHelper('mydatabase.fs')
+import random
+import string
 
-      # Add a student to the database
-      student1 = {"name": "John Doe", "email": "johndoe@gmail.com", "password": "password", "role": "student", "studentID": 1, "enrolledCourseList": []}
-      db_helper.add_student(student1["studentID"], student1)
+class CourseCodeGenerator:
+    def __init__(self):
+        self.used_course_codes = set()
 
-      # Retrieve and print the stored student object
-      retrieved_student = db_helper.get_student(student1["studentID"])
-      print("Retrieved Student:", retrieved_student)
+    def generate_course_code(self, prefix='C', length=6):
+        while True:
+            # Generate a random portion for the course code
+            random_portion = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+            # Combine the prefix with the random portion
+            course_code = f'{prefix}{random_portion}'
+            # Check if the generated course code is unique
+            if course_code not in self.used_course_codes:
+                self.used_course_codes.add(course_code)
+                return course_code
 
-      # Update the student object
-      student1_updated = {"name": "John Doe", "email": "johndoe@gmail.com", "password": "newpassword", "role": "student", "studentID": 1, "enrolledCourseList": ["Math", "English"]}
-      db_helper.update_student(student1_updated["studentID"], student1_updated)
-
-      # Retrieve and print the updated student object
-      retrieved_student_updated = db_helper.get_student(student1_updated["studentID"])
-      print("Updated Student:", retrieved_student_updated)
-
-      # Delete the student object
-      db_helper.delete_student(student1_updated["studentID"])
-      
-      
-      # Close the database connection
-      db_helper.close()
