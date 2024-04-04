@@ -51,7 +51,7 @@ class Teacher_Course_list(QMainWindow):
         self.gridLayout.setObjectName(u"gridLayout")
         
         # for loop making pushButton and Label
-        for i in range(len(self.course)):
+        for _ in range(len(self.course)):
             button = QPushButton(self.scrollAreaWidgetContents)
             button.setObjectName(f"course_{self.index + 1}")
             button.setText(self.course[self.index])
@@ -83,6 +83,7 @@ class Teacher_Course_list(QMainWindow):
         self.gridLayout.setColumnStretch(0, 5)
         self.gridLayout.setColumnStretch(1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        
         self.enroll_btn = QPushButton(Form)
         self.enroll_btn.setObjectName(u"enroll_btn")
         self.enroll_btn.setGeometry(QRect(520, 510, 181, 24))
@@ -95,14 +96,12 @@ class Teacher_Course_list(QMainWindow):
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
-    def delete_course(self, row):
-            # print(row)
+    def delete_course(self):
         sender_button = self.sender()
                 
         position = None
         if sender_button in self.delete_buttons:
             position = self.delete_buttons[sender_button]
-            # print(sender_button)
         
         if position != None:
             for j in range(self.gridLayout.columnCount()):
@@ -112,3 +111,5 @@ class Teacher_Course_list(QMainWindow):
                     widget = item.widget()
                     self.gridLayout.removeWidget(widget)
                     widget.deleteLater()
+            del self.delete_buttons[sender_button]
+            # print(self.delete_buttons)

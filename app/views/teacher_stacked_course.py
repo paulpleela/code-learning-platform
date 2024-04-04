@@ -37,9 +37,14 @@ class Teacher_Stacked_Course(QMainWindow):
         
         self.course_list.enroll_btn.clicked.connect(self.add_course)
         
+        ######################################
         self.lq_list = Teacher_Lesson_Quiz_list()
         self.stacked.addWidget(self.lq_list)
         self.lq_list.return_2.clicked.connect(self.go_to_course)
+        
+        self.lq_list.add_lesson_btn.clicked.connect(self.add_lesson)
+        self.lq_list.add_quiz_btn.clicked.connect(self.add_quiz)
+        
         
         
         QMetaObject.connectSlotsByName(Form)
@@ -83,5 +88,56 @@ class Teacher_Stacked_Course(QMainWindow):
             self.course_list.index += 1
 
             self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
-    
+
+    def add_lesson(self):
+        # if self.course_list.lineEdit.text() != '' :
+            self.lq_list.lesson_gridLayout.removeItem(self.lq_list.verticalSpacer)
+            
+            button = QPushButton(self.lq_list.lesson_widget)
+            self.lq_list.lesson_gridLayout.addWidget(button, self.lq_list.lesson_index, 0, 1, 1)
+            button.setText('Lesson')
+            self.lq_list.lesson_buttons.append(button)
+            
+            edit = QPushButton(self.lq_list.lesson_widget)
+            edit.setObjectName(f"edit_{self.lq_list.lesson_index + 1}")
+            edit.setText('Edit')
+            self.lq_list.lesson_gridLayout.addWidget(edit, self.lq_list.lesson_index, 1, 1, 1)
+            self.lq_list.lesson_edit.append(edit)
+                
+            delete = QPushButton(self.lq_list.lesson_widget)
+            delete.setObjectName(f"delete_{self.lq_list.lesson_index + 1}")
+            delete.setText('Delete')
+            self.lq_list.lesson_gridLayout.addWidget(delete, self.lq_list.lesson_index, 2, 1, 1)
+            self.lq_list.lesson_delete[delete] = self.lq_list.lesson_index
+            delete.clicked.connect(self.lq_list.delete_lesson)
+            
+            self.lq_list.lesson_index += 1
+
+            self.lq_list.lesson_gridLayout.addItem(self.lq_list.verticalSpacer, self.lq_list.lesson_index, 0, 1, 1)  
+            
+    def add_quiz(self):
+        # if self.course_list.lineEdit.text() != '' :
+            self.lq_list.quiz_gridLayout.removeItem(self.lq_list.verticalSpacer_2)
+            
+            button = QPushButton(self.lq_list.quiz_widget)
+            self.lq_list.quiz_gridLayout.addWidget(button, self.lq_list.quiz_index, 0, 1, 1)
+            button.setText('Quiz')
+            self.lq_list.quiz_buttons.append(button)
+            
+            edit = QPushButton(self.lq_list.quiz_widget)
+            edit.setObjectName(f"edit_{self.lq_list.quiz_index + 1}")
+            edit.setText('Edit')
+            self.lq_list.quiz_gridLayout.addWidget(edit, self.lq_list.quiz_index, 1, 1, 1)
+            self.lq_list.quiz_edit.append(edit)
+                
+            delete = QPushButton(self.lq_list.quiz_widget)
+            delete.setObjectName(f"delete_{self.lq_list.quiz_index + 1}")
+            delete.setText('Delete')
+            self.lq_list.quiz_gridLayout.addWidget(delete, self.lq_list.quiz_index, 2, 1, 1)
+            self.lq_list.quiz_delete[delete] = self.lq_list.quiz_index
+            delete.clicked.connect(self.lq_list.delete_quiz)
+            
+            self.lq_list.quiz_index += 1
+
+            self.lq_list.quiz_gridLayout.addItem(self.lq_list.verticalSpacer_2, self.lq_list.quiz_index, 0, 1, 1)       
     
