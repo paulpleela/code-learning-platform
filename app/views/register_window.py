@@ -157,3 +157,4 @@ class RegisterWindow(QtWidgets.QWidget):
         self.username_input.clear()
         self.password_input.clear()
         self.confirm_input.clear()
+        self.error_message.setText("")
