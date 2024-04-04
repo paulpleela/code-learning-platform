@@ -89,12 +89,12 @@ class UserRegistration:
         self.root = root
 
     def register_user(self, user):
-        if user.role == "I'm a Student":
+        if user.role == "student":
             if not hasattr(self.root, 'students'):
                 self.root.students = BTrees.OOBTree.BTree()
             student = Student(user.username, user.password, user.role, [])
             self.root.students[student.name] = student
-        elif user.role == "I'm a Teacher":
+        elif user.role == "teacher":
             if not hasattr(self.root, 'teachers'):
                 self.root.teachers = BTrees.OOBTree.BTree()
             teacher = Teacher(user.username, user.password, user.role, [])

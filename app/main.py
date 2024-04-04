@@ -15,6 +15,13 @@ def authenticate():
         "password": login_window.password_input.text()
     }
 
+    if len(login_window.username_input.text()) == 0:
+        login_window.set_error_message("Please enter your username")
+        return 
+    elif len(login_window.password_input.text()) == 0:
+        login_window.set_error_message("Please enter your password")
+        return 
+    
     response = requests.post(url + "/api/user/login", json=data)
 
     if response.status_code == 200:
@@ -25,9 +32,11 @@ def authenticate():
     else:
         try:
             response_data = response.json()
-            error_detail = response_data.get('detail', 'No detail provided')
+            error_detail = response_data.get('detail', 'An error occured')
+            login_window.set_error_message(error_detail)
         except ValueError:
             error_detail = 'Error parsing response JSON'
+            login_window.set_error_message('An error occured')
         print("Error:", error_detail)
 
 
@@ -36,20 +45,18 @@ def register():
     data = {
         "username": register_window.username_input.text(),
         "password": register_window.password_input.text(),
-        "role": register_window.role_selector.currentText()
+        "role": register_window.role_selector.currentData()
     }
-
-    if register_window.password_input.text() != register_window.confirm_input.text():
-        print("Mismatched password")
-        return
-    
-    if len(register_window.password_input.text()) == 0:
-        print("Please enter a password")
-        return 
     
     if len(register_window.username_input.text()) == 0:
-        print("Please enter a username")
+        register_window.set_error_message("Please enter a username")
         return 
+    elif len(register_window.password_input.text()) == 0:
+        register_window.set_error_message("Please enter a password")
+        return 
+    elif register_window.password_input.text() != register_window.confirm_input.text():
+        register_window.set_error_message("Passwords to not match")
+        return
     
     response = requests.post(url + "/api/user/register", json=data)
     print(response)
@@ -59,9 +66,11 @@ def register():
     else:
         try:
             response_data = response.json()
-            error_detail = response_data.get('detail', 'No detail provided')
+            error_detail = response_data.get('detail', 'An error occured')
+            register_window.set_error_message(error_detail)
         except ValueError:
             error_detail = 'Error parsing response JSON'
+            register_window.set_error_message('An error occured')
         print("Error:", error_detail)
 
 
