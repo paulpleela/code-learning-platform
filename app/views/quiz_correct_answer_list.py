@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-class Quiz_wrong_answer_list(QtWidgets.QWidget):
+class Quiz_correct_answer_list(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi(self)

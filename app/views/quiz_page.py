@@ -169,8 +169,8 @@ class QuizPage(QMainWindow):
         self.nav_bar = NavigationBar()
         layout.addWidget(self.nav_bar, alignment=Qt.AlignBottom)
 
-        self.nav_bar.previous_button.clicked.connect(self.previous_page)
-        self.nav_bar.next_button.clicked.connect(self.next_page)
+        # self.nav_bar.previous_button.clicked.connect(self.previous_page)
+        # self.nav_bar.next_button.clicked.connect(self.next_page)
         
         widget = QWidget()
         widget.setLayout(layout)
@@ -192,8 +192,8 @@ class QuizPage(QMainWindow):
             self.output_text.setTextColor(Qt.red)
             self.output_text.setText("Error:\n" + result.stderr)
 
-    def previous_page(self):
-        print("Go to previous page")
+    # def previous_page(self):
+    #     print("Go to previous page")
 
-    def next_page(self):
-        print("Go to next page")
+    # def next_page(self):
+    #     print("Go to next page")

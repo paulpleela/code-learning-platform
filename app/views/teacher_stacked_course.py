@@ -11,6 +11,9 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
 from PySide6 import QtCore, QtGui, QtWidgets
 from views.teacher_course_list import Teacher_Course_list
 from views.teacher_lesson_quiz_list import Teacher_Lesson_Quiz_list
+from views.quiz_page import QuizPage
+from views.quiz_correct_answer_list import Quiz_correct_answer_list
+from views.quiz_wrong_answer_list import Quiz_wrong_answer_list
 
 class Teacher_Stacked_Course(QMainWindow):
     def __init__(self):
@@ -24,7 +27,7 @@ class Teacher_Stacked_Course(QMainWindow):
         
         font1 = QFont()
         font1.setPointSize(20)
-        
+        ##################### 0 
         self.stacked = QStackedWidget(Form)
         self.stacked.setObjectName(u"stackedWidget")
         self.stacked.setGeometry(QRect(0, 0, 811, 541))
@@ -37,7 +40,7 @@ class Teacher_Stacked_Course(QMainWindow):
         
         self.course_list.enroll_btn.clicked.connect(self.add_course)
         
-        ######################################
+        ###################################### 1 
         self.lq_list = Teacher_Lesson_Quiz_list()
         self.stacked.addWidget(self.lq_list)
         self.lq_list.return_2.clicked.connect(self.go_to_course)
@@ -45,7 +48,23 @@ class Teacher_Stacked_Course(QMainWindow):
         self.lq_list.add_lesson_btn.clicked.connect(self.add_lesson)
         self.lq_list.add_quiz_btn.clicked.connect(self.add_quiz)
         
+        for button in self.lq_list.quiz_buttons:
+            button.clicked.connect(self.go_to_quiz)
+            
+        ##################################### 2
+        self.quiz = QuizPage()
+        self.stacked.addWidget(self.quiz)
         
+        self.quiz.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
+        self.quiz.nav_bar.send_button.clicked.connect(self.go_to_wrong)
+        
+        #################################### 3
+        self.correct = Quiz_correct_answer_list()
+        self.stacked.addWidget(self.correct)
+        
+        #################################### 4
+        self.wrong = Quiz_wrong_answer_list()
+        self.stacked.addWidget(self.wrong)
         
         QMetaObject.connectSlotsByName(Form)
     
@@ -56,10 +75,17 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(1)
         
     def go_to_quiz(self):
-        pass
+        self.stacked.setCurrentIndex(2)
+    
+    def go_to_correct(self):
+        self.stacked.setCurrentIndex(3)
+    
+    def go_to_wrong(self):
+        self.stacked.setCurrentIndex(4)
     
     def go_to_lesson(self):
         pass
+    
     
     
     def add_course(self):
@@ -97,6 +123,7 @@ class Teacher_Stacked_Course(QMainWindow):
             self.lq_list.lesson_gridLayout.addWidget(button, self.lq_list.lesson_index, 0, 1, 1)
             button.setText('Lesson')
             self.lq_list.lesson_buttons.append(button)
+            button.clicked.connect(self.go_to_lesson)
             
             edit = QPushButton(self.lq_list.lesson_widget)
             edit.setObjectName(f"edit_{self.lq_list.lesson_index + 1}")
@@ -123,6 +150,7 @@ class Teacher_Stacked_Course(QMainWindow):
             self.lq_list.quiz_gridLayout.addWidget(button, self.lq_list.quiz_index, 0, 1, 1)
             button.setText('Quiz')
             self.lq_list.quiz_buttons.append(button)
+            button.clicked.connect(self.go_to_quiz)
             
             edit = QPushButton(self.lq_list.quiz_widget)
             edit.setObjectName(f"edit_{self.lq_list.quiz_index + 1}")
