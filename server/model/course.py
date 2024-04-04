@@ -1,4 +1,6 @@
-class Course:
+import persistent
+
+class Course(persistent.Persistent):
       def __init__(self, courseName, courseCreatedDate, courseCode, courseTeacherName, studentList, moduleList, quizzList):
             self.courseName = courseName
             self.courseCreatedDate = courseCreatedDate

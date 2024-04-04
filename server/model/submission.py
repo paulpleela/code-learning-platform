@@ -1,4 +1,6 @@
-class Submission:
+import persistent
+
+class Submission(persistent.Persistent):
       def __init__(self, pythonCode, textcaseResultList, score, submissionTime):
             self.pythonCode = pythonCode
             self.textcaseResultList = textcaseResultList

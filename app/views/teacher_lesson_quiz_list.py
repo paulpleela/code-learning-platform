@@ -90,13 +90,13 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             
             edit = QPushButton(self.gridLayoutWidget)
             edit.setObjectName(f"edit_{self.lesson_index + 1}")
-            edit.setText(self.lessons[self.lesson_index])
+            edit.setText('Edit')
             self.lesson_gridLayout.addWidget(edit, self.lesson_index, 1, 1, 1)
             self.lesson_edit.append(edit)
             
             delete = QPushButton(self.gridLayoutWidget)
             delete.setObjectName(f"delete_{self.lesson_index + 1}")
-            delete.setText(self.lessons[self.lesson_index])
+            delete.setText('Delete')
             self.lesson_gridLayout.addWidget(delete, self.lesson_index, 2, 1, 1)
             self.lesson_delete.append(delete)      
             
@@ -116,13 +116,13 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             
             edit = QPushButton(self.gridLayoutWidget)
             edit.setObjectName(f"edit_{self.quiz_index + 1}")
-            edit.setText(self.quizzes[self.quiz_index])
+            edit.setText('Edit')
             self.quiz_gridLayout.addWidget(edit, self.quiz_index, 1, 1, 1)
             self.quiz_edit.append(edit)
             
             delete = QPushButton(self.gridLayoutWidget)
             delete.setObjectName(f"delete_{self.quiz_index + 1}")
-            delete.setText(self.quizzes[self.quiz_index])
+            delete.setText('Delete')
             self.quiz_gridLayout.addWidget(delete, self.quiz_index, 2, 1, 1)
             self.quiz_delete.append(delete)  
             

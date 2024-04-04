@@ -1,4 +1,6 @@
-class testCase:
+import persistent
+
+class testCase(persistent.Persistent):
       def __init__(self, id, name, description, input, expectedOutput, timeOut):
             self.id = id
             self.name = name

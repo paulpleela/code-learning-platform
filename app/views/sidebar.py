@@ -319,8 +319,8 @@ class Sidebar(object):
         self.stackedWidget.addWidget(self.page_2)
         ###################
         
-        stack_course = Stacked_Course()
-        #stack_course = Teacher_Stacked_Course()
+        # stack_course = Stacked_Course()
+        stack_course = Teacher_Stacked_Course()
         self.page_3 = stack_course
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)

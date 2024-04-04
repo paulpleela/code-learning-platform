@@ -1,4 +1,6 @@
-class Question:
+import persistent
+
+class Question(persistent.Persistent):
       def __init__(self, questionText, maxScore, testCasesList, TimeLimit, submissionDict):
             self.questionText = questionText
             self.maxScore = maxScore

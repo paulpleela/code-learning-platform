@@ -58,26 +58,30 @@ class Teacher_Stacked_Course(QMainWindow):
     
     
     def add_course(self):
-        self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
-        
-        button = QPushButton(self.course_list.scrollAreaWidgetContents)
-        self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
-        button.setText(self.course_list.lineEdit.text())
-        self.course_list.buttons.append(button)
-        button.clicked.connect(self.go_to_lesson_quiz)
-        
-        edit = QPushButton(self.course_list.scrollAreaWidgetContents)
-        edit.setObjectName(f"edit_{self.course_list.index + 1}")
-        edit.setText('Edit')
-        self.course_list.gridLayout.addWidget(edit, self.course_list.index, 1, 1, 1)
-        self.course_list.edit_buttons.append(edit)
+        # if self.course_list.lineEdit.text() != '' :
+            self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
             
-        delete = QPushButton(self.course_list.scrollAreaWidgetContents)
-        delete.setObjectName(f"delete_{self.course_list.index + 1}")
-        delete.setText('Delete')
-        self.course_list.gridLayout.addWidget(delete, self.course_list.index, 2, 1, 1)
-        self.course_list.delete_buttons.append(delete)
-        
-        self.course_list.index += 1
+            button = QPushButton(self.course_list.scrollAreaWidgetContents)
+            self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
+            button.setText(self.course_list.lineEdit.text())
+            self.course_list.course_buttons.append(button)
+            button.clicked.connect(self.go_to_lesson_quiz)
+            
+            edit = QPushButton(self.course_list.scrollAreaWidgetContents)
+            edit.setObjectName(f"edit_{self.course_list.index + 1}")
+            edit.setText('Edit')
+            self.course_list.gridLayout.addWidget(edit, self.course_list.index, 1, 1, 1)
+            self.course_list.edit_buttons.append(edit)
+                
+            delete = QPushButton(self.course_list.scrollAreaWidgetContents)
+            delete.setObjectName(f"delete_{self.course_list.index + 1}")
+            delete.setText('Delete')
+            self.course_list.gridLayout.addWidget(delete, self.course_list.index, 2, 1, 1)
+            self.course_list.delete_buttons[delete] = self.course_list.index
+            delete.clicked.connect(self.course_list.delete_course)
+            
+            self.course_list.index += 1
 
-        self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+            self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+    
+    

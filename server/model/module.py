@@ -1,4 +1,6 @@
-class Module:
+import persistent
+
+class Module(persistent.Persistent):
       def __init__(self, moduleName, moduleDescription, moduleLessonList, moduleQuestionsList, moduleDueDate, moduleType, moduleStatus):
             self.moduleName = moduleName
             self.moduleDescription = moduleDescription
