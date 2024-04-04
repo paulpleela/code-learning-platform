@@ -63,6 +63,12 @@ class Stacked_Course(QMainWindow):
         
         # self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
         
+        #################################### 3
+        self.show_ans = Quiz_answer_list()
+        self.stacked.addWidget(self.show_ans)
+        
+        self.show_ans.next.clicked.connect(self.go_to_lesson_quiz)
+        self.show_ans.go_back.clicked.connect(self.go_to_quiz)
         
         QMetaObject.connectSlotsByName(Form)
     
@@ -74,6 +80,9 @@ class Stacked_Course(QMainWindow):
         
     def go_to_quiz(self):
         self.stacked.setCurrentIndex(2)
+    
+    def go_to_answer(self):
+        self.stacked.setCurrentIndex(3)
     
     def go_to_lesson(self):
         pass

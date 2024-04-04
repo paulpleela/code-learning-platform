@@ -219,24 +219,48 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(4)
         self.update_lesson.add_button.clicked.connect(self.update_from_edit)
     
+#######################################################
     def go_to_quiz_edit(self):
         self.stacked.setCurrentIndex(5)
         sender_button = self.sender()
         
         if sender_button in self.lq_list.quiz_edit:
             position = self.lq_list.quiz_edit[sender_button]
-            # self.add_quiz_question.add_question_button.clicked.connect(lambda: self.edit_lesson(position)) 
+            self.add_quiz_question.add_question_button.clicked.connect(lambda: self.edit_quiz(position)) 
+    
+    def edit_quiz(self, index):
+        self.add_quiz_question.update_error_message()
+
+        # Check if there are no errors and at least one test case row is added
+        if self.add_quiz_question.error_message.isHidden() and self.add_quiz_question.row_counter > 0:
+            item = self.lq_list.quiz_gridLayout.itemAtPosition(index, 0).widget()
+            item.setText(self.add_quiz_question.question_name_edit.text())
+            print("Quiz question added3.")
+            self.back_from_quiz()
+            
+        elif self.add_quiz_question.row_counter == 0:
+            # Show error message if no test cases are added
+            self.add_quiz_question.error_message.setText("Add at least 1 test case.")
+            self.add_quiz_question.error_message.show()
+        
+    def back_from_quiz(self):
+        self.add_quiz_question.clear_fields()
+        self.go_to_lesson_quiz()
+        self.add_quiz_question.add_question_button.clicked.disconnect()
+    
     def update_from_quiz(self):
         # Update error message if necessary
         self.add_quiz_question.update_error_message()
 
         # Check if there are no errors and at least one test case row is added
-        if self.add_quiz_question.error_message.isHidden() and self.row_counter > 0:
+        if self.add_quiz_question.error_message.isHidden() and self.add_quiz_question.row_counter > 0:
             # This method would be responsible for adding the quiz question to your application
             # You can implement the functionality here, such as saving the question and test cases, etc.
             # For demonstration purposes, let's just print a message
-            print("Quiz question added.")
-            self.add_quiz_question.clear_fields()
+            self.add_quiz_from_update()
+            print("Quiz question added2.")
+            self.back_from_quiz()
+            
         elif self.add_quiz_question.row_counter == 0:
             # Show error message if no test cases are added
             self.add_quiz_question.error_message.setText("Add at least 1 test case.")
@@ -269,10 +293,9 @@ class Teacher_Stacked_Course(QMainWindow):
 
             self.lq_list.quiz_gridLayout.addItem(self.lq_list.verticalSpacer_2, self.lq_list.quiz_index, 0, 1, 1)
             
-            self.update_from_quiz()
     def add_quiz(self):
         self.stacked.setCurrentIndex(5)  
-        self.add_quiz_question.add_question_button.clicked.connect(self.add_quiz_from_update)
+        self.add_quiz_question.add_question_button.clicked.connect(self.update_from_quiz)
         
     # def add_lesson(self):
     #     # if self.course_list.lineEdit.text() != '' :            

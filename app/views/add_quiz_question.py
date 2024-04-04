@@ -216,7 +216,7 @@ class QuizQuestion(QMainWindow):
             # You can implement the functionality here, such as saving the question and test cases, etc.
             # For demonstration purposes, let's just print a message
             print("Quiz question added.")
-            self.clear_fields()
+            # self.clear_fields()
         elif self.row_counter == 0:
             # Show error message if no test cases are added
             self.error_message.setText("Add at least 1 test case.")
