@@ -55,16 +55,27 @@ class Teacher_Stacked_Course(QMainWindow):
         self.quiz = QuizPage()
         self.stacked.addWidget(self.quiz)
         
+        self.text_case = []
+        self.answer = []
+        
         self.quiz.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
-        self.quiz.nav_bar.send_button.clicked.connect(self.go_to_wrong)
+        
+        if self.text_case == self.answer:
+            self.quiz.nav_bar.send_button.clicked.connect(self.go_to_correct)
+        else:
+            self.quiz.nav_bar.send_button.clicked.connect(self.go_to_wrong)
         
         #################################### 3
         self.correct = Quiz_correct_answer_list()
         self.stacked.addWidget(self.correct)
         
+        self.correct.next.clicked.connect(self.go_to_lesson_quiz)
+        
         #################################### 4
         self.wrong = Quiz_wrong_answer_list()
         self.stacked.addWidget(self.wrong)
+        
+        self.wrong.tryagain.clicked.connect(self.go_to_quiz)
         
         QMetaObject.connectSlotsByName(Form)
     

@@ -69,6 +69,7 @@ class Course_list(QMainWindow):
         self.gridLayout.setColumnStretch(0, 5)
         self.gridLayout.setColumnStretch(1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        
         self.enroll_btn = QPushButton(Form)
         self.enroll_btn.setObjectName(u"enroll_btn")
         self.enroll_btn.setGeometry(QRect(520, 510, 181, 24))

@@ -23,11 +23,18 @@ from PySide6 import QtCore, QtGui, QtWidgets
 class Quiz_correct_answer_list(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.buttons = []
+        self.index = 0
+        self.test_case = ['a' , 'b' , 'c' , 'd']
+        self.answer = ['a' , 'b' , 'c' , 'd']
+        
         self.setupUi(self)
+        
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
         Form.resize(801, 551)
+        
         self.scrollArea = QScrollArea(Form)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setGeometry(QRect(10, 10, 781, 491))
@@ -35,66 +42,35 @@ class Quiz_correct_answer_list(QtWidgets.QWidget):
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 779, 489))
-        self.gridLayoutWidget = QWidget(self.scrollAreaWidgetContents)
-        self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
-        self.gridLayoutWidget.setGeometry(QRect(0, 0, 781, 491))
-        self.gridLayout = QGridLayout(self.gridLayoutWidget)
+        self.gridLayout = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_2 = QPushButton(self.gridLayoutWidget)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-
-        self.gridLayout.addWidget(self.pushButton_2, 1, 0, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout.addItem(self.verticalSpacer, 3, 0, 1, 1)
-
-        self.pushButton = QPushButton(self.gridLayoutWidget)
-        self.pushButton.setObjectName(u"pushButton")
-
-        self.gridLayout.addWidget(self.pushButton, 0, 0, 1, 1)
-
-        self.label = QLabel(self.gridLayoutWidget)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout.addWidget(self.label, 0, 1, 1, 1)
-
-        self.pushButton_3 = QPushButton(self.gridLayoutWidget)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-
-        self.gridLayout.addWidget(self.pushButton_3, 2, 0, 1, 1)
-
-        self.label_2 = QLabel(self.gridLayoutWidget)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout.addWidget(self.label_2, 1, 1, 1, 1)
-
-        self.label_3 = QLabel(self.gridLayoutWidget)
-        self.label_3.setObjectName(u"label_3")
-
-        self.gridLayout.addWidget(self.label_3, 2, 1, 1, 1)
-
-        self.gridLayout.setColumnStretch(0, 5)
+        
+        # for loop making pushButton and Label
+        for _ in range(len(self.test_case)):
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"pushButton_{self.index + 1}")
+            button.setText(f"Question_{self.index + 1}")
+            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
+            self.buttons.append(button)
+            
+            label = QLabel(self.scrollAreaWidgetContents)
+            label.setObjectName(f"label_{self.index + 1}")
+            label.setText("Correct")
+            self.gridLayout.addWidget(label, self.index, 1, 1, 1)
+            
+            self.index += 1
+        # makes verticleSpacer
+        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
+        self.gridLayout.setColumnStretch(5, 0)
         self.gridLayout.setColumnStretch(1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        
         self.next = QPushButton(Form)
         self.next.setObjectName(u"next")
         self.next.setGeometry(QRect(650, 510, 131, 24))
-
-        self.retranslateUi(Form)
+        self.next.setText("Exit Quiz")
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
-
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.pushButton_2.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.pushButton.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.label.setText(QCoreApplication.translate("Form", u"TextLabel", None))
-        self.pushButton_3.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.label_2.setText(QCoreApplication.translate("Form", u"TextLabel", None))
-        self.label_3.setText(QCoreApplication.translate("Form", u"TextLabel", None))
-        self.next.setText(QCoreApplication.translate("Form", u"Next Question", None))
-    # retranslateUi
 
