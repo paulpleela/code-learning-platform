@@ -1,41 +1,13 @@
 import persistent
 
 class Lesson(persistent.Persistent):
-      def __init__(self, name, file):
+      def __init__(self, name, filePath):
             self.name = name
-            self.file = file# SUPPORTS 2 Formats pdf or video mp4
+            self.filePath = filePath      # file path name SUPPORTS 2 Formats pdf or video mp4      
 
-      def edit_details(self, video, text, image, files):
-            self.video = video
-            self.text = text
-            self.image = image
-            self.files = files
-      
-      def add_video(self, video):
-            self.video.append(video)
-      
-      def remove_video(self, video):
-            self.video.remove(video)
-
-      def add_text(self, text):
-            self.text.append(text)
-
-      def remove_text(self, text):
-            self.text.remove(text)
-
-      def add_image(self, image):
-            self.image.append(image)
-
-      def remove_image(self, image):
-            self.image.remove(image)
-
-      def add_file(self, file):
-            self.files.append(file)
-
-      def remove_file(self, file):
-            self.files.remove(file)
-
-      
+      def edit_details(self, name, filePath):
+            self.name = name
+            self.filePath = filePath
 
 # The Lesson class is a simple class that contains the details of a lesson. 
 # It has a video, text, image, and files.  

@@ -8,7 +8,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-
+        self.role = None
         self.ui = Sidebar()
         self.ui.setupUi(self)
 
@@ -62,3 +62,8 @@ class MainWindow(QMainWindow):
 
     # def on_customers_btn_toggled(self):
     #     self.ui.stackedWidget.setCurrentIndex(4)
+
+    def set_role(self, role):
+        self.role = role
+        self.ui.set_role(role)
+        
