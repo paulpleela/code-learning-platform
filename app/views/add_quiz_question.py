@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QTextEdit, QPushButton, QGridLayout, QMessageBox
 from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QRect
 
 class QuizQuestion(QMainWindow):
     def __init__(self):
@@ -63,6 +63,10 @@ class QuizQuestion(QMainWindow):
         self.add_question_button = QPushButton("Add Quiz Question")
         self.add_question_button.clicked.connect(self.add_quiz_question)
         main_layout.addWidget(self.add_question_button)
+        
+        self.go_back = QPushButton("<< Go Back")
+        self.go_back.setFixedWidth(100)
+        main_layout.addWidget(self.go_back)
 
     def clear_test_cases(self):
         # Clear all test cases from the grid layout

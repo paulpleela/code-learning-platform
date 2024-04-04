@@ -88,8 +88,8 @@ class Teacher_Stacked_Course(QMainWindow):
         self.add_quiz_question = QuizQuestion()
         self.stacked.addWidget(self.add_quiz_question)
         
-        
-        
+        self.add_quiz_question.go_back.clicked.connect(self.back_from_quiz)
+     
     def go_to_course(self):
         self.stacked.setCurrentIndex(0)
     
