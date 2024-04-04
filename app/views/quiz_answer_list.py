@@ -49,7 +49,7 @@ class Quiz_answer_list(QtWidgets.QWidget):
         for _ in range(len(self.test_case)):
             button = QPushButton(self.scrollAreaWidgetContents)
             button.setObjectName(f"pushButton_{self.index + 1}")
-            button.setText(f"Question_{self.index + 1}")
+            button.setText(f"Test_case_{self.index + 1}")
             self.gridLayout.addWidget(button, self.index, 0, 1, 1)
             self.buttons.append(button)
             
