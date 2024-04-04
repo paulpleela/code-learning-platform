@@ -14,6 +14,7 @@ from views.teacher_lesson_quiz_list import Teacher_Lesson_Quiz_list
 from views.quiz_page import QuizPage
 from views.quiz_correct_answer_list import Quiz_correct_answer_list
 from views.quiz_wrong_answer_list import Quiz_wrong_answer_list
+from views.quiz_answer_list import Quiz_answer_list
 
 class Teacher_Stacked_Course(QMainWindow):
     def __init__(self):
@@ -60,24 +61,15 @@ class Teacher_Stacked_Course(QMainWindow):
         
         self.quiz.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
         
-        if self.text_case == self.answer:
-            self.quiz.nav_bar.send_button.clicked.connect(self.go_to_correct)
-        else:
-            self.quiz.nav_bar.send_button.clicked.connect(self.go_to_wrong)
+        self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
         
         #################################### 3
-        self.correct = Quiz_correct_answer_list()
-        self.stacked.addWidget(self.correct)
+        self.show_ans = Quiz_answer_list()
+        self.stacked.addWidget(self.show_ans)
         
-        self.correct.next.clicked.connect(self.go_to_lesson_quiz)
+        self.show_ans.next.clicked.connect(self.go_to_lesson_quiz)
+        self.show_ans.go_back.clicked.connect(self.go_to_quiz)
         
-        #################################### 4
-        self.wrong = Quiz_wrong_answer_list()
-        self.stacked.addWidget(self.wrong)
-        
-        self.wrong.tryagain.clicked.connect(self.go_to_quiz)
-        
-        QMetaObject.connectSlotsByName(Form)
     
     def go_to_course(self):
         self.stacked.setCurrentIndex(0)
@@ -88,11 +80,8 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_quiz(self):
         self.stacked.setCurrentIndex(2)
     
-    def go_to_correct(self):
+    def go_to_answer(self):
         self.stacked.setCurrentIndex(3)
-    
-    def go_to_wrong(self):
-        self.stacked.setCurrentIndex(4)
     
     def go_to_lesson(self):
         pass
