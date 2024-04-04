@@ -7,6 +7,7 @@ class Question(persistent.Persistent):
             self.testCasesList = testCasesList
             self.TimeLimit = TimeLimit
             self.submissionDict = submissionDict
+            # self.studentStatus = {"username": True}
       
       def edit_details(self, questionText, maxScore, TimeLimit):
             self.questionText = questionText

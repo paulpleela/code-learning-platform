@@ -1,11 +1,9 @@
 import persistent
 
 class Lesson(persistent.Persistent):
-      def __init__(self, video, text, image, files):
-            self.video = video
-            self.text = text
-            self.image = image
-            self.files = files
+      def __init__(self, name, file):
+            self.name = name
+            self.file = file# SUPPORTS 2 Formats pdf or video mp4
 
       def edit_details(self, video, text, image, files):
             self.video = video
