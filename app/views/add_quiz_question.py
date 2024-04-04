@@ -60,9 +60,9 @@ class QuizQuestion(QMainWindow):
 
         main_layout.addWidget(self.error_message)
         # Button to add quiz question
-        add_question_button = QPushButton("Add Quiz Question")
-        add_question_button.clicked.connect(self.add_quiz_question)
-        main_layout.addWidget(add_question_button)
+        self.add_question_button = QPushButton("Add Quiz Question")
+        self.add_question_button.clicked.connect(self.add_quiz_question)
+        main_layout.addWidget(self.add_question_button)
 
     def clear_test_cases(self):
         # Clear all test cases from the grid layout

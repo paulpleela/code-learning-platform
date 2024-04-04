@@ -16,6 +16,7 @@ from views.quiz_correct_answer_list import Quiz_correct_answer_list
 from views.quiz_wrong_answer_list import Quiz_wrong_answer_list
 from views.quiz_answer_list import Quiz_answer_list
 from views.update_lesson import EditLessonForm
+from views.add_quiz_question import QuizQuestion
 
 class Teacher_Stacked_Course(QMainWindow):
     def __init__(self):
@@ -54,7 +55,10 @@ class Teacher_Stacked_Course(QMainWindow):
             button.clicked.connect(self.go_to_quiz)
         
         for button in self.lq_list.lesson_edit:
-            button.clicked.connect(self.edit_lesson)
+            button.clicked.connect(self.go_to_lesson_edit)
+        
+        for button in self.lq_list.quiz_edit:
+            button.clicked.connect(self.go_to_quiz_edit)
             
         ##################################### 2
         self.quiz = QuizPage()
@@ -80,7 +84,12 @@ class Teacher_Stacked_Course(QMainWindow):
         
         self.update_lesson.back_button.clicked.connect(self.back_from_edit)
         
-    
+        #################################### 5
+        self.add_quiz_question = QuizQuestion()
+        self.stacked.addWidget(self.add_quiz_question)
+        
+        
+        
     def go_to_course(self):
         self.stacked.setCurrentIndex(0)
     
@@ -96,28 +105,6 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_lesson(self):
         pass
     
-    def update_from_edit(self, index):
-        print(index)
-        item = self.lq_list.lesson_gridLayout.itemAtPosition(index, 0).widget()
-        # print(item.text())
-        item.setText(self.update_lesson.lesson_name_edit.text())
-        
-        self.back_from_edit()
-        self.update_lesson.add_button.clicked.disconnect()
-        
-    def edit_lesson(self):
-        self.stacked.setCurrentIndex(4)
-        sender_button = self.sender()
-        
-        if sender_button in self.lq_list.lesson_edit:
-            position = self.lq_list.lesson_edit[sender_button]
-            self.update_lesson.add_button.clicked.connect(lambda: self.update_from_edit(position))   
-            
-    def back_from_edit(self):
-        self.update_lesson.lesson_name_edit.clear()
-        self.update_lesson.remove_file()
-        self.go_to_lesson_quiz()
-          
     def add_course(self):
         # if self.course_list.lineEdit.text() != '' :
             self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
@@ -146,16 +133,66 @@ class Teacher_Stacked_Course(QMainWindow):
             self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
             
             self.course_list.lineEdit.clear()
-
-    # def add_lesson(self):
+    
+    def edit_lesson(self, index):
+        lesson_name = self.update_lesson.lesson_name_edit.text()
+        lesson_file_path = self.update_lesson.lesson_file_edit.toPlainText()
         
-    def add_lesson(self):
+        if not lesson_name and not lesson_file_path:
+            self.update_lesson.error_message.setText("Please enter a lesson name and attach a file")
+        elif not lesson_name:
+            self.update_lesson.error_message.setText("Please enter a lesson name")
+        elif not lesson_file_path:
+            self.update_lesson.error_message.setText("Please attach a lesson file")
+        else:
+            
+            print("Lesson Name:", lesson_name)
+            print("Lesson File Path:", lesson_file_path)
+            print(index)
+            item = self.lq_list.lesson_gridLayout.itemAtPosition(index, 0).widget()
+            # print(item.text())
+            item.setText(self.update_lesson.lesson_name_edit.text())
+            self.back_from_edit()
+        
+        
+    def back_from_edit(self):
+        self.update_lesson.lesson_name_edit.clear()
+        self.update_lesson.remove_file()
+        self.update_lesson.error_message.clear()
+        self.go_to_lesson_quiz()        
+        self.update_lesson.add_button.clicked.disconnect()
+             
+    def go_to_lesson_edit(self):
+        self.stacked.setCurrentIndex(4)
+        sender_button = self.sender()
+        
+        if sender_button in self.lq_list.lesson_edit:
+            position = self.lq_list.lesson_edit[sender_button]
+            self.update_lesson.add_button.clicked.connect(lambda: self.edit_lesson(position))   
+            
+    def update_from_edit(self):
+        lesson_name = self.update_lesson.lesson_name_edit.text()
+        lesson_file_path = self.update_lesson.lesson_file_edit.toPlainText()
+        
+        if not lesson_name and not lesson_file_path:
+            self.update_lesson.error_message.setText("Please enter a lesson name and attach a file")
+        elif not lesson_name:
+            self.update_lesson.error_message.setText("Please enter a lesson name")
+        elif not lesson_file_path:
+            self.update_lesson.error_message.setText("Please attach a lesson file")
+        else:
+            print("Lesson Name:", lesson_name)
+            print("Lesson File Path:", lesson_file_path)
+            self.add_lesson_from_update()
+            self.back_from_edit()
+                   
+    def add_lesson_from_update(self):
         # if self.course_list.lineEdit.text() != '' :            
             self.lq_list.lesson_gridLayout.removeItem(self.lq_list.verticalSpacer)
             
             button = QPushButton(self.lq_list.lesson_widget)
             self.lq_list.lesson_gridLayout.addWidget(button, self.lq_list.lesson_index, 0, 1, 1)
-            button.setText('Lesson')
+            button.setText(self.update_lesson.lesson_name_edit.text())
             self.lq_list.lesson_buttons.append(button)
             button.clicked.connect(self.go_to_lesson)
             
@@ -164,7 +201,7 @@ class Teacher_Stacked_Course(QMainWindow):
             edit.setText('Edit')
             self.lq_list.lesson_gridLayout.addWidget(edit, self.lq_list.lesson_index, 1, 1, 1)
             self.lq_list.lesson_edit[edit] = self.lq_list.lesson_index
-            edit.clicked.connect(self.edit_lesson)
+            edit.clicked.connect(self.go_to_lesson_edit)
                 
             delete = QPushButton(self.lq_list.lesson_widget)
             delete.setObjectName(f"delete_{self.lq_list.lesson_index + 1}")
@@ -175,15 +212,42 @@ class Teacher_Stacked_Course(QMainWindow):
             
             self.lq_list.lesson_index += 1
 
-            self.lq_list.lesson_gridLayout.addItem(self.lq_list.verticalSpacer, self.lq_list.lesson_index, 0, 1, 1)  
+            self.lq_list.lesson_gridLayout.addItem(self.lq_list.verticalSpacer, self.lq_list.lesson_index, 0, 1, 1)
             
-    def add_quiz(self):
+            
+    def add_lesson(self):
+        self.stacked.setCurrentIndex(4)
+        self.update_lesson.add_button.clicked.connect(self.update_from_edit)
+    
+    def go_to_quiz_edit(self):
+        self.stacked.setCurrentIndex(5)
+        sender_button = self.sender()
+        
+        if sender_button in self.lq_list.quiz_edit:
+            position = self.lq_list.quiz_edit[sender_button]
+            # self.add_quiz_question.add_question_button.clicked.connect(lambda: self.edit_lesson(position)) 
+    def update_from_quiz(self):
+        # Update error message if necessary
+        self.add_quiz_question.update_error_message()
+
+        # Check if there are no errors and at least one test case row is added
+        if self.add_quiz_question.error_message.isHidden() and self.row_counter > 0:
+            # This method would be responsible for adding the quiz question to your application
+            # You can implement the functionality here, such as saving the question and test cases, etc.
+            # For demonstration purposes, let's just print a message
+            print("Quiz question added.")
+            self.add_quiz_question.clear_fields()
+        elif self.add_quiz_question.row_counter == 0:
+            # Show error message if no test cases are added
+            self.add_quiz_question.error_message.setText("Add at least 1 test case.")
+            self.add_quiz_question.error_message.show()
+    def add_quiz_from_update(self):
         # if self.course_list.lineEdit.text() != '' :
             self.lq_list.quiz_gridLayout.removeItem(self.lq_list.verticalSpacer_2)
             
             button = QPushButton(self.lq_list.quiz_widget)
             self.lq_list.quiz_gridLayout.addWidget(button, self.lq_list.quiz_index, 0, 1, 1)
-            button.setText('Quiz')
+            button.setText(self.add_quiz_question.question_name_edit.text())
             self.lq_list.quiz_buttons.append(button)
             button.clicked.connect(self.go_to_quiz)
             
@@ -203,7 +267,68 @@ class Teacher_Stacked_Course(QMainWindow):
             
             self.lq_list.quiz_index += 1
 
-            self.lq_list.quiz_gridLayout.addItem(self.lq_list.verticalSpacer_2, self.lq_list.quiz_index, 0, 1, 1)       
+            self.lq_list.quiz_gridLayout.addItem(self.lq_list.verticalSpacer_2, self.lq_list.quiz_index, 0, 1, 1)
+            
+            self.update_from_quiz()
+    def add_quiz(self):
+        self.stacked.setCurrentIndex(5)  
+        self.add_quiz_question.add_question_button.clicked.connect(self.add_quiz_from_update)
+        
+    # def add_lesson(self):
+    #     # if self.course_list.lineEdit.text() != '' :            
+    #         self.lq_list.lesson_gridLayout.removeItem(self.lq_list.verticalSpacer)
+            
+    #         button = QPushButton(self.lq_list.lesson_widget)
+    #         self.lq_list.lesson_gridLayout.addWidget(button, self.lq_list.lesson_index, 0, 1, 1)
+    #         button.setText('Lesson')
+    #         self.lq_list.lesson_buttons.append(button)
+    #         button.clicked.connect(self.go_to_lesson)
+            
+    #         edit = QPushButton(self.lq_list.lesson_widget)
+    #         edit.setObjectName(f"edit_{self.lq_list.lesson_index + 1}")
+    #         edit.setText('Edit')
+    #         self.lq_list.lesson_gridLayout.addWidget(edit, self.lq_list.lesson_index, 1, 1, 1)
+    #         self.lq_list.lesson_edit[edit] = self.lq_list.lesson_index
+    #         edit.clicked.connect(self.edit_lesson)
+                
+    #         delete = QPushButton(self.lq_list.lesson_widget)
+    #         delete.setObjectName(f"delete_{self.lq_list.lesson_index + 1}")
+    #         delete.setText('Delete')
+    #         self.lq_list.lesson_gridLayout.addWidget(delete, self.lq_list.lesson_index, 2, 1, 1)
+    #         self.lq_list.lesson_delete[delete] = self.lq_list.lesson_index
+    #         delete.clicked.connect(self.lq_list.delete_lesson)
+            
+    #         self.lq_list.lesson_index += 1
+
+    #         self.lq_list.lesson_gridLayout.addItem(self.lq_list.verticalSpacer, self.lq_list.lesson_index, 0, 1, 1)  
+            
+    # def add_quiz(self):
+    #     # if self.course_list.lineEdit.text() != '' :
+    #         self.lq_list.quiz_gridLayout.removeItem(self.lq_list.verticalSpacer_2)
+            
+    #         button = QPushButton(self.lq_list.quiz_widget)
+    #         self.lq_list.quiz_gridLayout.addWidget(button, self.lq_list.quiz_index, 0, 1, 1)
+    #         button.setText('Quiz')
+    #         self.lq_list.quiz_buttons.append(button)
+    #         button.clicked.connect(self.go_to_quiz)
+            
+    #         edit = QPushButton(self.lq_list.quiz_widget)
+    #         edit.setObjectName(f"edit_{self.lq_list.quiz_index + 1}")
+    #         edit.setText('Edit')
+    #         self.lq_list.quiz_gridLayout.addWidget(edit, self.lq_list.quiz_index, 1, 1, 1)
+    #         self.lq_list.quiz_edit[edit] = self.lq_list.quiz_index
+    #         edit.clicked.connect(self.edit_lesson)
+                
+    #         delete = QPushButton(self.lq_list.quiz_widget)
+    #         delete.setObjectName(f"delete_{self.lq_list.quiz_index + 1}")
+    #         delete.setText('Delete')
+    #         self.lq_list.quiz_gridLayout.addWidget(delete, self.lq_list.quiz_index, 2, 1, 1)
+    #         self.lq_list.quiz_delete[delete] = self.lq_list.quiz_index
+    #         delete.clicked.connect(self.lq_list.delete_quiz)
+            
+    #         self.lq_list.quiz_index += 1
+
+    #         self.lq_list.quiz_gridLayout.addItem(self.lq_list.verticalSpacer_2, self.lq_list.quiz_index, 0, 1, 1)       
     
     
         
