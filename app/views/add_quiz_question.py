@@ -28,7 +28,7 @@ class QuizQuestion(QMainWindow):
         question_layout.addWidget(self.question_instructions_edit)
 
         # Widgets for entering test cases
-        self.num_variables_label = QLabel("Number of Test Case Variables:")
+        self.num_variables_label = QLabel("Number of Test Case Input Variables:")
         self.num_variables_edit = QLineEdit()
         self.num_variables_edit.textChanged.connect(self.clear_test_cases)  # Connect to clear test cases when text changes
         self.error_message = QLabel()
@@ -109,17 +109,33 @@ class QuizQuestion(QMainWindow):
                     widget.setParent(None)
 
     def add_test_case(self):
+        # Check if the current number of test cases exceeds the limit of 9
+        if self.row_counter >= 9:
+            # Show error message if the limit is reached
+            self.error_message.setText("Maximum of 9 test cases allowed")
+            self.error_message.show()
+            return
+    
         # Check if the input value is between 0 and 7
         try:
             num_variables = int(self.num_variables_edit.text())
             if num_variables < 0 or num_variables > 7:
-                raise ValueError("Number of variables must be between 0 and 7")
+                self.error_message.setText("Number of input variables must be between 0 and 7")
+                self.error_message.show()
+                return
         except ValueError:
             # Show error message if input is not valid
             self.error_message.setText("Number of test cases must be an integer")
             self.error_message.show()
             return
 
+        # If no input variables, there can only be 1 output
+        if num_variables == 0 and self.row_counter > 0:
+            # Show error message if a test case row already exists
+            self.error_message.setText("Only 1 expected output allowed when there are no input variables")
+            self.error_message.show()
+            return
+        
         # Add header row if not already added
         if not self.header_added:
             header_label = QLabel("#")
@@ -184,13 +200,13 @@ class QuizQuestion(QMainWindow):
         num_variables = int(self.num_variables_edit.text()) if self.num_variables_edit.text() else 0
 
         if not question_name:
-            self.error_message.setText("Please enter a question name.")
+            self.error_message.setText("Please enter a question name")
             self.error_message.show()
         elif not question_instructions:
-            self.error_message.setText("Please enter question instructions.")
+            self.error_message.setText("Please enter question instructions")
             self.error_message.show()
         elif num_variables == 0 and self.row_counter == 0:
-            self.error_message.setText("Add at least 1 test case.")
+            self.error_message.setText("Add at least 1 test case")
             self.error_message.show()
         else:
             # Check if any test case input or output is empty
@@ -205,7 +221,7 @@ class QuizQuestion(QMainWindow):
                     break
 
             if empty_input_or_output:
-                self.error_message.setText("Test case input/output cannot be empty.")
+                self.error_message.setText("Enter all test cases' input and expected output")
                 self.error_message.show()
             else:
                 self.error_message.hide()
@@ -219,11 +235,11 @@ class QuizQuestion(QMainWindow):
             # This method would be responsible for adding the quiz question to your application
             # You can implement the functionality here, such as saving the question and test cases, etc.
             # For demonstration purposes, let's just print a message
-            print("Quiz question added.")
+            print("Quiz question added")
             # self.clear_fields()
         elif self.row_counter == 0:
             # Show error message if no test cases are added
-            self.error_message.setText("Add at least 1 test case.")
+            self.error_message.setText("Add at least 1 test case")
             self.error_message.show()
 
     def clear_fields(self):
