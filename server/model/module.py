@@ -1,9 +1,8 @@
 import persistent
 
 class Module(persistent.Persistent):
-      def __init__(self, Name, Description, LessonList, QuestionsList, DueDate, which_student_finsished_StatusDict):
+      def __init__(self, Name, LessonList, QuestionsList, DueDate, which_student_finsished_StatusDict):
             self.Name = Name
-            self.Description = Description
             self.LessonList = LessonList        # List of lesson objects
             self.QuestionsList = QuestionsList  # List of question objects
             self.DueDate = DueDate              # Deadline for the module

@@ -61,7 +61,7 @@ class Stacked_Course(QMainWindow):
         
         self.quiz.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
         
-        self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
+        # self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
         
         
         QMetaObject.connectSlotsByName(Form)

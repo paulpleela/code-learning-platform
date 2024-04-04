@@ -1,5 +1,5 @@
 import datetime
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, File, UploadFile
 from pydantic import BaseModel
 from typing import Optional, Dict
 import os, sys
@@ -26,24 +26,18 @@ class UserLogin(BaseModel):
 
 
 class CourseCreated(BaseModel):
-    courseName: str
+    name: str
     teacherName: str
 
 class Module(BaseModel):
-    moduleName: str
-    moduleDescription: str
-    moduleLessonList: list
-    moduleQuestionsList: list
-    moduleDueDate: datetime.datetime
-    moduleType: str
-    moduleStatus: str
+    name: str
+    lessonList: list
+    questionsList: list
+    dueDate: datetime.datetime
+    Status: str
 
 class Lesson(BaseModel):
-    lessonName: str
-    lessonDescription: str
-    lessonContent: str
-    lessonType: str
-    lessonStatus: str
+    name: str
 
 class Question(BaseModel):
     questionName: str
@@ -176,6 +170,9 @@ async def delete_module(moduleName: str):
 '''----------------------------------    Lesson      ---------------------------------- '''
 @app.post("/lesson")
 async def create_lesson(lesson: Lesson):
+
+    lesson = Lesson(lesson.name, lesson.lessonFile)
+
     db_helper.lesson_operations.create_lesson(lesson)
 
     return {"message": "Lesson created successfully"}

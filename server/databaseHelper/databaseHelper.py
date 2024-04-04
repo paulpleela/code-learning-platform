@@ -85,6 +85,7 @@ class CourseCodeGenerator:
                 self.used_course_codes.add(course_code)
                 return course_code
 
+fileCodeGenerator = CourseCodeGenerator()
 
 class UserRegistration:
     def __init__(self, root):
@@ -285,6 +286,7 @@ class LessonOperations:
     def __init__(self, root):
         self.root = root
 
+    
     ''' -----------------What Both students and teachers can do to the lesson-----------------'''
     def get_lesson_ByIndex(self, course_code, module_index, lesson_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -388,6 +390,7 @@ class QuizzOperations:
                 if module.checkQuizz_ByIndex(quizz_index):
                     del module.QuizzList[quizz_index]
                     transaction.commit()
+
 class TestCaseOperations:
     def __init__(self, root):
         self.root = root
