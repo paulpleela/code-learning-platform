@@ -260,7 +260,7 @@ class ModuleOperations:
             course = self.root.courses[course_code]
             if not hasattr(course, 'moduleList'):
                 course.moduleList = BTrees.OOBTree.BTree()
-            course.moduleList[module.name] = module
+            course.moduleList.append(module)
             transaction.commit()
 
     def get_module(self, course_code, module_name):

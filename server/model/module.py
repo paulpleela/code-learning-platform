@@ -7,8 +7,8 @@ class Module(persistent.Persistent):
             self.moduleLessonList = moduleLessonList
             self.moduleQuestionsList = moduleQuestionsList
             self.moduleDueDate = moduleDueDate              # Deadline for the module
-            self.moduleType = moduleType
             self.moduleStatus = moduleStatus
+            # self.studentStatus = {"username": True}
 
       def edit_details(self, moduleName, moduleDescription, moduleDueDate):
             self.moduleName = moduleName

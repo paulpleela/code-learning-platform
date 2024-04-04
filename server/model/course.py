@@ -9,7 +9,7 @@ class Course(persistent.Persistent):
 
             self.studentList = studentList
             self.moduleList = moduleList
-            self.quizzList = quizzList
+            # self.studentStatus = {"username": True}
  
 
       def edit_details(self, courseName, courseCode, courseTeacherName):
