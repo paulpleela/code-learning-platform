@@ -24,14 +24,16 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
     def __init__(self):
         super().__init__()
         self.lessons = ['abc', 'def', 'ghi']
+        self.cID = "abcdefgh"
+        
         self.lesson_buttons = []
         self.lesson_delete = {}
-        self.lesson_edit = []
+        self.lesson_edit = {}
         self.lesson_index = 0
         
         self.quizzes = ['ign', 'fed', 'cga']
         self.quiz_buttons = []
-        self.quiz_edit = []
+        self.quiz_edit = {}
         self.quiz_delete = {}
         self.quiz_index = 0
         
@@ -84,6 +86,10 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         self.add_quiz_btn.setText("Add Quiz")
         self.add_quiz_btn.setGeometry(QRect(510, 480, 201, 24))
         
+        self.courseID = QLabel(Form)
+        self.courseID.setText(f"courseID : {self.cID}")
+        self.courseID.setGeometry(QRect(350, 520, 300, 24))
+        
         # for loop making pushButton and Label
         # Lesson
         
@@ -100,7 +106,7 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             edit.setObjectName(f"edit_{self.lesson_index + 1}")
             edit.setText('Edit')
             self.lesson_gridLayout.addWidget(edit, self.lesson_index, 1, 1, 1)
-            self.lesson_edit.append(edit)
+            self.lesson_edit[edit] = self.lesson_index
             
             delete = QPushButton(self.lesson_widget)
             delete.setObjectName(f"delete_{self.lesson_index + 1}")
@@ -127,7 +133,7 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             edit.setObjectName(f"edit_{self.quiz_index + 1}")
             edit.setText('Edit')
             self.quiz_gridLayout.addWidget(edit, self.quiz_index, 1, 1, 1)
-            self.quiz_edit.append(edit)
+            self.quiz_edit[edit] = self.quiz_index
             
             delete = QPushButton(self.quiz_widget)
             delete.setObjectName(f"delete_{self.quiz_index + 1}")

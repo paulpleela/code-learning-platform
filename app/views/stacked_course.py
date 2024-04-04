@@ -82,3 +82,4 @@ class Stacked_Course(QMainWindow):
             self.course_list.index += 1
 
             self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+            self.course_list.lineEdit.clear()
