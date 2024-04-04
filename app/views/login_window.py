@@ -118,3 +118,7 @@ class LoginWindow(QtWidgets.QWidget):
 
     def set_error_message(self, message):
         self.error_message.setText(message)
+
+    def clear_fields(self):
+        self.username_input.clear()
+        self.password_input.clear()

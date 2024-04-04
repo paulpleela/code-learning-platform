@@ -27,6 +27,7 @@ def authenticate():
     if response.status_code == 200:
         response_data = response.json()
         print(response_data)
+        login_window.clear_fields()
         widget.setCurrentIndex(2)
         widget.setWindowTitle("PyQuizT")
     else:
@@ -47,7 +48,7 @@ def register():
         "password": register_window.password_input.text(),
         "role": register_window.role_selector.currentData()
     }
-    
+
     if len(register_window.username_input.text()) == 0:
         register_window.set_error_message("Please enter a username")
         return 
@@ -78,10 +79,12 @@ def register():
 def go_to_register():
     widget.setCurrentIndex(1)
     widget.setWindowTitle("Register | PyQuizT")
+    login_window.clear_fields()
 
 def go_to_login():
     widget.setCurrentIndex(0)
     widget.setWindowTitle("Login | PyQuizT")
+    register_window.clear_fields()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
