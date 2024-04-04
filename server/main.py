@@ -127,13 +127,13 @@ async def get_owned_courses(teacherName: str):
 async def update_course(courseCode: str, course: CourseCreated):
     db_helper.course_operations.update_course(courseCode, course)
 
-@app.delete("/course/{courseName}")
-async def delete_course(courseName: str):
-    existing_course = db_helper.get_course(courseName)
+@app.delete("/course/{courseCode}")
+async def delete_course(courseCode: str):
+    existing_course = db_helper.get_course(courseCode)
     if not existing_course:
         raise HTTPException(status_code=404, detail="Course not found")
 
-    db_helper.delete_course(courseName)
+    db_helper.delete_course(courseCode)
 
     return {"message": "Course deleted successfully"}
 

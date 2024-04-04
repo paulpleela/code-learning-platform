@@ -142,6 +142,19 @@ class CourseOperations:
     def __init__(self, root):
         self.root = root
 
+    def get_course_by_code(self, course_code):
+        if hasattr(self.root, 'courses'):
+            return self.root.courses.get(course_code)
+        return None
+    
+    def get_all_courses(self):
+        if hasattr(self.root, 'courses'):
+            return self.root.courses.values()
+        return []
+
+    
+    ''' -----------------What Teacher can do to the course----------------- '''
+
     def create_course(self, course, teacher_name):
         if not hasattr(self.root, 'courses'):
             self.root.courses = BTrees.OOBTree.BTree()
@@ -153,22 +166,13 @@ class CourseOperations:
             transaction.commit()
         transaction.commit()
 
-    def get_course_by_code(self, course_code):
-        if hasattr(self.root, 'courses'):
-            return self.root.courses.get(course_code)
-        return None
-    
-    def get_all_courses(self):
-        if hasattr(self.root, 'courses'):
-            return self.root.courses.values()
-        return []
-    
-    def get_courses_by_teacher(self, teacher_name):
+        
+    def get_courses_by_teacherName(self, teacher_name):
         if hasattr(self.root, 'teachers') and teacher_name in self.root.teachers:
             teacher = self.root.teachers[teacher_name]
             return teacher.ownedCourseList
         return []
-
+    
     # update course by course code and updated course
     def update_course(self, course_code, updated_course):
         
@@ -176,99 +180,67 @@ class CourseOperations:
             self.root.courses[course_code] = updated_course
             transaction.commit()
 
-        
-
-        '''
-        # also update the course in the teacher's owned course list
-        if hasattr(self.root, 'teachers'):
-            for teacher in self.root.teachers.values():
-                if course_code in teacher.ownedCourseList:
-                    teacher.ownedCourseList[course_code] = updated_course
-                    transaction.commit()
-        '''
-
-    
-    # delete course by course code
-    def delete_course(self, course_code):
+    def update_courseName_ByCourseCode(self, course_code, updated_courseName):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            # remove the course from the teacher's owned course list
-            if hasattr(self.root, 'teachers'):
-                for teacher in self.root.teachers.values():
-                    if course in teacher.ownedCourseList:
-                        teacher.ownedCourseList.remove(course)
-                        transaction.commit()
+            course.courseName = updated_courseName
+            transaction.commit()
+
+    # delete course by course code
+    def delete_course_ByCourseCode(self, course_code, teacher_name):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
             del self.root.courses[course_code]
             transaction.commit()
 
-        '''
-        # also remove the course from the teacher's owned course list
-        if hasattr(self.root, 'teachers'):
-            for teacher in self.root.teachers.values():
-                if course_code in teacher.ownedCourseList:
-                    teacher.ownedCourseList.remove(course_code)
-                    transaction.commit()
-        '''
-
-
-class LessonOperations:
-    def __init__(self, root):
-        self.root = root
-
-    def create_lesson(self, lesson, course_code):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if not hasattr(course, 'lessonList'):
-                course.lessonList = BTrees.OOBTree.BTree()
-            course.lessonList[lesson.name] = lesson
-            transaction.commit()
-
-    def get_lesson(self, course_code, lesson_name):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if hasattr(course, 'lessonList') and lesson_name in course.lessonList:
-                return course.lessonList.get(lesson_name)
-        return None
-
-    def get_all_lessons(self, course_code):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if hasattr(course, 'lessonList'):
-                return course.lessonList.values()
-        return []
-
-    def update_lesson(self, course_code, lesson_name, updated_lesson):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if hasattr(course, 'lessonList') and lesson_name in course.lessonList:
-                course.lessonList[lesson_name] = updated_lesson
+        # remove the course from the teacher's owned course list
+        if hasattr(self.root, 'teachers') and teacher_name in self.root.teachers:
+            teacher = self.root.teachers[teacher_name]
+            if teacher.checkCourse_ByCourseCode(course_code):
+                teacher.ownedCourseList.remove(course_code)
                 transaction.commit()
 
-    def delete_lesson(self, course_code, lesson_name):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if hasattr(course, 'lessonList') and lesson_name in course.lessonList:
-                del course.lessonList[lesson_name]
-                transaction.commit()
+        # remove the course from the student's enrolled course list
+        if hasattr(self.root, 'students'):
+            for student in self.root.students.values():
+                if student.checkCourse_ByCourseCode(course_code): # -> True
+                    student.enrolledCourseList.remove(course_code)
+                    transaction.commit()  
+        transaction.commit()
 
 class ModuleOperations:
     def __init__(self, root):
         self.root = root
 
+    ''' -----------------What Student can do to the module-----------------'''
+    def getModule_ByIndex(self, course_code, moduleIndex):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
+                return course.moduleList.get(moduleIndex)
+        return None
+    
+    def get_all_modules(self, course_code):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if hasattr(course, 'moduleList'):
+                return course.moduleList.values()
+        return []
+    ''' -----------------What Teacher can do to the module-----------------'''
     def create_module(self, module, course_code):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if not hasattr(course, 'moduleList'):
                 course.moduleList = BTrees.OOBTree.BTree()
-            course.moduleList.append(module)
+            course.add_module(module)
+
             transaction.commit()
 
-    def get_module(self, course_code, module_name):
+    # get module by index in the module list of the course object in the courses dictionary
+    def get_module_ByIndex(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList') and module_name in course.moduleList:
-                return course.moduleList.get(module_name)
-        return None
+            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
+                return course.moduleList.get(moduleIndex)
 
     def get_all_modules(self, course_code):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -277,59 +249,124 @@ class ModuleOperations:
                 return course.moduleList.values()
         return []
 
-    def update_module(self, course_code, module_name, updated_module):
+    def update_module(self, course_code, moduleIndex, updated_module):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList') and module_name in course.moduleList:
-                course.moduleList[module_name] = updated_module
+            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
+                course.moduleList[moduleIndex] = updated_module
                 transaction.commit()
 
-    def delete_module(self, course_code, module_name):
+    def delete_module(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList') and module_name in course.moduleList:
-                del course.moduleList[module_name]
+            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
+                del course.moduleList[moduleIndex]
                 transaction.commit()
+
+
+class LessonOperations:
+    def __init__(self, root):
+        self.root = root
+
+    def create_lesson(self, course_code, lesson):
+        # Check if the course exists
+
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            
+            # first go to the module list of the course
+            if hasattr(course, 'moduleList'):
+                for module in course.moduleList.values():
+                    if hasattr(module, 'lessonList'):
+                        module.lessonList.append(lesson)
+                        transaction.commit()
+        
+
+    def get_lesson_ByIndex(self, course_code, module_index, lesson_index):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if course.checkModule_ByIndex(module_index):    # True
+                module = course.moduleList[module_index]
+                if module.checkLesson_ByIndex(lesson_index):
+                    return module.moduleLessonList[lesson_index]
+        return None
+
+    def get_all_lessons(self, course_code, module_index):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if course.checkModule_ByIndex(module_index):    # True
+                module = course.moduleList[module_index]
+                return module.LessonList
+        return []
+
+    def update_lesson_ByIndex(self, course_code, module_index, lesson_index, updated_lesson):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if course.checkModule_ByIndex(module_index):    # True
+                module = course.moduleList[module_index]
+                if module.checkLesson_ByIndex(lesson_index):    # True
+                    module.moduleLessonList[lesson_index] = updated_lesson
+                    transaction.commit()
+        
+    def delete_lesson_ByIndex(self, course_code, module_index, lesson_index):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if course.checkModule_ByIndex(module_index):    # True
+                module = course.moduleList[module_index]
+                if module.checkLesson_ByIndex(lesson_index):    # True
+                    del module.moduleLessonList[lesson_index]
+                    transaction.commit()
 
 class QuizzOperations:
     def __init__(self, root):
         self.root = root
 
-    def create_quizz(self, quizz, course_code):
+    def create_quizz(self, course_code, quizz):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if not hasattr(course, 'quizzList'):
-                course.quizzList = BTrees.OOBTree.BTree()
-            course.quizzList[quizz.name] = quizz
-            transaction.commit()
+            
+            # first go to the module list of the course
+            if hasattr(course, 'moduleList'):
+                for module in course.moduleList.values():
+                    if hasattr(module, 'quizzList'):
+                        module.quizzList.append(quizz)
+                        transaction.commit()
 
-    def get_quizz(self, course_code, quizz_name):
+    def get_quizz_ByIndex(self, course_code, module_index, quizz_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'quizzList') and quizz_name in course.quizzList:
-                return course.quizzList.get(quizz_name)
+            if course.checkModule_ByIndex(module_index):
+                module = course.moduleList[module_index]
+                if module.checkQuizz_ByIndex(quizz_index):
+                    return module.QuizzList[quizz_index]
         return None
 
-    def get_all_quizzes(self, course_code):
+    def get_all_quizzs(self, course_code, module_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'quizzList'):
-                return course.quizzList.values()
+            if course.checkModule_ByIndex(module_index):
+                module = course.moduleList[module_index]
+                return module.QuizzList
         return []
 
-    def update_quizz(self, course_code, quizz_name, updated_quizz):
+    def update_quizz_ByIndex(self, course_code, module_index, quizz_index, updated_quizz):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'quizzList') and quizz_name in course.quizzList:
-                course.quizzList[quizz_name] = updated_quizz
-                transaction.commit()
+            if course.checkModule_ByIndex(module_index):
+                module = course.moduleList[module_index]
+                if module.checkQuizz_ByIndex(quizz_index):
+                    module.QuizzList[quizz_index] = updated_quizz
+                    transaction.commit()
 
-    def delete_quizz(self, course_code, quizz_name):
+    def delete_quizz_ByIndex(self, course_code, module_index, quizz_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'quizzList') and quizz_name in course.quizzList:
-                del course.quizzList[quizz_name]
-                transaction.commit()
+            if course.checkModule_ByIndex(module_index):
+                module = course.moduleList[module_index]
+                if module.checkQuizz_ByIndex(quizz_index):
+                    del module.QuizzList[quizz_index]
+                    transaction.commit()
+
 
 class ZODBHelper:
     def __init__(self, db_file):

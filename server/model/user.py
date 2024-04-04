@@ -21,12 +21,18 @@ class Student(User, persistent.Persistent):
   
             self.enrolledCourseList = enrolledCourseList
 
-      def enroll_course(self, course):
-            self.enrolledCourseList.append(course)
+      def enroll_course(self, courseCode):
+            self.enrolledCourseList.append(courseCode)
 
-      def unenroll_course(self, course):
-            self.enrolledCourseList.remove(course)
+      def unenroll_course(self, courseCode):
+            self.enrolledCourseList.remove(courseCode)
 
+      def checkCourse_ByCourseCode(self, courseCode):
+            if courseCode in self.enrolledCourseList:
+                  return True
+            else:
+                  return False
+            
       def print_details(self):
             print("Name:", self.name)
             print("Role:", self.role)
@@ -38,20 +44,13 @@ class Teacher(User, persistent.Persistent):
       def __init__(self, name, password, role,  ownedCourseList):
             super().__init__(name, password, role)
 
-            self.ownedCourseList = ownedCourseList
-
-      def own_course(self, course):
-            self.ownedCourseList.append(course)
-
-      def unown_course(self, course):
-            self.ownedCourseList.remove(course)
-
-      # check course by course name
-      def getCourse(self, courseName):
-            for course in self.ownedCourseList:
-                  if course.courseName == courseName:
-                        return course
-            return None
+            self.ownedCourseList = ownedCourseList          # List of courses by courseCode
+      # check course by courseCode
+      def checkCourse_ByCourseCode(self, courseCode):
+            if courseCode in self.ownedCourseList:
+                  return True
+            else:
+                  return False
 
       def print_details(self):
             print("Name:", self.name)
