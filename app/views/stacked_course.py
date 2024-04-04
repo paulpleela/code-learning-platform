@@ -17,6 +17,7 @@ from views.quiz_wrong_answer_list import Quiz_wrong_answer_list
 from views.quiz_answer_list import Quiz_answer_list
 from views.update_lesson import EditLessonForm
 from views.add_quiz_question import QuizQuestion
+from views.module_list import Module_list
 
 class Stacked_Course(QMainWindow):
     def __init__(self):
@@ -35,22 +36,24 @@ class Stacked_Course(QMainWindow):
         self.stacked.setObjectName(u"stackedWidget")
         self.stacked.setGeometry(QRect(0, 0, 811, 541))
         
+        ###################################### 0
         self.course_list = Course_list()   
         self.stacked.addWidget(self.course_list)
-        # self.course_list.pushButton.clicked.connect(self.go_to_lesson_quiz)
-        # self.course_list.pushButton_2.clicked.connect(self.go_to_lesson_quiz)
-        # self.course_list.pushButton_3.clicked.connect(self.go_to_lesson_quiz)
         
         for button in self.course_list.buttons:
-            button.clicked.connect(self.go_to_lesson_quiz)
+            button.clicked.connect(self.go_to_module)
         
         self.course_list.enroll_btn.clicked.connect(self.enroll_course)
         
-        ##########################################
+        ##########################################1
         
         self.lq_list = Lesson_Quiz_list()
         self.stacked.addWidget(self.lq_list)
-        self.lq_list.return_2.clicked.connect(self.go_to_course)
+        
+        self.lq_list.return_2.clicked.connect(self.go_to_module)
+        
+        for button in self.lq_list.quiz_buttons:
+            button.clicked.connect(self.go_to_quiz)
         
         ########################################2
         self.quiz = QuizPage()
@@ -61,7 +64,7 @@ class Stacked_Course(QMainWindow):
         
         self.quiz.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
         
-        # self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
+        self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
         
         #################################### 3
         self.show_ans = Quiz_answer_list()
@@ -69,6 +72,15 @@ class Stacked_Course(QMainWindow):
         
         self.show_ans.next.clicked.connect(self.go_to_lesson_quiz)
         self.show_ans.go_back.clicked.connect(self.go_to_quiz)
+        
+        #################################### 4
+        self.module_list = Module_list()
+        self.stacked.addWidget(self.module_list)
+        
+        for button in self.module_list.buttons:
+            button.clicked.connect(self.go_to_lesson_quiz)
+        
+        self.module_list.return_2.clicked.connect(self.go_to_course)
         
         QMetaObject.connectSlotsByName(Form)
     
@@ -83,10 +95,12 @@ class Stacked_Course(QMainWindow):
     
     def go_to_answer(self):
         self.stacked.setCurrentIndex(3)
+        
+    def go_to_module(self):
+        self.stacked.setCurrentIndex(4)
     
     def go_to_lesson(self):
         pass
-    
     
     def enroll_course(self):
         # if self.course_list.lineEdit.text() != '' :
@@ -95,7 +109,7 @@ class Stacked_Course(QMainWindow):
             self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
             button.setText(self.course_list.lineEdit.text())
             self.course_list.buttons.append(button)
-            button.clicked.connect(self.go_to_lesson_quiz)
+            button.clicked.connect(self.go_to_module)
             
             label = QLabel(self.course_list.scrollAreaWidgetContents)
             label.setObjectName(f"label_{self.course_list.index+1}")
