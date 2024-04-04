@@ -11,6 +11,12 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
 from PySide6 import QtCore, QtGui, QtWidgets
 from views.course_list import Course_list
 from views.lesson_quiz_list import Lesson_Quiz_list
+from views.quiz_page import QuizPage
+from views.quiz_correct_answer_list import Quiz_correct_answer_list
+from views.quiz_wrong_answer_list import Quiz_wrong_answer_list
+from views.quiz_answer_list import Quiz_answer_list
+from views.update_lesson import EditLessonForm
+from views.add_quiz_question import QuizQuestion
 
 class Stacked_Course(QMainWindow):
     def __init__(self):
@@ -46,6 +52,17 @@ class Stacked_Course(QMainWindow):
         self.stacked.addWidget(self.lq_list)
         self.lq_list.return_2.clicked.connect(self.go_to_course)
         
+        ########################################2
+        self.quiz = QuizPage()
+        self.stacked.addWidget(self.quiz)
+        
+        self.text_case = []
+        self.answer = []
+        
+        self.quiz.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
+        
+        self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
+        
         
         QMetaObject.connectSlotsByName(Form)
     
@@ -56,7 +73,7 @@ class Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(1)
         
     def go_to_quiz(self):
-        pass
+        self.stacked.setCurrentIndex(2)
     
     def go_to_lesson(self):
         pass
