@@ -17,6 +17,8 @@ from views.quiz_wrong_answer_list import Quiz_wrong_answer_list
 from views.quiz_answer_list import Quiz_answer_list
 from views.update_lesson import EditLessonForm
 from views.add_quiz_question import QuizQuestion
+from views.rename import Rename
+from views.teacher_module_list import Teacher_Module_list
 
 class Teacher_Stacked_Course(QMainWindow):
     def __init__(self):
@@ -30,23 +32,26 @@ class Teacher_Stacked_Course(QMainWindow):
         
         font1 = QFont()
         font1.setPointSize(20)
-        ##################### 0 
         self.stacked = QStackedWidget(Form)
         self.stacked.setObjectName(u"stackedWidget")
         self.stacked.setGeometry(QRect(0, 0, 811, 541))
         
+        ##################### 0 
         self.course_list = Teacher_Course_list()   
         self.stacked.addWidget(self.course_list)
         
         for button in self.course_list.course_buttons:
-            button.clicked.connect(self.go_to_lesson_quiz)
+            button.clicked.connect(self.go_to_module)
+        
+        for button in self.course_list.edit_buttons:
+            button.clicked.connect(self.go_to_course_edit)
         
         self.course_list.enroll_btn.clicked.connect(self.add_course)
         
         ###################################### 1 
         self.lq_list = Teacher_Lesson_Quiz_list()
         self.stacked.addWidget(self.lq_list)
-        self.lq_list.return_2.clicked.connect(self.go_to_course)
+        self.lq_list.return_2.clicked.connect(self.go_to_module)
         
         self.lq_list.add_lesson_btn.clicked.connect(self.add_lesson)
         self.lq_list.add_quiz_btn.clicked.connect(self.add_quiz)
@@ -68,7 +73,6 @@ class Teacher_Stacked_Course(QMainWindow):
         self.answer = []
         
         self.quiz.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
-        
         self.quiz.nav_bar.send_button.clicked.connect(self.go_to_answer)
         
         #################################### 3
@@ -89,6 +93,29 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.addWidget(self.add_quiz_question)
         
         self.add_quiz_question.go_back.clicked.connect(self.back_from_quiz)
+        #################################### 6
+        self.course_rename = Rename()
+        self.stacked.addWidget(self.course_rename)
+        
+        self.course_rename.cancel.clicked.connect(self.back_from_rename2course)
+        
+        ##################################### 7
+        self.module_list = Teacher_Module_list()
+        self.stacked.addWidget(self.module_list)
+        
+        self.module_list.return_2.clicked.connect(self.go_to_course)
+        self.module_list.enroll_btn.clicked.connect(self.add_module)
+        
+        for button in self.module_list.module_buttons:
+            button.clicked.connect(self.go_to_lesson_quiz)
+        for button in self.module_list.edit_buttons:
+            button.clicked.connect(self.go_to_module_edit)
+        
+        ################################# 8
+        self.module_rename = Rename()
+        self.stacked.addWidget(self.module_rename)
+        
+        self.module_rename.cancel.clicked.connect(self.back_from_rename2module)
      
     def go_to_course(self):
         self.stacked.setCurrentIndex(0)
@@ -105,6 +132,51 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_lesson(self):
         pass
     
+    def go_to_module(self):
+        self.stacked.setCurrentIndex(7)
+        
+    def go_to_course_edit(self):
+        self.stacked.setCurrentIndex(6)
+        
+        sender_button = self.sender()
+        
+        if sender_button in self.course_list.edit_buttons:
+            position = self.course_list.edit_buttons[sender_button]
+            self.course_rename.confirm.clicked.connect(lambda: self.submit_course_rename(position))
+    
+    def go_to_module_edit(self):
+        self.stacked.setCurrentIndex(8)
+        
+        sender_button = self.sender()
+        
+        if sender_button in self.module_list.edit_buttons:
+            position = self.module_list.edit_buttons[sender_button]
+            self.module_rename.confirm.clicked.connect(lambda: self.submit_module_rename(position))
+    
+    def back_from_rename2course(self):
+        self.stacked.setCurrentIndex(0)
+        self.course_rename.lineEdit.clear()
+        self.course_rename.confirm.clicked.disconnect()
+        
+    def back_from_rename2module(self):
+        self.stacked.setCurrentIndex(7)
+        self.module_rename.lineEdit.clear()
+        self.module_rename.confirm.clicked.disconnect()
+    
+#########################################
+    def submit_course_rename(self, index):
+        if self.course_rename.lineEdit.text():
+            item = self.course_list.gridLayout.itemAtPosition(index , 0).widget()
+            item.setText(self.course_rename.lineEdit.text())
+            self.back_from_rename2course()
+            
+    def submit_module_rename(self, index):
+        if self.module_rename.lineEdit.text():
+            item = self.module_list.gridLayout.itemAtPosition(index , 0).widget()
+            item.setText(self.module_rename.lineEdit.text())
+            self.back_from_rename2module()
+       
+#########################################
     def add_course(self):
         # if self.course_list.lineEdit.text() != '' :
             self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
@@ -113,13 +185,14 @@ class Teacher_Stacked_Course(QMainWindow):
             self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
             button.setText(self.course_list.lineEdit.text())
             self.course_list.course_buttons.append(button)
-            button.clicked.connect(self.go_to_lesson_quiz)
+            button.clicked.connect(self.go_to_module)
             
             edit = QPushButton(self.course_list.scrollAreaWidgetContents)
             edit.setObjectName(f"edit_{self.course_list.index + 1}")
             edit.setText('Edit')
             self.course_list.gridLayout.addWidget(edit, self.course_list.index, 1, 1, 1)
-            self.course_list.edit_buttons.append(edit)
+            self.course_list.edit_buttons[edit] = self.course_list.index
+            edit.clicked.connect(self.go_to_course_edit)
                 
             delete = QPushButton(self.course_list.scrollAreaWidgetContents)
             delete.setObjectName(f"delete_{self.course_list.index + 1}")
@@ -133,7 +206,37 @@ class Teacher_Stacked_Course(QMainWindow):
             self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
             
             self.course_list.lineEdit.clear()
-    
+            
+    def add_module(self):
+        # if self.module_list.lineEdit.text() != '' :
+            self.module_list.gridLayout.removeItem(self.module_list.verticalSpacer)
+            
+            button = QPushButton(self.module_list.scrollAreaWidgetContents)
+            self.module_list.gridLayout.addWidget(button, self.module_list.index, 0, 1, 1)
+            button.setText(self.module_list.lineEdit.text())
+            self.module_list.module_buttons.append(button)
+            button.clicked.connect(self.go_to_lesson_quiz)
+            
+            edit = QPushButton(self.module_list.scrollAreaWidgetContents)
+            edit.setObjectName(f"edit_{self.module_list.index + 1}")
+            edit.setText('Edit')
+            self.module_list.gridLayout.addWidget(edit, self.module_list.index, 1, 1, 1)
+            self.module_list.edit_buttons[edit] = self.module_list.index
+            edit.clicked.connect(self.go_to_module_edit)
+                
+            delete = QPushButton(self.module_list.scrollAreaWidgetContents)
+            delete.setObjectName(f"delete_{self.module_list.index + 1}")
+            delete.setText('Delete')
+            self.module_list.gridLayout.addWidget(delete, self.module_list.index, 2, 1, 1)
+            self.module_list.delete_buttons[delete] = self.module_list.index
+            delete.clicked.connect(self.module_list.delete_module)
+            
+            self.module_list.index += 1
+
+            self.module_list.gridLayout.addItem(self.module_list.verticalSpacer, self.module_list.index, 0, 1, 1)
+            
+            self.module_list.lineEdit.clear()
+##########################################
     def edit_lesson(self, index):
         lesson_name = self.update_lesson.lesson_name_edit.text()
         lesson_file_path = self.update_lesson.lesson_file_edit.toPlainText()
@@ -153,8 +256,7 @@ class Teacher_Stacked_Course(QMainWindow):
             # print(item.text())
             item.setText(self.update_lesson.lesson_name_edit.text())
             self.back_from_edit()
-        
-        
+               
     def back_from_edit(self):
         self.update_lesson.lesson_name_edit.clear()
         self.update_lesson.remove_file()

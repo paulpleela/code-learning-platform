@@ -27,7 +27,7 @@ class Teacher_Course_list(QMainWindow):
         self.course_buttons = []
         self.index = 0
         
-        self.edit_buttons = []
+        self.edit_buttons = {}
         
         self.delete_buttons = {}   
         
@@ -50,6 +50,7 @@ class Teacher_Course_list(QMainWindow):
         self.gridLayout = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(u"gridLayout")
         
+
         # for loop making pushButton and Label
         for _ in range(len(self.course)):
             button = QPushButton(self.scrollAreaWidgetContents)
@@ -62,7 +63,7 @@ class Teacher_Course_list(QMainWindow):
             edit.setObjectName(f"edit_{self.index + 1}")
             edit.setText('Edit')
             self.gridLayout.addWidget(edit, self.index, 1, 1, 1)
-            self.edit_buttons.append(edit)
+            self.edit_buttons[edit] = self.index
             
             delete = QPushButton(self.scrollAreaWidgetContents)
             delete.setObjectName(f"delete_{self.index + 1}")

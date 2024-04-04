@@ -24,6 +24,7 @@ class Lesson_Quiz_list(QMainWindow):
     def __init__(self):
         super().__init__()
         self.lessons = ['abc', 'def', 'ghi']
+        self.cID = "abcdefgh"
         self.lesson_buttons = []
         self.lesson_index = 0
         
@@ -74,6 +75,10 @@ class Lesson_Quiz_list(QMainWindow):
         self.quiz_scroll.setWidget(self.quiz_widget)
         
         self.return_2.setText('Return to ...')
+        
+        self.courseID = QLabel(Form)
+        self.courseID.setText(f"courseID : {self.cID}")
+        self.courseID.setGeometry(QRect(350, 520, 300, 24))
         
         # for loop making pushButton and Label
         # Lesson
