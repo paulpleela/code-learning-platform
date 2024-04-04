@@ -87,7 +87,7 @@ async def login_user(user: UserLogin):
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    return {"message": "Login successful", "username": user.name}
+    return {"message": "Login successful", "username": user.name, "role": user.role}
 
 '''----------------------------------    Course      ---------------------------------- 
     '''

@@ -10,7 +10,7 @@
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt, QObject, Signal)
+    QSize, QTime, QUrl, Qt, QObject, Signal, Slot)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
@@ -33,6 +33,7 @@ class Sidebar(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(950, 600)
+        self.role = MainWindow.role
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -319,8 +320,11 @@ class Sidebar(object):
         self.stackedWidget.addWidget(self.page_2)
         ###################
         
-        # stack_course = Stacked_Course()
-        stack_course = Teacher_Stacked_Course()
+        if self.role == "teacher":
+            stack_course = Teacher_Stacked_Course()
+        else:
+            stack_course = Stacked_Course()
+
         self.page_3 = stack_course
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)
@@ -464,3 +468,15 @@ class Sidebar(object):
         # self.label_7.setText(QCoreApplication.translate("MainWindow", u"Teaching Page", None))
     # retranslateUi
 
+    def set_role(self, role):
+        self.role = role
+        if self.role == "teacher":
+            stack_course = Teacher_Stacked_Course()
+        else:
+            stack_course = Stacked_Course()
+
+        self.page_3 = stack_course
+        self.stackedWidget.removeWidget(self.stackedWidget.widget(2))  # Remove the current page_3
+        self.stackedWidget.insertWidget(2, self.page_3)
+        self.stackedWidget.setCurrentIndex(0)
+        self.dashboard_btn_1.setChecked(True) # Toggle UI index selection
