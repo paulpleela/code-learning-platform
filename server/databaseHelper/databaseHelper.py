@@ -152,7 +152,38 @@ class CourseOperations:
             return self.root.courses.values()
         return []
 
-    
+    ''' -----------------What Student can do to the course----------------- '''
+    def enroll_course(self, course_code, student_name):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+
+            if hasattr(self.root, 'students') and student_name in self.root.students:
+                student = self.root.students[student_name]
+                student.enrolledCourseList.append(course_code)
+                transaction.commit()
+            transaction.commit()
+        
+        # add student to the student list of the course
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if hasattr(course, 'studentList'):
+                course.studentList.append(student_name)
+                transaction.commit()
+
+    def unenroll_course(self, course_code, student_name):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+
+            if hasattr(self.root, 'students') and student_name in self.root.students:
+                student = self.root.students[student_name]
+                student.enrolledCourseList.remove(course_code)
+                transaction.commit()
+            transaction.commit()
+        
+        # remove student from the student list of the course
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if hasattr(course, 'studentList'):
+                course.studentList.remove(student_name)
+                transaction.commit()
     ''' -----------------What Teacher can do to the course----------------- '''
 
     def create_course(self, course, teacher_name):
@@ -211,7 +242,7 @@ class ModuleOperations:
     def __init__(self, root):
         self.root = root
 
-    ''' -----------------What Student can do to the module-----------------'''
+    ''' -----------------What Both students and teachers can do to the module-----------------'''
     def getModule_ByIndex(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
@@ -235,20 +266,6 @@ class ModuleOperations:
 
             transaction.commit()
 
-    # get module by index in the module list of the course object in the courses dictionary
-    def get_module_ByIndex(self, course_code, moduleIndex):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
-                return course.moduleList.get(moduleIndex)
-
-    def get_all_modules(self, course_code):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList'):
-                return course.moduleList.values()
-        return []
-
     def update_module(self, course_code, moduleIndex, updated_module):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
@@ -268,20 +285,7 @@ class LessonOperations:
     def __init__(self, root):
         self.root = root
 
-    def create_lesson(self, course_code, lesson):
-        # Check if the course exists
-
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            
-            # first go to the module list of the course
-            if hasattr(course, 'moduleList'):
-                for module in course.moduleList.values():
-                    if hasattr(module, 'lessonList'):
-                        module.lessonList.append(lesson)
-                        transaction.commit()
-        
-
+    ''' -----------------What Both students and teachers can do to the lesson-----------------'''
     def get_lesson_ByIndex(self, course_code, module_index, lesson_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
@@ -298,6 +302,21 @@ class LessonOperations:
                 module = course.moduleList[module_index]
                 return module.LessonList
         return []
+    
+    ''' -----------------What Teacher can do to the lesson-----------------'''
+    def create_lesson(self, course_code, lesson):
+        # Check if the course exists
+
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            
+            # first go to the module list of the course
+            if hasattr(course, 'moduleList'):
+                for module in course.moduleList.values():
+                    if hasattr(module, 'lessonList'):
+                        module.lessonList.append(lesson)
+                        transaction.commit()
+ 
 
     def update_lesson_ByIndex(self, course_code, module_index, lesson_index, updated_lesson):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -321,17 +340,7 @@ class QuizzOperations:
     def __init__(self, root):
         self.root = root
 
-    def create_quizz(self, course_code, quizz):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            
-            # first go to the module list of the course
-            if hasattr(course, 'moduleList'):
-                for module in course.moduleList.values():
-                    if hasattr(module, 'quizzList'):
-                        module.quizzList.append(quizz)
-                        transaction.commit()
-
+    ''' -----------------What Both students and teachers can do to the quizz-----------------'''
     def get_quizz_ByIndex(self, course_code, module_index, quizz_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
@@ -348,6 +357,19 @@ class QuizzOperations:
                 module = course.moduleList[module_index]
                 return module.QuizzList
         return []
+
+    ''' -----------------What Teacher can do to the quizz-----------------'''
+    def create_quizz(self, course_code, quizz):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            
+            # first go to the module list of the course
+            if hasattr(course, 'moduleList'):
+                for module in course.moduleList.values():
+                    if hasattr(module, 'quizzList'):
+                        module.quizzList.append(quizz)
+                        transaction.commit()
+
 
     def update_quizz_ByIndex(self, course_code, module_index, quizz_index, updated_quizz):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -366,7 +388,11 @@ class QuizzOperations:
                 if module.checkQuizz_ByIndex(quizz_index):
                     del module.QuizzList[quizz_index]
                     transaction.commit()
+class TestCaseOperations:
+    def __init__(self, root):
+        self.root = root
 
+    
 
 class ZODBHelper:
     def __init__(self, db_file):
@@ -378,9 +404,12 @@ class ZODBHelper:
 
         self.user_registration = UserRegistration(self.root)
         self.user_authentication = UserAuthentication(self.root)
+
         self.course_operations = CourseOperations(self.root)
-        self.lesson_operations = LessonOperations(self.root)
+
         self.module_operations = ModuleOperations(self.root) 
+
+        self.lesson_operations = LessonOperations(self.root)
         self.quizz_operations = QuizzOperations(self.root)   
 
     def close(self):
