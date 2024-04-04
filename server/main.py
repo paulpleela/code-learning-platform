@@ -66,13 +66,13 @@ print("------------------------------   Server running......    ----------------
 @app.post("/api/user/register")
 async def register_user(user: UserRegister):
 
-    if user.role == "I'm a Student":
+    if user.role == "student":
         if db_helper.user_authentication.student_exists(user.username):
-            raise HTTPException(status_code=400, detail="Student already exists")
+            raise HTTPException(status_code=400, detail="This username is taken")
     
-    elif user.role == "I'm a Teacher":
+    elif user.role == "teacher":
         if db_helper.user_authentication.teacher_exists(user.username):
-            raise HTTPException(status_code=400, detail="Teacher already exists")
+            raise HTTPException(status_code=400, detail="This username is taken")
     db_helper.user_registration.register_user(user)
 
     return {"message": "user registered successfully"}
@@ -85,7 +85,7 @@ async def login_user(user: UserLogin):
     db_helper.user_authentication.get_user_details()
 
     if not user:
-        raise HTTPException(status_code=400, detail="Invalid credentials")
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     return {"message": "Login successful", "username": user.name}
 
