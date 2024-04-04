@@ -70,7 +70,7 @@ TestCaseResult
     - result
 
 '''
-class CourseCodeGenerator:
+class CodeGenerator:
     def __init__(self):
         self.used_course_codes = set()
 
@@ -84,8 +84,6 @@ class CourseCodeGenerator:
             if course_code not in self.used_course_codes:
                 self.used_course_codes.add(course_code)
                 return course_code
-
-fileCodeGenerator = CourseCodeGenerator()
 
 class UserRegistration:
     def __init__(self, root):
@@ -131,6 +129,7 @@ class UserAuthentication:
                 return user
         return None
 
+
     def get_user_details(self):
         if hasattr(self.root, 'students'):
             for student in self.root.students.values():
@@ -153,6 +152,10 @@ class CourseOperations:
             return self.root.courses.values()
         return []
 
+    def get_all_courseNames(self):
+        if hasattr(self.root, 'courses'):
+            return [course.courseName for course in self.root.courses.values()]
+        return []
     ''' -----------------What Student can do to the course----------------- '''
     def enroll_course(self, course_code, student_name):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -243,6 +246,7 @@ class ModuleOperations:
     def __init__(self, root):
         self.root = root
 
+
     ''' -----------------What Both students and teachers can do to the module-----------------'''
     def getModule_ByIndex(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -302,22 +306,24 @@ class LessonOperations:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):    # True
                 module = course.moduleList[module_index]
-                return module.LessonList
+                return module.lessonList
         return []
     
     ''' -----------------What Teacher can do to the lesson-----------------'''
-    def create_lesson(self, course_code, lesson):
+    def create_lesson(self, course_code, moduleIndex, lesson):
         # Check if the course exists
 
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             
             # first go to the module list of the course
-            if hasattr(course, 'moduleList'):
-                for module in course.moduleList.values():
-                    if hasattr(module, 'lessonList'):
-                        module.lessonList.append(lesson)
-                        transaction.commit()
+            if course.checkModule_ByIndex(moduleIndex):
+                module = course.moduleList[moduleIndex]
+                if not hasattr(module, 'lessonList'):
+                    module.lessonList = BTrees.OOBTree.BTree()
+                module.lessonList.append(lesson)
+                transaction.commit()
+                
  
 
     def update_lesson_ByIndex(self, course_code, module_index, lesson_index, updated_lesson):
@@ -326,7 +332,7 @@ class LessonOperations:
             if course.checkModule_ByIndex(module_index):    # True
                 module = course.moduleList[module_index]
                 if module.checkLesson_ByIndex(lesson_index):    # True
-                    module.moduleLessonList[lesson_index] = updated_lesson
+                    module.lessonList[lesson_index] = updated_lesson
                     transaction.commit()
         
     def delete_lesson_ByIndex(self, course_code, module_index, lesson_index):
@@ -335,7 +341,7 @@ class LessonOperations:
             if course.checkModule_ByIndex(module_index):    # True
                 module = course.moduleList[module_index]
                 if module.checkLesson_ByIndex(lesson_index):    # True
-                    del module.moduleLessonList[lesson_index]
+                    del module.lessonList[lesson_index]
                     transaction.commit()
 
 class QuizzOperations:
@@ -349,7 +355,7 @@ class QuizzOperations:
             if course.checkModule_ByIndex(module_index):
                 module = course.moduleList[module_index]
                 if module.checkQuizz_ByIndex(quizz_index):
-                    return module.QuizzList[quizz_index]
+                    return module.quizzList[quizz_index]
         return None
 
     def get_all_quizzs(self, course_code, module_index):
@@ -357,7 +363,7 @@ class QuizzOperations:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):
                 module = course.moduleList[module_index]
-                return module.QuizzList
+                return module.quizzList
         return []
 
     ''' -----------------What Teacher can do to the quizz-----------------'''
@@ -379,7 +385,7 @@ class QuizzOperations:
             if course.checkModule_ByIndex(module_index):
                 module = course.moduleList[module_index]
                 if module.checkQuizz_ByIndex(quizz_index):
-                    module.QuizzList[quizz_index] = updated_quizz
+                    module.quizzList[quizz_index] = updated_quizz
                     transaction.commit()
 
     def delete_quizz_ByIndex(self, course_code, module_index, quizz_index):
@@ -388,7 +394,7 @@ class QuizzOperations:
             if course.checkModule_ByIndex(module_index):
                 module = course.moduleList[module_index]
                 if module.checkQuizz_ByIndex(quizz_index):
-                    del module.QuizzList[quizz_index]
+                    del module.quizzList[quizz_index]
                     transaction.commit()
 
 class TestCaseOperations:
@@ -413,7 +419,8 @@ class ZODBHelper:
         self.module_operations = ModuleOperations(self.root) 
 
         self.lesson_operations = LessonOperations(self.root)
-        self.quizz_operations = QuizzOperations(self.root)   
+        self.quizz_operations = QuizzOperations(self.root) 
+          
 
     def close(self):
         self.connection.close()

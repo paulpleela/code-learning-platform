@@ -1,15 +1,17 @@
 import persistent
 
-class Question(persistent.Persistent):
+class Quiz(persistent.Persistent):
       def __init__(self, questionText, maxScore, testCasesList, TimeLimit, submissionDict, which_student_finsished_StatusDict):
             self.questionText = questionText
             self.maxScore = maxScore
             self.testCasesList = testCasesList
-            self.TimeLimit = TimeLimit
-            
+            self.timeLimit = TimeLimit
+
             self.submissionDict = submissionDict
             self.which_student_finsished_StatusDict = which_student_finsished_StatusDict # self.studentStatus = {"username": True}
       
+
+
       def edit_details(self, questionText, maxScore, TimeLimit):
             self.questionText = questionText
             self.maxScore = maxScore

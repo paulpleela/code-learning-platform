@@ -1,11 +1,11 @@
 import persistent
 
 class Module(persistent.Persistent):
-      def __init__(self, Name, LessonList, QuestionsList, DueDate, which_student_finsished_StatusDict):
-            self.Name = Name
-            self.LessonList = LessonList        # List of lesson objects
-            self.QuestionsList = QuestionsList  # List of question objects
-            self.DueDate = DueDate              # Deadline for the module
+      def __init__(self, Name, LessonList, QuizzList, DueDate, which_student_finsished_StatusDict):
+            self.name = Name
+            self.lessonList = LessonList        # List of lesson objects
+            self.quizzList = QuizzList  # List of question objects
+            self.dueDate = DueDate              # Deadline for the module
             self.which_student_finsished_StatusDict = which_student_finsished_StatusDict # {"username": True}
 
 
@@ -15,8 +15,8 @@ class Module(persistent.Persistent):
             else:
                   return False
             
-      def checkQuestion_ByIndex(self, questionIndex):
-            if questionIndex < len(self.QuestionsList):
+      def checkQuizz_ByIndex(self, quizzIndex):
+            if quizzIndex < len(self.quizzList):
                   return True
             else:
                   return False

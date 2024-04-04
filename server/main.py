@@ -5,12 +5,15 @@ from typing import Optional, Dict
 import os, sys
 from ZODB import FileStorage, DB
 
+from fastapi import FastAPI, Request
 app = FastAPI()
 
 
 from database import *
 
-code_generator = CourseCodeGenerator()
+courseCode_generator = CodeGenerator()
+fileCodeGenerator = CodeGenerator()
+
 db_helper = ZODBHelper('mydatabase.fs')
  
  # Base model for student registration, login, and course creation
@@ -34,27 +37,27 @@ class Module(BaseModel):
     lessonList: list
     questionsList: list
     dueDate: datetime.datetime
-    Status: str
+    status: str
 
 class Lesson(BaseModel):
     name: str
 
-class Question(BaseModel):
-    questionName: str
-    questionText: str
-    questionType: str
-    questionOptions: list
-    questionAnswer: str
+class Quizz(BaseModel):
+    name: str
+    content: str
+    answer: str
+
 
 class Submission(BaseModel):
-    submissionName: str
-    submissionContent: str
-    submissionStatus: str
+    name: str
+    content: str
+    answer: str
 
 class testCase(BaseModel):
-    testCaseName: str
-    testCaseInput: str
-    testCaseOutput: str
+    name: str
+    input: str
+    output: str
+
 print("------------------------------   Server running......    ------------------------------")
 
 @app.post("/api/user/register")
@@ -87,9 +90,9 @@ async def login_user(user: UserLogin):
     '''
 @app.post("api/teacher/course")
 async def course(course: CourseCreated):
-    course_code = code_generator.generate_code()
+    course_code = courseCode_generator.generate_code()
     course_created_date = datetime.datetime.now()
-    course = Course(course.courseName, course_created_date, course_code, course.teacherName, [], [], [])
+    course = Course(course.name, course_created_date, course_code, course.teacherName, [], [], [])
 
     db_helper.course_operations.create_course(course, course.teacherName)
 
@@ -168,14 +171,39 @@ async def delete_module(moduleName: str):
     return {"message": "Module deleted successfully"}
 
 '''----------------------------------    Lesson      ---------------------------------- '''
-@app.post("/lesson")
-async def create_lesson(lesson: Lesson):
+@app.post("/lesson/{courseCode}/{moduleIndex}/{lessonName}")
+async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file: UploadFile = File(None)):
 
-    lesson = Lesson(lesson.name, lesson.lessonFile)
+    if file is None:
+        return {"error": "No file provided"}
 
-    db_helper.lesson_operations.create_lesson(lesson)
+    if file.content_type == "application/pdf":
+        file_extension = ".pdf"
+    elif file.content_type == "video/mp4":
+        file_extension = ".mp4"
+    else:
+        return {"error": "Unsupported file type"}
 
-    return {"message": "Lesson created successfully"}
+    lessonCode = CodeGenerator.generate_course_code(prefix="L", length=8)
+    # Generate a unique filename
+    file_name = f"{lessonCode}{file_extension}"
+
+    # Create the directory if it doesn't exist
+    UPLOAD_DIRECTORY = "static"
+    if not os.path.exists(UPLOAD_DIRECTORY):
+        os.makedirs(UPLOAD_DIRECTORY)
+
+    # Save the file to the "static" directory
+    file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
+    with open(file_path, "wb") as buffer:
+        buffer.write(await file.read())
+
+    # Optionally, you can save the file information to a database
+    # For example:
+    lessonObject = Lesson(lessonName, file_path)
+    db_helper.lesson_operations.create_lesson(courseCode, lessonObject)
+
+    return {"message": "Lesson created successfully", "file_path": file_path}
 
 @app.get("/lessons")
 async def get_all_lessons():
@@ -204,39 +232,41 @@ async def delete_lesson(lessonName: str):
 
     return {"message": "Lesson deleted successfully"}
 
-'''----------------------------------    Question      ---------------------------------- '''
+'''----------------------------------    Quizz      ---------------------------------- '''
 
-@app.post("/question")
-async def create_question(question: Question):
+@app.post("/quizz")
+async def create_qizz(question: Quizz):
     db_helper.question_operations.create_question(question)
 
     return {"message": "Question created successfully"}
 
-@app.get("/questions")
+@app.get("/quizzs")
 async def get_all_questions():
 
-    questions = db_helper.question_operations.get_all_questions()
-    return {"questions": questions}
+    quizzList = db_helper.quizz_operations.get_all_quizzs()
+    return {"quizzList": quizzList}
 
-@app.get("/question/{questionName}")
-async def get_question(questionName: str):
-    question = db_helper.question_operations.get_question(questionName)
-    if not question:
+@app.get("/quizz/{quizzIndex}")
+async def get_quizz_ByIndex(quizzIndex: str):
+    quizz = db_helper.quizz_operations.get_quizz_by_index(quizzIndex)
+    if not quizz:
+        raise HTTPException(status_code=404, detail="Quizz not found")
+
+    return quizz
+
+@app.put("/question/{quizzIndex}")
+async def update_question(quizzIndex: str, quiz: Quiz):
+    db_helper.quizz_operations.update_quizz(quizzIndex, quiz)
+
+
+@app.delete("/question/{quizzIndex}")
+async def delete_question(quizzIndex: str):
+    
+    existing_quizz = db_helper.quizz_operations.get_quizz_by_index(quizzIndex)
+    if not existing_quizz:
         raise HTTPException(status_code=404, detail="Question not found")
-
-    return question
-
-@app.put("/question/{questionName}")
-async def update_question(questionName: str, question: Question):
-    db_helper.question_operations.update_question(questionName, question)
-
-@app.delete("/question/{questionName}")
-async def delete_question(questionName: str):
-    existing_question = db_helper.get_question(questionName)
-    if not existing_question:
-        raise HTTPException(status_code=404, detail="Question not found")
-
-    db_helper.delete_question(questionName)
+    
+    db_helper.quizz_operations.delete_quizz(quizzIndex)
 
     return {"message": "Question deleted successfully"}
 

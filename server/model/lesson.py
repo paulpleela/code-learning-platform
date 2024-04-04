@@ -3,6 +3,7 @@ import persistent
 class Lesson(persistent.Persistent):
       def __init__(self, name, filePath):
             self.name = name
+
             self.filePath = filePath      # file path name SUPPORTS 2 Formats pdf or video mp4      
 
       def edit_details(self, name, filePath):
