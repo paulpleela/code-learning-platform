@@ -6,6 +6,8 @@ import BTrees.OOBTree
 import random
 import string
 from model.user import *
+import bcrypt
+
 '''
 Database stored in ZODB
 
@@ -89,15 +91,17 @@ class UserRegistration:
         self.root = root
 
     def register_user(self, user):
+        hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
+
         if user.role == "student":
             if not hasattr(self.root, 'students'):
                 self.root.students = BTrees.OOBTree.BTree()
-            student = Student(user.username, user.password, user.role, [])
+            student = Student(user.username, hashed_password, user.role, [])
             self.root.students[student.name] = student
         elif user.role == "teacher":
             if not hasattr(self.root, 'teachers'):
                 self.root.teachers = BTrees.OOBTree.BTree()
-            teacher = Teacher(user.username, user.password, user.role, [])
+            teacher = Teacher(user.username, hashed_password, user.role, [])
             self.root.teachers[teacher.name] = teacher
         transaction.commit()
 
@@ -118,11 +122,11 @@ class UserAuthentication:
     def login_user(self, username, password):
         if hasattr(self.root, 'students') and username in self.root.students:
             user = self.root.students[username]
-            if user.password == password:
+            if bcrypt.checkpw(password.encode('utf-8'), user.password):
                 return user
         elif hasattr(self.root, 'teachers') and username in self.root.teachers:
             user = self.root.teachers[username]
-            if user.password == password:
+            if bcrypt.checkpw(password.encode('utf-8'), user.password):
                 return user
         return None
 
