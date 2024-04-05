@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
     QScrollArea, QSizePolicy, QSpacerItem, QWidget, QStackedWidget, QMainWindow)
 
 from PySide6 import QtCore, QtGui, QtWidgets
+
 from views.course_list import Course_list
 from views.lesson_quiz_list import Lesson_Quiz_list
 from views.quiz_page import QuizPage

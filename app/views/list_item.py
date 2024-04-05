@@ -16,58 +16,52 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QPushButton, QScrollArea, QSizePolicy,
-    QSpacerItem, QVBoxLayout, QWidget)
+    QSpacerItem, QVBoxLayout, QWidget, QMainWindow, QLineEdit, QGridLayout, QLabel)
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-class ListItem(QtWidgets.QWidget):
+class ListItem(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.name = ['list1', 'list2', 'list3']
+        self.buttons = []
+        self.index = 0
+        
         self.setupUi(self)
+        
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
+        Form.resize(801, 551)
+        
         self.scrollArea = QScrollArea(Form)
         self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setGeometry(QRect(10, 10, 781, 531))
+        self.scrollArea.setGeometry(QRect(10, 10, 781, 491))
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 779, 529))
-        self.verticalLayoutWidget = QWidget(self.scrollAreaWidgetContents)
-        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 781, 531))
-        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        ##############################
-        self.pushButton = QPushButton(self.verticalLayoutWidget)
-        self.pushButton.setObjectName(u"pushButton")
-
-        self.verticalLayout.addWidget(self.pushButton)
-
-        self.pushButton_2 = QPushButton(self.verticalLayoutWidget)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-
-        self.verticalLayout.addWidget(self.pushButton_2)
-        ##########################
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 779, 489))
+        self.gridLayout = QGridLayout(self.scrollAreaWidgetContents)
+        self.gridLayout.setObjectName(u"gridLayout")
         
-        #########################
-
-        self.verticalLayout.addItem(self.verticalSpacer)
+        # for loop making pushButton and Label
+        for _ in range(len(self.name)):
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"pushButton_{self.index + 1}")
+            button.setText(self.name[self.index])
+            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
+            self.buttons.append(button)
+            
+            self.index += 1
+        # makes verticleSpacer
+        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
+        
+        ############################################
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-
-        self.retranslateUi(Form)
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.pushButton.setText(QCoreApplication.translate("Form", u"PushButton", None))
-        self.pushButton_2.setText(QCoreApplication.translate("Form", u"PushButton", None))
-    # retranslateUi
 

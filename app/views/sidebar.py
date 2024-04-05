@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
 import views.resource_rc
 
+from views.list_item import ListItem
 from views.quiz_page import QuizPage
 from views.calendar import Calendar
 from views.lesson_pdf import LessonPDF
@@ -27,6 +28,7 @@ from views.course_list import Course_list
 from views.lesson_quiz_list import Lesson_Quiz_list
 from views.stacked_course import Stacked_Course
 from views.teacher_stacked_course import Teacher_Stacked_Course
+from views.stacked_certificate import Stacked_Certificate
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
@@ -286,8 +288,8 @@ class Sidebar(object):
         self.stackedWidget.setObjectName(u"stackedWidget")
         
         ################################################
-        quiz_page = QuizPage()
-        self.page = quiz_page
+        list_item = ListItem()
+        self.page = list_item
         
         self.page.setObjectName(u"page")
         self.gridLayout_2 = QGridLayout(self.page)
@@ -363,7 +365,9 @@ class Sidebar(object):
         # self.page_3.addWidget(self.lq_list)
         
         #####################
-        self.page_4 = QWidget()
+        
+        stack_certificate = Stacked_Certificate()
+        self.page_4 = stack_certificate
         self.page_4.setObjectName(u"page_4")
         self.gridLayout_5 = QGridLayout(self.page_4)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
