@@ -200,7 +200,7 @@ async def delete_module(courseCode:str, moduleIndex: str):
     if not existing_module:
         raise HTTPException(status_code=404, detail="Module not found")
 
-    db_helper.module_operations.delete_module(moduleIndex)
+    db_helper.module_operations.delete_module(courseCode, moduleIndex)
 
     return {"message": "Module deleted successfully"}
 
