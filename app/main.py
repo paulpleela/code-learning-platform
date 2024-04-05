@@ -54,6 +54,7 @@ def register():
         "role": register_window.role_selector.currentData()
     }
 
+    print("XX", data)
     if len(register_window.username_input.text()) == 0:
         register_window.set_error_message("Please enter a username")
         return 
