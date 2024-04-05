@@ -177,7 +177,7 @@ async def get_all_modulesNames(courseCode: str):
     # create module name list from modules object list
     moduleNames = []
     for module in modules:
-        moduleNames.append(module.name)
+        moduleNames.append(module["name"])
     
     return {"moduleNames": moduleNames}
 
