@@ -169,14 +169,14 @@ class CourseOperations:
         return ret
     
     def get_teacher_course_list(self, username):
-        ret = []
+        ret = {}
         if hasattr(self.root, 'teachers'):
             teacher = self.root.teachers[username]
             course_codes = teacher.ownedCourseList
-        if hasattr(self.root, 'courses'):
-            for course_code in course_codes:
-                course_obj = self.root.courses[course_code]
-                ret.append({course_code: course_obj.Name})
+            if hasattr(self.root, 'courses'):
+                for course_code in course_codes:
+                    course_obj = self.root.courses[course_code]
+                    ret[course_code] = course_obj.Name
         return ret
     
     ''' -----------------What Student can do to the course----------------- '''
@@ -233,7 +233,9 @@ class CourseOperations:
             teacher = self.root.teachers[teacher_username]
             teacher.ownedCourseList.append(course)
             transaction.commit()
-        transaction.commit()
+            return True
+        transaction.abort()  # Rollback the transaction if the teacher is not found
+        return False  # Return False if the teacher is not found
 
         
     def get_courses_by_teacherName(self, teacher_username):

@@ -25,15 +25,14 @@ class Teacher_Course_list(QMainWindow):
         super().__init__()
         self.username = username
 
-        response = requests.get("http://127.0.0.1:8000/api/teacher/ownedCourses/{}".format(self.username))
-
+        response = requests.get("http://127.0.0.1:8000/api/teacher/course_list", params={"username": username})
+        print(response)
         course_names = []
 
         if response.status_code == 200:
                 data = response.json()
                 course_names_dict = data.get("course_names", {})
                 course_names = list(course_names_dict.values())
-
 
         self.course = course_names
         self.course_buttons = []

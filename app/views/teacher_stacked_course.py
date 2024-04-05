@@ -20,6 +20,8 @@ from views.add_quiz_question import QuizQuestion
 from views.rename import Rename
 from views.teacher_module_list import Teacher_Module_list
 
+import requests
+
 class Teacher_Stacked_Course(QMainWindow):
     def __init__(self, username):
         super().__init__()
@@ -179,33 +181,42 @@ class Teacher_Stacked_Course(QMainWindow):
        
 #########################################
     def add_course(self):
-        # if self.course_list.lineEdit.text() != '' :
-            self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
-            
-            button = QPushButton(self.course_list.scrollAreaWidgetContents)
-            self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
-            button.setText(self.course_list.lineEdit.text())
-            self.course_list.course_buttons.append(button)
-            button.clicked.connect(self.go_to_module)
-            
-            edit = QPushButton(self.course_list.scrollAreaWidgetContents)
-            edit.setObjectName(f"edit_{self.course_list.index + 1}")
-            edit.setText('Edit')
-            self.course_list.gridLayout.addWidget(edit, self.course_list.index, 1, 1, 1)
-            self.course_list.edit_buttons[edit] = self.course_list.index
-            edit.clicked.connect(self.go_to_course_edit)
-                
-            delete = QPushButton(self.course_list.scrollAreaWidgetContents)
-            delete.setObjectName(f"delete_{self.course_list.index + 1}")
-            delete.setText('Delete')
-            self.course_list.gridLayout.addWidget(delete, self.course_list.index, 2, 1, 1)
-            self.course_list.delete_buttons[delete] = self.course_list.index
-            delete.clicked.connect(self.course_list.delete_course)
-            
-            self.course_list.index += 1
+        if self.course_list.lineEdit.text() != '' :
+            response = requests.post("http://127.0.0.1:8000/api/teacher/course", json={"name": self.course_list.lineEdit.text(), "teacherName": self.username})
 
-            self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
-            
+            # Check if the request was successful
+            if response.status_code == 200:
+                # Print the response message
+                if response.json()["success"]:
+                    self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
+                    
+                    button = QPushButton(self.course_list.scrollAreaWidgetContents)
+                    self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
+                    button.setText(self.course_list.lineEdit.text())
+                    self.course_list.course_buttons.append(button)
+                    button.clicked.connect(self.go_to_module)
+                    
+                    edit = QPushButton(self.course_list.scrollAreaWidgetContents)
+                    edit.setObjectName(f"edit_{self.course_list.index + 1}")
+                    edit.setText('Edit')
+                    self.course_list.gridLayout.addWidget(edit, self.course_list.index, 1, 1, 1)
+                    self.course_list.edit_buttons[edit] = self.course_list.index
+                    edit.clicked.connect(self.go_to_course_edit)
+                        
+                    delete = QPushButton(self.course_list.scrollAreaWidgetContents)
+                    delete.setObjectName(f"delete_{self.course_list.index + 1}")
+                    delete.setText('Delete')
+                    self.course_list.gridLayout.addWidget(delete, self.course_list.index, 2, 1, 1)
+                    self.course_list.delete_buttons[delete] = self.course_list.index
+                    delete.clicked.connect(self.course_list.delete_course)
+                    
+                    self.course_list.index += 1
+
+                    self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+            else:
+                # Print an error message if the request failed
+                print("Error:", response.text)
+
             self.course_list.lineEdit.clear()
             
     def add_module(self):

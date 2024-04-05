@@ -90,8 +90,12 @@ async def login_user(user: UserLogin):
 @app.get("/api/student/course_list")
 async def get_course_list(username: str):
     courses = db_helper.course_operations.get_student_course_list(username)
-    return {"course_names": courses}  
+    return {"course_names": courses}
 
+@app.get("/api/teacher/course_list")
+async def get_course_list(username: str):
+    courses = db_helper.course_operations.get_teacher_course_list(username)
+    return {"course_names": courses}
 
 
 
@@ -103,11 +107,9 @@ async def course(courseCreated: CourseCreated):
     course_created_date = datetime.datetime.now()
     course = Course(courseCreated.name, course_created_date, course_code, courseCreated.teacherName, [], [], [])
 
-    db_helper.course_operations.create_course(course, course.courseTeacherName)
-
-
+    success = db_helper.course_operations.create_course(course, course.courseTeacherName)
         
-    return {"message": "Course created successfully"}
+    return {"success": success}
 
 # get operation
 @app.get("/courses")
