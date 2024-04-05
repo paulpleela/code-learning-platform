@@ -300,7 +300,7 @@ class ModuleOperations:
             course = self.root.courses[course_code]
             
             if course.checkModule_ByIndex(moduleIndex):
-                return course.moduleList[moduleIndex]
+                return course.moduleList[int(moduleIndex)]
         return None
     
     def get_all_modules(self, course_code):
