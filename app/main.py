@@ -49,12 +49,16 @@ def authenticate():
 def register():
     data = {
         "username": register_window.username_input.text(),
+        "name": register_window.name_input.text(),
         "password": register_window.password_input.text(),
         "role": register_window.role_selector.currentData()
     }
 
     if len(register_window.username_input.text()) == 0:
         register_window.set_error_message("Please enter a username")
+        return 
+    elif len(register_window.name_input.text()) == 0:
+        register_window.set_error_message("Please enter your full name")
         return 
     elif len(register_window.password_input.text()) == 0:
         register_window.set_error_message("Please enter a password")

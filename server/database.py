@@ -14,7 +14,7 @@ from model.user import *
 from model.course import *
 from model.lesson import *
 from model.module import *
-from server.model.quiz import *
+from model.quiz import *
 from model.submission import *
 from model.testCaseResult import *
 from model.testCase import *
