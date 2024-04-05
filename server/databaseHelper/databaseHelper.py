@@ -330,16 +330,15 @@ class ModuleOperations:
     def update_module(self, course_code, moduleIndex, updated_module):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
-                course.moduleList[moduleIndex] = updated_module
-                transaction.commit()
+
+            self.root.courses[course_code].moduleList[moduleIndex] = updated_module
 
     def delete_module(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
-                del course.moduleList[moduleIndex]
-                transaction.commit()
+            
+            # delete the module from the course
+            del course.moduleList[moduleIndex]
 
 
 class LessonOperations:
