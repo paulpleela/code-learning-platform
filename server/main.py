@@ -125,6 +125,14 @@ async def get_course(courseCode: str):
 
     return course
 
+@app.get("/course/getCourseName/{courseCode}")
+async def get_course_name(courseCode: str):
+    course = db_helper.course_operations.get_course_by_code(courseCode)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    return course.Name
+
 @app.get("/api/teacher/ownedCourses/{teacherName}")
 async def get_owned_courses(teacherName: str):
     ownedCourses = db_helper.course_operations.get_courses_by_teacherName(teacherName)
