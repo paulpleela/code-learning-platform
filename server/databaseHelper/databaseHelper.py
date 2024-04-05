@@ -298,8 +298,9 @@ class ModuleOperations:
     def getModule_ByIndex(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
-            if hasattr(course, 'moduleList') and moduleIndex in course.moduleList:
-                return course.moduleList.get(moduleIndex)
+            
+            if course.checkModule_ByIndex(moduleIndex):
+                return course.moduleList[moduleIndex]
         return None
     
     def get_all_modules(self, course_code):
