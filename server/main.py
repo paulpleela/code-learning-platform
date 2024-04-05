@@ -158,14 +158,14 @@ async def create_module(module: ModuleModel):
 
     return {"message": "Module created successfully"}
 
-@app.get("/modules")
-async def get_all_modules():
-    modules = db_helper.module_operations.get_all_modules()
+@app.get("/modules/{courseCode}")
+async def get_all_modules(courseCode: str):
+    modules = db_helper.module_operations.get_all_modules(courseCode)
     return {"modules": modules}
 
-@app.get("/module/{moduleName}")
-async def get_module(moduleName: str):
-    module = db_helper.module_operations.get_module(moduleName)
+@app.get("/module/{courseCode}/{moduleIndex}")
+async def get_moduleByIndex(courseCode: str, moduleIndex: str):
+    module = db_helper.module_operations.get_module(courseCode, moduleIndex)
     if not module:
         raise HTTPException(status_code=404, detail="Module not found")
 
