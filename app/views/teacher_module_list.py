@@ -34,7 +34,6 @@ class Teacher_Module_list(QMainWindow):
         
         self.setupUi(self)
         
-        
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
@@ -104,7 +103,9 @@ class Teacher_Module_list(QMainWindow):
         self.return_2.setText('Return to ...')
 
         QMetaObject.connectSlotsByName(Form)
+        self.update_ui_with_modules()
     # setupUi
+    
     def delete_module(self):
         sender_button = self.sender()
                 
@@ -112,18 +113,27 @@ class Teacher_Module_list(QMainWindow):
         if sender_button in self.delete_buttons:
             position = self.delete_buttons[sender_button]
         
-        if position != None:
+        if position is not None:
             response = requests.delete(f"http://127.0.0.1:8000/module/{self.cID}/{position}")
+            print("del res", response)
             if response:
+                # Remove widgets in the same row as the delete button
                 for j in range(self.gridLayout.columnCount()):
-                    item = self.gridLayout.itemAtPosition(position, j)
-                    # item = self.gridLayout.itemAtPosition(row, j)
-                    if item:
-                        widget = item.widget()
-                        self.gridLayout.removeWidget(widget)
-                        widget.deleteLater()
-                del self.delete_buttons[sender_button]
-            # print(self.delete_buttons)
+                    for widget_position in range(len(self.delete_buttons)):
+                        item = self.gridLayout.itemAtPosition(widget_position, j)
+                        if item is not None:
+                            widget = item.widget()
+                            if widget is not None:
+                                self.gridLayout.removeWidget(widget)
+                                widget.deleteLater()
+                # Clear references to deleted buttons
+                self.delete_buttons.clear()
+                self.edit_buttons.clear()
+                self.module_buttons.clear()
+                self.index = 0
+                # Fetch and update modules to reflect the changes
+                self.set_courseCode(self.cID)
+
 
     def set_courseCode(self, courseCode):
         self.cID = courseCode
@@ -152,12 +162,17 @@ class Teacher_Module_list(QMainWindow):
         # Clear the layout
         for i in reversed(range(self.gridLayout.count())):
             widget = self.gridLayout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-
+            if widget:
+                widget.deleteLater()
+            # if widget is not None:
+            #     widget.setParent(None)
+        self.gridLayout.removeItem(self.verticalSpacer)
         # Reinitialize index
         self.index = 0
-
+        self.module_buttons = []
+        self.edit_buttons = {}
+        self.delete_buttons = {}
+        
         # Add new modules to the layout
         for module_name in self.module:
             # Add module button
@@ -184,6 +199,9 @@ class Teacher_Module_list(QMainWindow):
 
             self.index += 1
 
+        #Add VerticalSpacer
+        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
         # Update course ID label
         self.courseID.setText(f"courseID : {self.cID}")
 
