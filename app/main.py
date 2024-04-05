@@ -30,7 +30,8 @@ def authenticate():
         login_window.clear_fields()
 
         role = response_data["role"]
-        main_window.set_role(role)
+        username = response_data["username"]
+        main_window.set_user(role, username)
 
         widget.setCurrentIndex(2)
         widget.setWindowTitle("PyQuizT")

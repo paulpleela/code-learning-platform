@@ -7,6 +7,8 @@ import random
 import string
 from model.user import *
 import bcrypt
+from model.course import Course
+import json
 
 '''
 Database stored in ZODB
@@ -76,7 +78,7 @@ class CodeGenerator:
     def __init__(self):
         self.used_course_codes = set()
 
-    def generate_course_code(self, prefix='C', length=6):
+    def generate_code(self, prefix='C', length=6):
         while True:
             # Generate a random portion for the course code
             random_portion = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -150,30 +152,79 @@ class CourseOperations:
         return None
     
     def get_all_courses(self):
+        def serialize_course(obj):
+            if isinstance(obj, Course):
+                # Convert Course object to a dictionary
+                return {
+                    "Name": obj.Name,
+                    "CreatedDate": obj.CreatedDate,
+                    "courseCode": obj.courseCode,
+                    "courseTeacherName": obj.courseTeacherName,
+                    # Serialize the moduleList, studentList, and studentStatusList
+                    "moduleList": [module.__dict__ for module in obj.moduleList],
+                    "studentList": obj.studentList,
+                    "studentStatusList": obj.studentStatusList
+                }
+            raise TypeError("Object of type Course is not JSON serializable")
+        serialized_courses = {}
         if hasattr(self.root, 'courses'):
-            return self.root.courses.values()
-        return []
+            serialized_courses = json.dumps(self.root.courses, default=serialize_course)
+        return serialized_courses
 
     def get_all_courseNames(self):
         if hasattr(self.root, 'courses'):
             return [course.courseName for course in self.root.courses.values()]
         return []
+    
+    def get_student_course_list(self, username):
+        ret = {}
+        if hasattr(self.root, 'students'):
+            student = self.root.students[username]
+            course_codes = student.enrolledCourseList
+            if hasattr(self.root, 'courses'):
+                for course_code in course_codes:
+                    course_obj = self.root.courses[course_code]
+                    ret[course_code] = course_obj.Name
+        return ret
+    
+    def get_teacher_course_list(self, username):
+        ret = []
+        if hasattr(self.root, 'teachers'):
+            teacher = self.root.teachers[username]
+            course_codes = teacher.ownedCourseList
+        if hasattr(self.root, 'courses'):
+            for course_code in course_codes:
+                course_obj = self.root.courses[course_code]
+                ret.append({course_code: course_obj.Name})
+        return ret
+    
     ''' -----------------What Student can do to the course----------------- '''
     def enroll_course(self, course_code, student_username):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+        if not hasattr(self.root, 'courses') or course_code not in self.root.courses:
+            # Course not found
+            return False
 
-            if hasattr(self.root, 'students') and student_username in self.root.students:
-                student = self.root.students[student_username]
-                student.enrolledCourseList.append(course_code)
-                transaction.commit()
+        if not hasattr(self.root, 'students') or student_username not in self.root.students:
+            # Student not found
+            return False
+
+        # Enroll the student in the course
+        student = self.root.students[student_username]
+        student.enrolledCourseList.append(course_code)
+
+        # Commit the student transaction
+        transaction.commit()
+
+        # Check if the course has a student list attribute
+        course = self.root.courses[course_code]
+        if hasattr(course, 'studentList'):
+            course.studentList.append(student_username)
+
+            # Commit the course transaction
             transaction.commit()
-        
-        # add student to the student list of the course
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if hasattr(course, 'studentList'):
-                course.studentList.append(student_username)
-                transaction.commit()
+
+        return True
+
 
     def unenroll_course(self, course_code, student_username):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:

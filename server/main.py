@@ -87,15 +87,23 @@ async def login_user(user: UserLogin):
 
     return {"message": "Login successful", "username": user.username, "role": user.role}
 
+@app.get("/api/student/course_list")
+async def get_course_list(username: str):
+    courses = db_helper.course_operations.get_student_course_list(username)
+    return {"course_names": courses}  
+
+
+
+
 '''----------------------------------    Course      ---------------------------------- 
     '''
-@app.post("api/teacher/course")
-async def course(course: CourseCreated):
+@app.post("/api/teacher/course")
+async def course(courseCreated: CourseCreated):
     course_code = courseCode_generator.generate_code()
     course_created_date = datetime.datetime.now()
-    course = Course(course.name, course_created_date, course_code, course.teacherName, [], [], [])
+    course = Course(courseCreated.name, course_created_date, course_code, courseCreated.teacherName, [], [], [])
 
-    db_helper.course_operations.create_course(course, course.teacherName)
+    db_helper.course_operations.create_course(course, course.courseTeacherName)
 
 
         
@@ -115,10 +123,16 @@ async def get_course(courseCode: str):
 
     return course
 
-@app.get("api/teacher/ownedCourses/{teacherName}")
+@app.get("/api/teacher/ownedCourses/{teacherName}")
 async def get_owned_courses(teacherName: str):
-    ownedCourses = db_helper.course_operations.get_courses_by_teacher(teacherName)
+    ownedCourses = db_helper.course_operations.get_courses_by_teacherName(teacherName)
     return {"courses": ownedCourses}
+
+@app.post("/api/enroll")
+async def enroll_course(courseCode: str, username: str):
+    success = db_helper.course_operations.enroll_course(courseCode, username)
+    return {"success": success}
+
 
 # update operation 
 @app.put("/course/{courseCode}")

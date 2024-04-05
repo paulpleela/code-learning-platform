@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
     QScrollArea, QSizePolicy, QSpacerItem, QWidget, QStackedWidget, QMainWindow)
 
 from PySide6 import QtCore, QtGui, QtWidgets
-
+import requests
 from views.course_list import Course_list
 from views.lesson_quiz_list import Lesson_Quiz_list
 from views.quiz_page import QuizPage
@@ -21,8 +21,9 @@ from views.add_quiz_question import QuizQuestion
 from views.module_list import Module_list
 
 class Stacked_Course(QMainWindow):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
+        self.username = username
         self.setupUi(self)
         
     def setupUi(self, Form):
@@ -38,7 +39,7 @@ class Stacked_Course(QMainWindow):
         self.stacked.setGeometry(QRect(0, 0, 811, 541))
         
         ###################################### 0
-        self.course_list = Course_list()   
+        self.course_list = Course_list(self.username)
         self.stacked.addWidget(self.course_list)
         
         for button in self.course_list.buttons:
@@ -104,23 +105,33 @@ class Stacked_Course(QMainWindow):
         pass
     
     def enroll_course(self):
-        # if self.course_list.lineEdit.text() != '' :
-            self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
-            button = QPushButton(self.course_list.scrollAreaWidgetContents)
-            self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
-            button.setText(self.course_list.lineEdit.text())
-            self.course_list.buttons.append(button)
-            button.clicked.connect(self.go_to_module)
-            
-            label = QLabel(self.course_list.scrollAreaWidgetContents)
-            label.setObjectName(f"label_{self.course_list.index+1}")
-            label.setText(QCoreApplication.translate("Form", u"Complete?", None))
-            
-            self.course_list.lineEdit.clear()
+        if self.course_list.lineEdit.text() != '' :
+            response = requests.post("http://127.0.0.1:8000/api/enroll", params={"courseCode": self.course_list.lineEdit.text(), "username": self.username})
 
-            self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
-            
-            self.course_list.index += 1
+            # Check if the request was successful
+            if response.status_code == 200:
+                # Print the response message
+                if response.json()["success"]:
+                    self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
+                    button = QPushButton(self.course_list.scrollAreaWidgetContents)
+                    self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
+                    button.setText(self.course_list.lineEdit.text())
+                    self.course_list.buttons.append(button)
+                    button.clicked.connect(self.go_to_module)
+                    
+                    label = QLabel(self.course_list.scrollAreaWidgetContents)
+                    label.setObjectName(f"label_{self.course_list.index+1}")
+                    label.setText(QCoreApplication.translate("Form", u"Complete?", None))
+                    
+                    self.course_list.lineEdit.clear()
 
-            self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+                    self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
+                    
+                    self.course_list.index += 1
+
+                    self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+            else:
+                # Print an error message if the request failed
+                print("Error:", response.text)
+
             self.course_list.lineEdit.clear()

@@ -36,6 +36,8 @@ class Sidebar(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(950, 600)
         self.role = MainWindow.role
+        self.username = MainWindow.username
+
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -326,7 +328,7 @@ class Sidebar(object):
         if self.role == "teacher":
             stack_course = Teacher_Stacked_Course()
         else:
-            stack_course = Stacked_Course()
+            stack_course = Stacked_Course(self.username)
 
         self.page_3 = stack_course
         self.page_3.setObjectName(u"page_3")
@@ -473,12 +475,13 @@ class Sidebar(object):
         # self.label_7.setText(QCoreApplication.translate("MainWindow", u"Teaching Page", None))
     # retranslateUi
 
-    def set_role(self, role):
+    def set_user(self, role, username):
         self.role = role
+        self.username = username
         if self.role == "teacher":
-            stack_course = Teacher_Stacked_Course()
+            stack_course = Teacher_Stacked_Course(username)
         else:
-            stack_course = Stacked_Course()
+            stack_course = Stacked_Course(username)
 
         self.page_3 = stack_course
         self.stackedWidget.removeWidget(self.stackedWidget.widget(2))  # Remove the current page_3
