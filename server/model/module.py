@@ -10,13 +10,13 @@ class Module(persistent.Persistent):
 
 
       def checkLesson_ByIndex(self, lessonIndex):
-            if lessonIndex < len(self.LessonList):
+            if int(lessonIndex) < len(self.LessonList):
                   return True
             else:
                   return False
             
       def checkQuizz_ByIndex(self, quizzIndex):
-            if quizzIndex < len(self.quizzList):
+            if int(quizzIndex) < len(self.quizzList):
                   return True
             else:
                   return False
