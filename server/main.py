@@ -33,28 +33,28 @@ class CourseCreated(BaseModel):
     name: str
     teacherName: str
 
-class Module(BaseModel):
+class ModuleModel(BaseModel):
     name: str
     lessonList: list
     questionsList: list
     dueDate: datetime.datetime
     status: str
 
-class Lesson(BaseModel):
+class LessonModel(BaseModel):
     name: str
 
-class Quizz(BaseModel):
-    name: str
-    content: str
-    answer: str
-
-
-class Submission(BaseModel):
+class QuizzModel(BaseModel):
     name: str
     content: str
     answer: str
 
-class testCase(BaseModel):
+
+class SubmissionModel(BaseModel):
+    name: str
+    content: str
+    answer: str
+
+class testCaseModel(BaseModel):
     name: str
     input: str
     output: str
@@ -137,7 +137,7 @@ async def delete_course(courseCode: str):
 
 '''----------------------------------    Module      ---------------------------------- '''
 @app.post("/module")
-async def create_module(module: Module):
+async def create_module(module: ModuleModel):
     db_helper.module_operations.create_module(module)
 
 
@@ -202,7 +202,7 @@ async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file
     # Optionally, you can save the file information to a database
     # For example:
     lessonObject = Lesson(lessonName, file_path)
-    db_helper.lesson_operations.create_lesson(courseCode, lessonObject)
+    db_helper.lesson_operations.create_lesson(courseCode, moduleIndex, lessonObject)
 
     return {"message": "Lesson created successfully", "file_path": file_path}
 
@@ -220,7 +220,7 @@ async def get_lesson(lessonName: str):
     return lesson
 
 @app.put("/lesson/{lessonName}")
-async def update_lesson(lessonName: str, lesson: Lesson):
+async def update_lesson(lessonName: str, lesson: LessonModel):
     db_helper.lesson_operations.update_lesson(lessonName, lesson)
 
 @app.delete("/lesson/{lessonName}")
@@ -236,8 +236,8 @@ async def delete_lesson(lessonName: str):
 '''----------------------------------    Quizz      ---------------------------------- '''
 
 @app.post("/quizz")
-async def create_qizz(question: Quizz):
-    db_helper.question_operations.create_question(question)
+async def create_qizz(Quizz: QuizzModel):
+    db_helper.question_operations.create_question(Quizz)
 
     return {"message": "Question created successfully"}
 
@@ -256,7 +256,7 @@ async def get_quizz_ByIndex(quizzIndex: str):
     return quizz
 
 @app.put("/question/{quizzIndex}")
-async def update_question(quizzIndex: str, quiz: Quiz):
+async def update_question(quizzIndex: str, quiz: QuizzModel):
     db_helper.quizz_operations.update_quizz(quizzIndex, quiz)
 
 
@@ -274,7 +274,7 @@ async def delete_question(quizzIndex: str):
 '''----------------------------------    Submission      ---------------------------------- '''
 
 @app.post("/submission")
-async def create_submission(submission: Submission):
+async def create_submission(submission: SubmissionModel):
     db_helper.submission_operations.create_submission(submission)
 
     return {"message": "Submission created successfully"}
@@ -294,7 +294,7 @@ async def get_submission(submissionName: str):
     return submission
 
 @app.put("/submission/{submissionName}")
-async def update_submission(submissionName: str, submission: Submission):
+async def update_submission(submissionName: str, submission: SubmissionModel):
     db_helper.submission_operations.update_submission(submissionName, submission)
 
 
@@ -311,7 +311,7 @@ async def delete_submission(submissionName: str):
 '''----------------------------------    Test Case      ---------------------------------- '''
 
 @app.post("/testcase")
-async def create_testcase(testcase: testCase):
+async def create_testcase(testcase: testCaseModel):
     db_helper.testcase_operations.create_testcase(testcase)
 
     return {"message": "Test Case created successfully"}
