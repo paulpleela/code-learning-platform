@@ -137,19 +137,20 @@ async def enroll_course(courseCode: str, username: str):
 
 
 # update operation 
-@app.put("/course/{courseCode}")
-async def update_course(courseCode: str, course: CourseCreated):
-    db_helper.course_operations.update_course(courseCode, course)
+@app.put("/course/rename/{courseCode}/{newName}")
+async def update_course(courseCode: str, newName: str):
+    db_helper.course_operations.rename_course(courseCode, newName)
 
-@app.delete("/course/{courseCode}")
-async def delete_course(courseCode: str):
-    existing_course = db_helper.get_course(courseCode)
-    if not existing_course:
-        raise HTTPException(status_code=404, detail="Course not found")
+@app.delete("/course/{courseCode}/{username}")
+async def delete_course(courseCode: str, username: str):
+    success = False
+    existing_course = db_helper.course_operations.get_course_by_code(courseCode)
+    # if not existing_course:
+    #     raise HTTPException(status_code=404, detail="Course not found")
 
-    db_helper.delete_course(courseCode)
+    success = db_helper.course_operations.delete_course_ByCourseCode(courseCode, username)
 
-    return {"message": "Course deleted successfully"}
+    return {"success": success}
 
 '''----------------------------------    Module      ---------------------------------- '''
 @app.post("/module")

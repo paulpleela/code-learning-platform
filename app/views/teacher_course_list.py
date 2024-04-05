@@ -28,13 +28,16 @@ class Teacher_Course_list(QMainWindow):
         response = requests.get("http://127.0.0.1:8000/api/teacher/course_list", params={"username": username})
         print(response)
         course_names = []
+        course_codes = []
 
         if response.status_code == 200:
                 data = response.json()
                 course_names_dict = data.get("course_names", {})
                 course_names = list(course_names_dict.values())
+                course_codes = list(course_names_dict.keys())
 
         self.course = course_names
+        self.course_codes = course_codes
         self.course_buttons = []
         self.index = 0
         
@@ -109,19 +112,45 @@ class Teacher_Course_list(QMainWindow):
         QMetaObject.connectSlotsByName(Form)
     # setupUi
     def delete_course(self):
-        sender_button = self.sender()
-                
+        sender_button = self.sender()                    
         position = None
         if sender_button in self.delete_buttons:
             position = self.delete_buttons[sender_button]
-        
+        print(position)
         if position != None:
-            for j in range(self.gridLayout.columnCount()):
-                item = self.gridLayout.itemAtPosition(position, j)
-                # item = self.gridLayout.itemAtPosition(row, j)
-                if item:
-                    widget = item.widget()
-                    self.gridLayout.removeWidget(widget)
-                    widget.deleteLater()
-            del self.delete_buttons[sender_button]
-            # print(self.delete_buttons)
+            response = requests.delete(f"http://127.0.0.1:8000/course/{self.course_codes[position]}/{self.username}")
+
+            if response.status_code == 200:
+                data = response.json()
+                success = data["success"]
+                print(f"Deletion success: {success}")
+                # code to remove from UI            
+                if position != None:
+                    for j in range(self.gridLayout.columnCount()):
+                        item = self.gridLayout.itemAtPosition(position, j)
+                        # item = self.gridLayout.itemAtPosition(row, j)
+                        if item:
+                            widget = item.widget()
+                            self.gridLayout.removeWidget(widget)
+                            widget.deleteLater()
+                    del self.delete_buttons[sender_button]
+                    # print(self.delete_buttons)
+            else:
+                print(f"Failed to delete course. Status code: {response.status_code}, Error: {response.text}")
+
+    def updateAPI(self):
+        response = requests.get("http://127.0.0.1:8000/api/teacher/course_list", params={"username": self.username})
+        course_names = []
+        course_codes= []
+
+        if response.status_code == 200:
+            data = response.json()
+            course_names_dict = data.get("course_names", {})
+            course_names = list(course_names_dict.values())
+            course_codes = list(course_names_dict.keys())
+
+        self.course = course_names
+        self.course_codes = course_codes
+
+    def renameCourse(self, index, newName):
+        requests.put(f"http://127.0.0.1:8000/course/rename/{self.course_codes[index]}/{newName}")

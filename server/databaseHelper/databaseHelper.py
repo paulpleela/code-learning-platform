@@ -245,10 +245,10 @@ class CourseOperations:
         return []
     
     # update course by course code and updated course
-    def update_course(self, course_code, updated_course):
+    def rename_course(self, course_code, newName):
         
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            self.root.courses[course_code] = updated_course
+            self.root.courses[course_code].Name = newName
             transaction.commit()
 
     def update_courseName_ByCourseCode(self, course_code, updated_courseName):
@@ -259,24 +259,35 @@ class CourseOperations:
 
     # delete course by course code
     def delete_course_ByCourseCode(self, course_code, teacher_username):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            del self.root.courses[course_code]
-            transaction.commit()
+        try:
+            # Check if all necessary roots are present
+            if not hasattr(self.root, 'courses') or not hasattr(self.root, 'teachers') or not hasattr(self.root, 'students'):
+                raise Exception("Some required roots are missing.")
 
-        # remove the course from the teacher's owned course list
-        if hasattr(self.root, 'teachers') and teacher_username in self.root.teachers:
-            teacher = self.root.teachers[teacher_username]
-            if teacher.checkCourse_ByCourseCode(course_code):
-                teacher.ownedCourseList.remove(course_code)
-                transaction.commit()
+            if course_code in self.root.courses:
+                del self.root.courses[course_code]
 
-        # remove the course from the student's enrolled course list
-        if hasattr(self.root, 'students'):
+            # remove the course from the teacher's owned course list
+            if teacher_username in self.root.teachers:
+                teacher = self.root.teachers[teacher_username]
+                if teacher.checkCourse_ByCourseCode(course_code):
+                    teacher.ownedCourseList.remove(course_code)
+
+            # remove the course from the student's enrolled course list
             for student in self.root.students.values():
-                if student.checkCourse_ByCourseCode(course_code): # -> True
+                if student.checkCourse_ByCourseCode(course_code):
                     student.enrolledCourseList.remove(course_code)
-                    transaction.commit()  
-        transaction.commit()
+
+            # Commit the transaction after all changes
+            transaction.commit()
+            return True  # Operation succeeded
+
+        except Exception as e:
+            # Rollback transaction in case of any exception
+            transaction.rollback()
+            print("An error occurred:", str(e))
+            return False  # Operation failed
+
 
 class ModuleOperations:
     def __init__(self, root):

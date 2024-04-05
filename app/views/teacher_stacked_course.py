@@ -169,6 +169,7 @@ class Teacher_Stacked_Course(QMainWindow):
 #########################################
     def submit_course_rename(self, index):
         if self.course_rename.lineEdit.text():
+            self.course_list.renameCourse(index, self.course_rename.lineEdit.text())
             item = self.course_list.gridLayout.itemAtPosition(index , 0).widget()
             item.setText(self.course_rename.lineEdit.text())
             self.back_from_rename2course()
@@ -213,6 +214,8 @@ class Teacher_Stacked_Course(QMainWindow):
                     self.course_list.index += 1
 
                     self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
+                    self.course_list.updateAPI()
+
             else:
                 # Print an error message if the request failed
                 print("Error:", response.text)
@@ -248,6 +251,7 @@ class Teacher_Stacked_Course(QMainWindow):
             self.module_list.gridLayout.addItem(self.module_list.verticalSpacer, self.module_list.index, 0, 1, 1)
             
             self.module_list.lineEdit.clear()
+
 ##########################################
     def edit_lesson(self, index):
         lesson_name = self.update_lesson.lesson_name_edit.text()
