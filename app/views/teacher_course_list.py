@@ -19,11 +19,23 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
     QScrollArea, QSizePolicy, QSpacerItem, QWidget, QStackedWidget, QMainWindow, QLineEdit)
 
 from PySide6 import QtCore, QtGui, QtWidgets
-
+import requests
 class Teacher_Course_list(QMainWindow):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
-        self.course = ['abc', 'def', 'ghi']
+        self.username = username
+
+        response = requests.get("http://127.0.0.1:8000/api/teacher/ownedCourses/{}".format(self.username))
+
+        course_names = []
+
+        if response.status_code == 200:
+                data = response.json()
+                course_names_dict = data.get("course_names", {})
+                course_names = list(course_names_dict.values())
+
+
+        self.course = course_names
         self.course_buttons = []
         self.index = 0
         

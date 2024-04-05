@@ -21,8 +21,9 @@ from views.rename import Rename
 from views.teacher_module_list import Teacher_Module_list
 
 class Teacher_Stacked_Course(QMainWindow):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
+        self.username = username
         self.setupUi(self)
         
     def setupUi(self, Form):
@@ -37,7 +38,7 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.setGeometry(QRect(0, 0, 811, 541))
         
         ##################### 0 
-        self.course_list = Teacher_Course_list()   
+        self.course_list = Teacher_Course_list(self.username)   
         self.stacked.addWidget(self.course_list)
         
         for button in self.course_list.course_buttons:

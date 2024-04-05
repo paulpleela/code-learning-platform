@@ -7,8 +7,6 @@ import random
 import string
 from model.user import *
 import bcrypt
-from model.course import Course
-import json
 
 '''
 Database stored in ZODB
@@ -152,24 +150,7 @@ class CourseOperations:
         return None
     
     def get_all_courses(self):
-        def serialize_course(obj):
-            if isinstance(obj, Course):
-                # Convert Course object to a dictionary
-                return {
-                    "Name": obj.Name,
-                    "CreatedDate": obj.CreatedDate,
-                    "courseCode": obj.courseCode,
-                    "courseTeacherName": obj.courseTeacherName,
-                    # Serialize the moduleList, studentList, and studentStatusList
-                    "moduleList": [module.__dict__ for module in obj.moduleList],
-                    "studentList": obj.studentList,
-                    "studentStatusList": obj.studentStatusList
-                }
-            raise TypeError("Object of type Course is not JSON serializable")
-        serialized_courses = {}
-        if hasattr(self.root, 'courses'):
-            serialized_courses = json.dumps(self.root.courses, default=serialize_course)
-        return serialized_courses
+        pass
 
     def get_all_courseNames(self):
         if hasattr(self.root, 'courses'):
