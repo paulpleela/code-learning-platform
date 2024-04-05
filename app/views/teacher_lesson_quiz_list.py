@@ -19,12 +19,14 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
     QScrollArea, QSizePolicy, QSpacerItem, QWidget, QMainWindow)
 
 from PySide6 import QtCore, QtGui, QtWidgets
-
+import requests
 class Teacher_Lesson_Quiz_list(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.lessons = ['abc', 'def', 'ghi']
         self.cID = "abcdefgh"
+        self.moduleIndex = None
+
+        self.lessons = []
         
         self.lesson_buttons = []
         self.lesson_delete = {}
@@ -38,6 +40,7 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         self.quiz_index = 0
         
         self.setupUi(self)
+
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
@@ -183,5 +186,44 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
                     widget.deleteLater()
             del self.quiz_delete[sender_button]
 
+    def updateLessonsUi(self, lessons):
+        # Clear existing lesson buttons
+        for button in self.lesson_buttons:
+            button.deleteLater()
+        self.lesson_buttons = []
+        self.lesson_index = 0
+        
+        # Add new lessons
+        for lesson_name in lessons:
+            button = QPushButton(self.lesson_widget)
+            button.setObjectName(f"lesson_{self.lesson_index + 1}")
+            button.setText(lesson_name)
+            self.lesson_gridLayout.addWidget(button, self.lesson_index, 0, 1, 1)
+            self.lesson_buttons.append(button)
+            
+            edit = QPushButton(self.lesson_widget)
+            edit.setObjectName(f"edit_{self.lesson_index + 1}")
+            edit.setText('Edit')
+            self.lesson_gridLayout.addWidget(edit, self.lesson_index, 1, 1, 1)
+            self.lesson_edit[edit] = self.lesson_index
+            
+            delete = QPushButton(self.lesson_widget)
+            delete.setObjectName(f"delete_{self.lesson_index + 1}")
+            delete.setText('Delete')
+            delete.clicked.connect(self.delete_lesson)
+            self.lesson_gridLayout.addWidget(delete, self.lesson_index, 2, 1, 1)
+            self.lesson_delete[delete] = self.lesson_index 
+            
+            self.lesson_index += 1
 
+    def set_courseCode_moduleIndex(self, courseCode, moduleIndex):
+        self.courseID = courseCode
+        self.moduleIndex = moduleIndex
+        print("moduleIndex: ", moduleIndex)
+        response = requests.get(f"http://127.0.0.1:8000/lessons/{courseCode}/{moduleIndex}")
 
+        if response.status_code == 200:
+            data = response.json()
+            lessons = [lesson_obj["name"] for lesson_obj in data["lessons"]]
+            self.updateLessonsUi(lessons)
+            print(data)

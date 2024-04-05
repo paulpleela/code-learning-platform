@@ -114,8 +114,13 @@ class Teacher_Stacked_Course(QMainWindow):
         self.module_list.return_2.clicked.connect(self.go_to_course)
         self.module_list.enroll_btn.clicked.connect(self.add_module)
         
-        for button in self.module_list.module_buttons:
-            button.clicked.connect(self.go_to_lesson_quiz)
+        # index = 0
+        # for button in self.module_list.module_buttons:
+        #     print("BUTTON", button)
+        #     button.clicked.connect(lambda idx=index: self.go_to_lesson_quiz_index(idx))
+        #     index += 1
+
+
         for button in self.module_list.edit_buttons:
             button.clicked.connect(self.go_to_module_edit)
         
@@ -128,6 +133,12 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_course(self):
         self.stacked.setCurrentIndex(0)
     
+    def go_to_lesson_quiz_index(self, index):
+        course_code = self.module_list.cID
+        self.lq_list.set_courseCode_moduleIndex(course_code, index)
+        print("Button clicked with index:", index)
+        self.stacked.setCurrentIndex(1)
+
     def go_to_lesson_quiz(self):
         self.stacked.setCurrentIndex(1)
         
@@ -143,8 +154,12 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_module(self, index):
         course_code = self.course_list.get_courseCode(index)
         self.module_list.set_courseCode(course_code)
-        for button in self.module_list.module_buttons:
-            button.clicked.connect(self.go_to_lesson_quiz)
+
+        for index, button in enumerate(self.module_list.module_buttons):
+            def callback(idx=index):
+                return lambda: self.go_to_lesson_quiz_index(idx)
+            button.clicked.connect(callback())
+
         for button in self.module_list.edit_buttons:
             button.clicked.connect(self.go_to_module_edit)
         self.stacked.setCurrentIndex(7)
@@ -251,7 +266,7 @@ class Teacher_Stacked_Course(QMainWindow):
                 self.module_list.gridLayout.addWidget(button, self.module_list.index, 0, 1, 1)
                 button.setText(self.module_list.lineEdit.text())
                 self.module_list.module_buttons.append(button)
-                button.clicked.connect(self.go_to_lesson_quiz)
+                button.clicked.connect(self.go_to_lesson_quiz_index(len(self.module_list.module_buttons)-1))
                 
                 edit = QPushButton(self.module_list.scrollAreaWidgetContents)
                 edit.setObjectName(f"edit_{self.module_list.index + 1}")
@@ -326,32 +341,35 @@ class Teacher_Stacked_Course(QMainWindow):
             self.back_from_edit()
                    
     def add_lesson_from_update(self):
-        # if self.course_list.lineEdit.text() != '' :            
-            self.lq_list.lesson_gridLayout.removeItem(self.lq_list.verticalSpacer)
-            
-            button = QPushButton(self.lq_list.lesson_widget)
-            self.lq_list.lesson_gridLayout.addWidget(button, self.lq_list.lesson_index, 0, 1, 1)
-            button.setText(self.update_lesson.lesson_name_edit.text())
-            self.lq_list.lesson_buttons.append(button)
-            button.clicked.connect(self.go_to_lesson)
-            
-            edit = QPushButton(self.lq_list.lesson_widget)
-            edit.setObjectName(f"edit_{self.lq_list.lesson_index + 1}")
-            edit.setText('Edit')
-            self.lq_list.lesson_gridLayout.addWidget(edit, self.lq_list.lesson_index, 1, 1, 1)
-            self.lq_list.lesson_edit[edit] = self.lq_list.lesson_index
-            edit.clicked.connect(self.go_to_lesson_edit)
-                
-            delete = QPushButton(self.lq_list.lesson_widget)
-            delete.setObjectName(f"delete_{self.lq_list.lesson_index + 1}")
-            delete.setText('Delete')
-            self.lq_list.lesson_gridLayout.addWidget(delete, self.lq_list.lesson_index, 2, 1, 1)
-            self.lq_list.lesson_delete[delete] = self.lq_list.lesson_index
-            delete.clicked.connect(self.lq_list.delete_lesson)
-            
-            self.lq_list.lesson_index += 1
+        files = {'file': open(self.update_lesson.lesson_file_edit.text(), 'rb')}
+        response = requests.post(f"http://127.0.0.1:8000/lesson/{self.lq_list.cID}/{self.lq_list.moduleIndex}/{self.update_lesson.lesson_name_edit.text()}", files=files)
 
-            self.lq_list.lesson_gridLayout.addItem(self.lq_list.verticalSpacer, self.lq_list.lesson_index, 0, 1, 1)
+        if response:
+                self.lq_list.lesson_gridLayout.removeItem(self.lq_list.verticalSpacer)
+                
+                button = QPushButton(self.lq_list.lesson_widget)
+                self.lq_list.lesson_gridLayout.addWidget(button, self.lq_list.lesson_index, 0, 1, 1)
+                button.setText(self.update_lesson.lesson_name_edit.text())
+                self.lq_list.lesson_buttons.append(button)
+                button.clicked.connect(self.go_to_lesson)
+                
+                edit = QPushButton(self.lq_list.lesson_widget)
+                edit.setObjectName(f"edit_{self.lq_list.lesson_index + 1}")
+                edit.setText('Edit')
+                self.lq_list.lesson_gridLayout.addWidget(edit, self.lq_list.lesson_index, 1, 1, 1)
+                self.lq_list.lesson_edit[edit] = self.lq_list.lesson_index
+                edit.clicked.connect(self.go_to_lesson_edit)
+                    
+                delete = QPushButton(self.lq_list.lesson_widget)
+                delete.setObjectName(f"delete_{self.lq_list.lesson_index + 1}")
+                delete.setText('Delete')
+                self.lq_list.lesson_gridLayout.addWidget(delete, self.lq_list.lesson_index, 2, 1, 1)
+                self.lq_list.lesson_delete[delete] = self.lq_list.lesson_index
+                delete.clicked.connect(self.lq_list.delete_lesson)
+                
+                self.lq_list.lesson_index += 1
+
+                self.lq_list.lesson_gridLayout.addItem(self.lq_list.verticalSpacer, self.lq_list.lesson_index, 0, 1, 1)
             
             
     def add_lesson(self):

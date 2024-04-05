@@ -240,8 +240,8 @@ async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file
     return {"message": "Lesson created successfully", "file_path": file_path}
 
 @app.get("/lessons")
-async def get_all_lessons():
-    lessons = db_helper.lesson_operations.get_all_lessons()
+async def get_all_lessons(courseCode: str, moduleIndex: str):
+    lessons = db_helper.lesson_operations.get_all_lessons(courseCode, moduleIndex)
     return {"lessons": lessons}
 
 @app.get("/lesson/{lessonName}")

@@ -134,7 +134,6 @@ class Teacher_Module_list(QMainWindow):
                 # Fetch and update modules to reflect the changes
                 self.set_courseCode(self.cID)
 
-
     def set_courseCode(self, courseCode):
         self.cID = courseCode
         
