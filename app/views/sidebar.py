@@ -285,6 +285,7 @@ class Sidebar(object):
         self.stackedWidget = QStackedWidget(self.widget_3)
         self.stackedWidget.setObjectName(u"stackedWidget")
         
+        ################################################
         quiz_page = QuizPage()
         self.page = quiz_page
         
