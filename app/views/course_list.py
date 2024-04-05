@@ -41,6 +41,8 @@ class Course_list(QMainWindow):
         self.buttons = []
         self.index = 0
         
+        self.delete_buttons = {}  
+        
         self.setupUi(self)
         
         
@@ -73,6 +75,12 @@ class Course_list(QMainWindow):
             label.setText("Complete?")
             self.gridLayout.addWidget(label, self.index, 1, 1, 1)
             
+            delete = QPushButton(self.scrollAreaWidgetContents)
+            delete.setObjectName(f"delete_{self.index + 1}")
+            delete.setText('Leave')
+            self.delete_buttons[delete]  = self.index
+            delete.clicked.connect(self.delete_course)
+            
             self.index += 1
         # makes verticleSpacer
         self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -96,6 +104,22 @@ class Course_list(QMainWindow):
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
+    
+    def delete_course(self):
+        sender_button = self.sender()
+                
+        position = None
+        if sender_button in self.delete_buttons:
+            position = self.delete_buttons[sender_button]
+        
+        if position != None:
+            for j in range(self.gridLayout.columnCount()):
+                item = self.gridLayout.itemAtPosition(position, j)
+                if item:
+                    widget = item.widget()
+                    self.gridLayout.removeWidget(widget)
+                    widget.deleteLater()
+            del self.delete_buttons[sender_button]
 
     # def enroll_course(self):
     #     self.gridLayout.removeItem(self.verticalSpacer)
