@@ -218,7 +218,7 @@ async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file
     else:
         return {"error": "Unsupported file type"}
 
-    lessonCode = CodeGenerator.generate_course_code(prefix="L", length=8)
+    lessonCode = CodeGenerator.generate_code(prefix="L", length=8)
     # Generate a unique filename
     file_name = f"{lessonCode}{file_extension}"
 
@@ -239,38 +239,49 @@ async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file
 
     return {"message": "Lesson created successfully", "file_path": file_path}
 
-@app.get("/lessons")
+@app.get("/lessons/{courseCode}/{moduleIndex}")
 async def get_all_lessons(courseCode: str, moduleIndex: str):
     lessons = db_helper.lesson_operations.get_all_lessons(courseCode, moduleIndex)
     return {"lessons": lessons}
 
-@app.get("/lesson/{lessonName}")
-async def get_lesson(lessonName: str):
-    lesson = db_helper.lesson_operations.get_lesson(lessonName)
+@app.get("/lesson/lessonNamesList/{courseCode}/{moduleIndex}")
+async def get_all_lessonNames(courseCode: str, moduleIndex: str):
+    lessons = db_helper.lesson_operations.get_all_lessons(courseCode, moduleIndex)
+
+    # create lesson name list from lessons object list
+    lessonNames = []
+    for lesson in lessons:
+        lessonNames.append(lesson["name"])
+    
+    return {"lessonNames": lessonNames}
+
+@app.get("/lesson/{courseCode}/{moduleIndex}/{lessonIndex}")
+async def get_lesson_ByIndex(courseCode: str, moduleIndex: str, lessonIndex: str):
+    lesson = db_helper.lesson_operations.get_lesson_ByIndex(courseCode, moduleIndex, lessonIndex)
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
 
     return lesson
 
-@app.put("/lesson/{lessonName}")
-async def update_lesson(lessonName: str, lesson: LessonModel):
-    db_helper.lesson_operations.update_lesson(lessonName, lesson)
+@app.put("/lesson/{courseCode}/{moduleIndex}/{lessonIndex}")
+async def update_lesson(courseCode: str, moduleIndex: str, lessonIndex: str, lesson: LessonModel):
+    db_helper.lesson_operations.update_lesson_ByIndex(courseCode, moduleIndex, lessonIndex, lesson)
 
-@app.delete("/lesson/{lessonName}")
-async def delete_lesson(lessonName: str):
-    existing_lesson = db_helper.get_lesson(lessonName)
+@app.delete("/lesson/{courseCode}/{moduleIndex}/{lessonIndex}")
+async def delete_lesson(courseCode: str, moduleIndex: str, lessonIndex: str):
+    existing_lesson = db_helper.lesson_operations.get_lesson_ByIndex(courseCode, moduleIndex, lessonIndex)
     if not existing_lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
 
-    db_helper.delete_lesson(lessonName)
+    db_helper.lesson_operations.delete_lesson_ByIndex(courseCode, moduleIndex, lessonIndex)
 
     return {"message": "Lesson deleted successfully"}
 
 '''----------------------------------    Quizz      ---------------------------------- '''
 
-@app.post("/quizz")
-async def create_qizz(Quizz: QuizzModel):
-    db_helper.question_operations.create_question(Quizz)
+@app.post("/quizz/{courseCode}/{moduleIndex}")
+async def create_qizz(courseCode: str, moduleIndex: str, quizz: QuizzModel):
+
 
     return {"message": "Question created successfully"}
 
