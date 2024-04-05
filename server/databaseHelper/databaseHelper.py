@@ -353,15 +353,15 @@ class LessonOperations:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):    # True
                 module = course.moduleList[module_index]
-                if module.checkLesson_ByIndex(lesson_index):
-                    return module.moduleLessonList[lesson_index]
+                if module.checkLesson_ByIndex(lesson_index):    # True
+                    return module.lessonList[int(lesson_index)]
         return None
-
+    
     def get_all_lessons(self, course_code, module_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):    # True
-                module = course.moduleList[module_index]
+                module = course.moduleList[int(module_index)]
                 return module.lessonList
         return []
     
