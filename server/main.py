@@ -170,7 +170,7 @@ async def get_all_modules(courseCode: str):
     modules = db_helper.module_operations.get_all_modules(courseCode)
     return {"modules": modules}
 
-@app.get("/modules/{courseCode}")
+@app.get("/modules/moduleNamesList{courseCode}")
 async def get_all_modulesNames(courseCode: str):
     modules = db_helper.module_operations.get_all_modules(courseCode)
 
