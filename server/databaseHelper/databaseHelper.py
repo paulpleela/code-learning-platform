@@ -374,7 +374,7 @@ class LessonOperations:
             if hasattr(self.root, 'courses') and course_code in self.root.courses:
                 course = self.root.courses[course_code]
                 if course.checkModule_ByIndex(moduleIndex):
-                    module = course.moduleList[moduleIndex]
+                    module = course.moduleList[int(moduleIndex)]
                     if not hasattr(module, 'lessonList'):
                         module.lessonList = []
                     module.lessonList.append(lesson)
