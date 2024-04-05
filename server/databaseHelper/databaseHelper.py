@@ -339,7 +339,7 @@ class ModuleOperations:
             course = self.root.courses[course_code]
             
             # delete the module from the course
-            del course.moduleList[moduleIndex]
+            del course.moduleList[int(moduleIndex)]
 
 
 class LessonOperations:
