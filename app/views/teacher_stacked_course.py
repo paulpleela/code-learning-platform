@@ -19,6 +19,7 @@ from views.update_lesson import EditLessonForm
 from views.add_quiz_question import QuizQuestion
 from views.rename import Rename
 from views.teacher_module_list import Teacher_Module_list
+from views.module_rename import Module_Rename
 
 import requests
 
@@ -115,7 +116,7 @@ class Teacher_Stacked_Course(QMainWindow):
             button.clicked.connect(self.go_to_module_edit)
         
         ################################# 8
-        self.module_rename = Rename()
+        self.module_rename = Module_Rename()
         self.stacked.addWidget(self.module_rename)
         
         self.module_rename.cancel.clicked.connect(self.back_from_rename2module)
@@ -164,6 +165,8 @@ class Teacher_Stacked_Course(QMainWindow):
     def back_from_rename2module(self):
         self.stacked.setCurrentIndex(7)
         self.module_rename.lineEdit.clear()
+        
+        self.module_rename.deadline_edit.clear()
         self.module_rename.confirm.clicked.disconnect()
     
 #########################################
