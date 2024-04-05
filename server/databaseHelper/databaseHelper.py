@@ -231,7 +231,7 @@ class CourseOperations:
 
         if hasattr(self.root, 'teachers') and teacher_username in self.root.teachers:
             teacher = self.root.teachers[teacher_username]
-            teacher.ownedCourseList.append(course)
+            teacher.ownedCourseList.append(course.courseCode)
             transaction.commit()
             return True
         transaction.abort()  # Rollback the transaction if the teacher is not found
