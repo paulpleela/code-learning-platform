@@ -158,7 +158,7 @@ async def get_module(moduleName: str):
     return module
 
 @app.put("/module/{moduleName}")
-async def update_module(moduleName: str, module: Module):
+async def update_module(moduleName: str, module: ModuleModel):
     db_helper.module_operations.update_module(moduleName, module)
 
 @app.delete("/module/{moduleName}")
