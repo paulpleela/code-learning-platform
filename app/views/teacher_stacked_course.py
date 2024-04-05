@@ -143,6 +143,10 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_module(self, index):
         course_code = self.course_list.get_courseCode(index)
         self.module_list.set_courseCode(course_code)
+        for button in self.module_list.module_buttons:
+            button.clicked.connect(self.go_to_lesson_quiz)
+        for button in self.module_list.edit_buttons:
+            button.clicked.connect(self.go_to_module_edit)
         self.stacked.setCurrentIndex(7)
         
     def go_to_course_edit(self):

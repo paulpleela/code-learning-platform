@@ -162,12 +162,17 @@ class Teacher_Module_list(QMainWindow):
         # Clear the layout
         for i in reversed(range(self.gridLayout.count())):
             widget = self.gridLayout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-
+            if widget:
+                widget.deleteLater()
+            # if widget is not None:
+            #     widget.setParent(None)
+        self.gridLayout.removeItem(self.verticalSpacer)
         # Reinitialize index
         self.index = 0
-
+        self.module_buttons = []
+        self.edit_buttons = {}
+        self.delete_buttons = {}
+        
         # Add new modules to the layout
         for module_name in self.module:
             # Add module button
@@ -194,6 +199,9 @@ class Teacher_Module_list(QMainWindow):
 
             self.index += 1
 
+        #Add VerticalSpacer
+        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
         # Update course ID label
         self.courseID.setText(f"courseID : {self.cID}")
 
