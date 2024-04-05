@@ -4,9 +4,9 @@ import persistent
 
 # abstract class User and two clases, student and teacher, inherit from it
 class User(persistent.Persistent):
-      def __init__(self, name, password, role):
+      def __init__(self, username, name, password, role):
+            self.username = username
             self.name = name
-
             self.password = password
             self.role = role
 
@@ -16,8 +16,8 @@ class User(persistent.Persistent):
             self.password = password
 
 class Student(User, persistent.Persistent):
-      def __init__(self, name, password, role,  enrolledCourseList):
-            super().__init__(name, password, role)
+      def __init__(self, username, name, password, role,  enrolledCourseList):
+            super().__init__(username, name, password, role)
   
             self.enrolledCourseList = enrolledCourseList
 
@@ -34,15 +34,15 @@ class Student(User, persistent.Persistent):
                   return False
             
       def print_details(self):
-            print("Name:", self.name)
+            print("Username:", self.username)
             print("Role:", self.role)
             print("Enrolled Courses:", self.enrolledCourseList)
 
       
 
 class Teacher(User, persistent.Persistent):
-      def __init__(self, name, password, role,  ownedCourseList):
-            super().__init__(name, password, role)
+      def __init__(self, username, name, password, role,  ownedCourseList):
+            super().__init__(username, name, password, role)
 
             self.ownedCourseList = ownedCourseList          # List of courses by courseCode
       # check course by courseCode
@@ -53,6 +53,6 @@ class Teacher(User, persistent.Persistent):
                   return False
 
       def print_details(self):
-            print("Name:", self.name)
+            print("Username:", self.username)
             print("Role:", self.role)
             print("Owned Courses:", self.ownedCourseList)

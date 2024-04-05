@@ -12,12 +12,14 @@ import bcrypt
 Database stored in ZODB
 
 Teacher
+    - username
     - name
     - password
     - role
     - ownedCourseList
 
 Student
+    -username
     - name
     - password
     - role
@@ -95,26 +97,26 @@ class UserRegistration:
         if user.role == "student":
             if not hasattr(self.root, 'students'):
                 self.root.students = BTrees.OOBTree.BTree()
-            student = Student(user.username, hashed_password, user.role, [])
-            self.root.students[student.name] = student
+            student = Student(user.username, user.name, hashed_password, user.role, [])
+            self.root.students[student.username] = student
         elif user.role == "teacher":
             if not hasattr(self.root, 'teachers'):
                 self.root.teachers = BTrees.OOBTree.BTree()
-            teacher = Teacher(user.username, hashed_password, user.role, [])
-            self.root.teachers[teacher.name] = teacher
+            teacher = Teacher(user.username, user.name, hashed_password, user.role, [])
+            self.root.teachers[teacher.username] = teacher
         transaction.commit()
 
 class UserAuthentication:
     def __init__(self, root):
         self.root = root
 
-    def student_exists(self, student_name):
-        if hasattr(self.root, 'students') and student_name in self.root.students:
+    def student_exists(self, student_username):
+        if hasattr(self.root, 'students') and student_username in self.root.students:
             return True
         return False
 
-    def teacher_exists(self, teacher_name):
-        if hasattr(self.root, 'teachers') and teacher_name in self.root.teachers:
+    def teacher_exists(self, teacher_username):
+        if hasattr(self.root, 'teachers') and teacher_username in self.root.teachers:
             return True
         return False
 
@@ -157,11 +159,11 @@ class CourseOperations:
             return [course.courseName for course in self.root.courses.values()]
         return []
     ''' -----------------What Student can do to the course----------------- '''
-    def enroll_course(self, course_code, student_name):
+    def enroll_course(self, course_code, student_username):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
 
-            if hasattr(self.root, 'students') and student_name in self.root.students:
-                student = self.root.students[student_name]
+            if hasattr(self.root, 'students') and student_username in self.root.students:
+                student = self.root.students[student_username]
                 student.enrolledCourseList.append(course_code)
                 transaction.commit()
             transaction.commit()
@@ -170,14 +172,14 @@ class CourseOperations:
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if hasattr(course, 'studentList'):
-                course.studentList.append(student_name)
+                course.studentList.append(student_username)
                 transaction.commit()
 
-    def unenroll_course(self, course_code, student_name):
+    def unenroll_course(self, course_code, student_username):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
 
-            if hasattr(self.root, 'students') and student_name in self.root.students:
-                student = self.root.students[student_name]
+            if hasattr(self.root, 'students') and student_username in self.root.students:
+                student = self.root.students[student_username]
                 student.enrolledCourseList.remove(course_code)
                 transaction.commit()
             transaction.commit()
@@ -186,25 +188,25 @@ class CourseOperations:
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if hasattr(course, 'studentList'):
-                course.studentList.remove(student_name)
+                course.studentList.remove(student_username)
                 transaction.commit()
     ''' -----------------What Teacher can do to the course----------------- '''
 
-    def create_course(self, course, teacher_name):
+    def create_course(self, course, teacher_username):
         if not hasattr(self.root, 'courses'):
             self.root.courses = BTrees.OOBTree.BTree()
         self.root.courses[course.courseCode] = course
 
-        if hasattr(self.root, 'teachers') and teacher_name in self.root.teachers:
-            teacher = self.root.teachers[teacher_name]
+        if hasattr(self.root, 'teachers') and teacher_username in self.root.teachers:
+            teacher = self.root.teachers[teacher_username]
             teacher.ownedCourseList.append(course)
             transaction.commit()
         transaction.commit()
 
         
-    def get_courses_by_teacherName(self, teacher_name):
-        if hasattr(self.root, 'teachers') and teacher_name in self.root.teachers:
-            teacher = self.root.teachers[teacher_name]
+    def get_courses_by_teacherName(self, teacher_username):
+        if hasattr(self.root, 'teachers') and teacher_username in self.root.teachers:
+            teacher = self.root.teachers[teacher_username]
             return teacher.ownedCourseList
         return []
     
@@ -222,14 +224,14 @@ class CourseOperations:
             transaction.commit()
 
     # delete course by course code
-    def delete_course_ByCourseCode(self, course_code, teacher_name):
+    def delete_course_ByCourseCode(self, course_code, teacher_username):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             del self.root.courses[course_code]
             transaction.commit()
 
         # remove the course from the teacher's owned course list
-        if hasattr(self.root, 'teachers') and teacher_name in self.root.teachers:
-            teacher = self.root.teachers[teacher_name]
+        if hasattr(self.root, 'teachers') and teacher_username in self.root.teachers:
+            teacher = self.root.teachers[teacher_username]
             if teacher.checkCourse_ByCourseCode(course_code):
                 teacher.ownedCourseList.remove(course_code)
                 transaction.commit()
