@@ -322,6 +322,7 @@ class ModuleOperations:
                 course.add_module(module)
 
                 transaction.commit()
+                return True  # Operation succeeded
         except Exception as e:
             # Rollback transaction in case of any exception
             transaction.rollback()
@@ -369,17 +370,22 @@ class LessonOperations:
     def create_lesson(self, course_code, moduleIndex, lesson):
         # Check if the course exists
 
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            
-            # first go to the module list of the course
-            if course.checkModule_ByIndex(moduleIndex):
-                module = course.moduleList[moduleIndex]
-                if not hasattr(module, 'lessonList'):
-                    module.lessonList = BTrees.OOBTree.BTree()
-                module.lessonList.append(lesson)
-                transaction.commit()
-                
+        try:
+            if hasattr(self.root, 'courses') and course_code in self.root.courses:
+                course = self.root.courses[course_code]
+                if course.checkModule_ByIndex(moduleIndex):
+                    module = course.moduleList[moduleIndex]
+                    if not hasattr(module, 'lessonList'):
+                        module.lessonList = []
+                    module.lessonList.append(lesson)
+                    transaction.commit()
+                    return True  # Operation succeeded
+        except Exception as e:
+            # Rollback transaction in case of any exception
+            transaction.rollback()
+            print("An error occurred:", str(e))
+            return False
+        
  
 
     def update_lesson_ByIndex(self, course_code, module_index, lesson_index, updated_lesson):
