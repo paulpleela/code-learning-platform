@@ -235,9 +235,9 @@ async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file
     # Optionally, you can save the file information to a database
     # For example:
     lessonObject = Lesson(lessonName, file_path)
-    db_helper.lesson_operations.create_lesson(courseCode, moduleIndex, lessonObject)
+    success = db_helper.lesson_operations.create_lesson(courseCode, moduleIndex, lessonObject)
 
-    return {"message": "Lesson created successfully", "file_path": file_path}
+    return {"success": success}
 
 @app.get("/lessons/{courseCode}/{moduleIndex}")
 async def get_all_lessons(courseCode: str, moduleIndex: str):
