@@ -115,7 +115,8 @@ class Stacked_Course(QMainWindow):
                     self.course_list.gridLayout.removeItem(self.course_list.verticalSpacer)
                     button = QPushButton(self.course_list.scrollAreaWidgetContents)
                     self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
-                    button.setText(self.course_list.lineEdit.text())
+                    course_name = self.getCourseName(self.course_list.lineEdit.text()).strip('"')
+                    button.setText(course_name)
                     self.course_list.buttons.append(button)
                     button.clicked.connect(self.go_to_module)
                     
@@ -135,3 +136,9 @@ class Stacked_Course(QMainWindow):
                 print("Error:", response.text)
 
             self.course_list.lineEdit.clear()
+
+    def getCourseName(self, courseCode):
+        response = requests.get(f"http://127.0.0.1:8000/course/getCourseName/{courseCode}")
+        if response.status_code == 200:
+            return response.text
+        return None

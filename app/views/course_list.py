@@ -30,14 +30,16 @@ class Course_list(QMainWindow):
         response = requests.get("http://127.0.0.1:8000/api/student/course_list", params={"username": username})
 
         course_names = []
+        course_codes = []
 
         if response.status_code == 200:
                 data = response.json()
                 course_names_dict = data.get("course_names", {})
                 course_names = list(course_names_dict.values())
-
+                course_codes = list(course_names_dict.keys())
 
         self.course = course_names
+        self.course_codes = course_codes
         self.buttons = []
         self.index = 0
         
@@ -113,3 +115,17 @@ class Course_list(QMainWindow):
     #     self.index += 1
 
     #     self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
+
+    def updateAPI(self):
+        response = requests.get("http://127.0.0.1:8000/api/student/course_list", params={"username": self.username})
+        course_names = []
+        course_codes= []
+
+        if response.status_code == 200:
+            data = response.json()
+            course_names_dict = data.get("course_names", {})
+            course_names = list(course_names_dict.values())
+            course_codes = list(course_names_dict.keys())
+
+        self.course = course_names
+        self.course_codes = course_codes
