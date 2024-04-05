@@ -310,14 +310,20 @@ class ModuleOperations:
         return []
     ''' -----------------What Teacher can do to the module-----------------'''
     def create_module(self, module, course_code):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            if not hasattr(course, 'moduleList'):
-                course.moduleList = BTrees.OOBTree.BTree()
-            course.add_module(module)
+        try:
+            if hasattr(self.root, 'courses') and course_code in self.root.courses:
+                course = self.root.courses[course_code]
+                if not hasattr(course, 'moduleList'):
+                    course.moduleList = BTrees.OOBTree.BTree()
+                course.add_module(module)
 
-            transaction.commit()
-
+                transaction.commit()
+        except Exception as e:
+            # Rollback transaction in case of any exception
+            transaction.rollback()
+            print("An error occurred:", str(e))
+            return False  # Operation failed
+        
     def update_module(self, course_code, moduleIndex, updated_module):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]

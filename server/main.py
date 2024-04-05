@@ -35,10 +35,6 @@ class CourseCreated(BaseModel):
 
 class ModuleModel(BaseModel):
     name: str
-    lessonList: list
-    questionsList: list
-    dueDate: datetime.datetime
-    status: str
 
 class LessonModel(BaseModel):
     name: str
@@ -161,13 +157,13 @@ async def delete_course(courseCode: str, username: str):
     return {"success": success}
 
 '''----------------------------------    Module      ---------------------------------- '''
-@app.post("/module")
-async def create_module(module: ModuleModel):
-    db_helper.module_operations.create_module(module)
+@app.post("/module/{moduleName}/{courseCode}")
+async def create_module(moduleName: str, courseCode: str):
 
-
-
-    return {"message": "Module created successfully"}
+    moduleObject = Module(moduleName, [], [], "", {})
+    success = db_helper.module_operations.create_module(moduleObject, courseCode)
+    
+    return {"success": success}
 
 @app.get("/modules/{courseCode}")
 async def get_all_modules(courseCode: str):
