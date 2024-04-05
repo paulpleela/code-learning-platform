@@ -154,3 +154,8 @@ class Teacher_Course_list(QMainWindow):
 
     def renameCourse(self, index, newName):
         requests.put(f"http://127.0.0.1:8000/course/rename/{self.course_codes[index]}/{newName}")
+
+    def get_courseCode(self, index):
+        print("index", index)
+        return self.course_codes[index]
+    

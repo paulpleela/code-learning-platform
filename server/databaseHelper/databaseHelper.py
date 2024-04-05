@@ -303,11 +303,14 @@ class ModuleOperations:
         return None
     
     def get_all_modules(self, course_code):
+        res = []
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if hasattr(course, 'moduleList'):
-                return course.moduleList.values()
-        return []
+                module_objects = course.moduleList
+                for module_obj in module_objects:
+                    res.append({"name": module_obj.name, "dueDate": module_obj.dueDate, "students_completed": module_obj.students_completed})
+        return res
     ''' -----------------What Teacher can do to the module-----------------'''
     def create_module(self, module, course_code):
         try:

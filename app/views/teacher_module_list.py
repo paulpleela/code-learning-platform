@@ -19,12 +19,12 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
     QScrollArea, QSizePolicy, QSpacerItem, QWidget, QStackedWidget, QMainWindow, QLineEdit)
 
 from PySide6 import QtCore, QtGui, QtWidgets
-
+import requests
 class Teacher_Module_list(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.module = ['mol1', 'mol2', 'mol3']
-        self.cID = "abcdefgh"
+        self.module = []
+        self.cID = ""
         self.module_buttons = []
         self.index = 0
         
@@ -33,7 +33,6 @@ class Teacher_Module_list(QMainWindow):
         self.delete_buttons = {}   
         
         self.setupUi(self)
-        
         
         
     def setupUi(self, Form):
@@ -114,12 +113,79 @@ class Teacher_Module_list(QMainWindow):
             position = self.delete_buttons[sender_button]
         
         if position != None:
-            for j in range(self.gridLayout.columnCount()):
-                item = self.gridLayout.itemAtPosition(position, j)
-                # item = self.gridLayout.itemAtPosition(row, j)
-                if item:
-                    widget = item.widget()
-                    self.gridLayout.removeWidget(widget)
-                    widget.deleteLater()
-            del self.delete_buttons[sender_button]
+            response = requests.delete(f"http://127.0.0.1:8000/module/{self.cID}/{position}")
+            if response:
+                for j in range(self.gridLayout.columnCount()):
+                    item = self.gridLayout.itemAtPosition(position, j)
+                    # item = self.gridLayout.itemAtPosition(row, j)
+                    if item:
+                        widget = item.widget()
+                        self.gridLayout.removeWidget(widget)
+                        widget.deleteLater()
+                del self.delete_buttons[sender_button]
             # print(self.delete_buttons)
+
+    def set_courseCode(self, courseCode):
+        self.cID = courseCode
+        
+        # Fetch modules data from the backend
+        response = requests.get(f"http://127.0.0.1:8000/modules/{courseCode}")
+
+        if response.status_code == 200:
+            # Clear existing modules
+            self.clear_modules()
+
+            # Parse the response and add modules to the UI
+            data = response.json()
+            print(data)
+            for module_obj in data["modules"]:
+                print(module_obj)
+                self.module.append(module_obj["name"])
+                
+            # Update the UI with new modules
+            self.update_ui_with_modules()
+
+    def clear_modules(self):
+        self.module.clear()
+
+    def update_ui_with_modules(self):
+        # Clear the layout
+        for i in reversed(range(self.gridLayout.count())):
+            widget = self.gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
+        # Reinitialize index
+        self.index = 0
+
+        # Add new modules to the layout
+        for module_name in self.module:
+            # Add module button
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"module_{self.index + 1}")
+            button.setText(module_name)
+            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
+            self.module_buttons.append(button)
+
+            # Add edit button
+            edit = QPushButton(self.scrollAreaWidgetContents)
+            edit.setObjectName(f"edit_{self.index + 1}")
+            edit.setText('Edit')
+            self.gridLayout.addWidget(edit, self.index, 1, 1, 1)
+            self.edit_buttons[edit] = self.index
+
+            # Add delete button
+            delete = QPushButton(self.scrollAreaWidgetContents)
+            delete.setObjectName(f"delete_{self.index + 1}")
+            delete.setText('Delete')
+            self.gridLayout.addWidget(delete, self.index, 2, 1, 1)
+            self.delete_buttons[delete] = self.index
+            delete.clicked.connect(self.delete_module)
+
+            self.index += 1
+
+        # Update course ID label
+        self.courseID.setText(f"courseID : {self.cID}")
+
+        # Update the scroll area widget
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)

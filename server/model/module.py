@@ -1,12 +1,12 @@
 import persistent
 
 class Module(persistent.Persistent):
-      def __init__(self, Name, LessonList, QuizzList, DueDate, which_student_finsished_StatusDict):
+      def __init__(self, Name, LessonList, QuizzList, DueDate, students_completed):
             self.name = Name
             self.lessonList = LessonList        # List of lesson objects
             self.quizzList = QuizzList  # List of question objects
             self.dueDate = DueDate              # Deadline for the module
-            self.which_student_finsished_StatusDict = which_student_finsished_StatusDict # {"username": True}
+            self.students_completed = students_completed
 
 
       def checkLesson_ByIndex(self, lessonIndex):

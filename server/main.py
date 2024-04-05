@@ -160,7 +160,7 @@ async def delete_course(courseCode: str, username: str):
 @app.post("/module/{moduleName}/{courseCode}")
 async def create_module(moduleName: str, courseCode: str):
 
-    moduleObject = Module(moduleName, [], [], "", {})
+    moduleObject = Module(moduleName, [], [], "", set())
     success = db_helper.module_operations.create_module(moduleObject, courseCode)
     
     return {"success": success}
@@ -184,23 +184,23 @@ async def get_all_modulesNames(courseCode: str):
 
 @app.get("/module/{courseCode}/{moduleIndex}")
 async def get_moduleByIndex(courseCode: str, moduleIndex: str):
-    module = db_helper.module_operations.get_module(courseCode, moduleIndex)
+    module = db_helper.module_operations.getModule_ByIndex(courseCode, moduleIndex)
     if not module:
         raise HTTPException(status_code=404, detail="Module not found")
 
     return module
 
-@app.put("/module/{moduleName}")
-async def update_module(moduleName: str, module: ModuleModel):
-    db_helper.module_operations.update_module(moduleName, module)
+@app.put("/module/{courseCode}/{moduleIndex}")
+async def update_module(courseCode: str, moduleIndex: str, module: ModuleModel):
+    db_helper.module_operations.update_module(courseCode, moduleIndex, module)
 
-@app.delete("/module/{moduleName}")
-async def delete_module(moduleName: str):
-    existing_module = db_helper.get_module(moduleName)
+@app.delete("/module/{courseCode}/{moduleIndex}")
+async def delete_module(courseCode:str, moduleIndex: str):
+    existing_module = db_helper.module_operations.getModule_ByIndex(courseCode, moduleIndex)
     if not existing_module:
         raise HTTPException(status_code=404, detail="Module not found")
 
-    db_helper.delete_module(moduleName)
+    db_helper.delete_module(moduleIndex)
 
     return {"message": "Module deleted successfully"}
 
