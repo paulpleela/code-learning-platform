@@ -133,6 +133,8 @@ class Teacher_Stacked_Course(QMainWindow):
         for button in self.module_list.edit_buttons:
             button.clicked.connect(self.go_to_module_edit)
         
+        self.lesson_video.go_back.clicked.connect(self.go_to_lesson_quiz)
+        
         ################################# 10
         self.module_rename = Module_Rename()
         self.stacked.addWidget(self.module_rename)

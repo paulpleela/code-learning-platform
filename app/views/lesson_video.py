@@ -5,7 +5,7 @@
 
 import sys
 from PySide6.QtCore import Qt, Slot, QUrl
-from PySide6.QtWidgets import QApplication, QMainWindow, QSlider, QStyle
+from PySide6.QtWidgets import QApplication, QMainWindow, QSlider, QStyle, QPushButton, QToolBar
 from PySide6.QtGui import QAction
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtMultimediaWidgets import QVideoWidget
@@ -27,6 +27,9 @@ class LessonVideo(QMainWindow):
         self._player.errorOccurred.connect(self._player_error)
 
         tool_bar = self.addToolBar("Controls")
+        
+        self.bottom_left_toolbar = QToolBar()
+        self.addToolBar(Qt.BottomToolBarArea, self.bottom_left_toolbar)
 
         style = self.style()
 
@@ -46,6 +49,9 @@ class LessonVideo(QMainWindow):
         self._player.positionChanged.connect(self.update_slider_position)
         self._player.setVideoOutput(self._video_widget)
 
+        self.go_back = QPushButton("<< Go Back")
+        self.bottom_left_toolbar.addWidget(self.go_back)
+        
         self.update_buttons(self._player.playbackState())
 
     def closeEvent(self, event):
