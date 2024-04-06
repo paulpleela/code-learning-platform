@@ -190,6 +190,14 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         # Clear existing lesson buttons
         for button in self.lesson_buttons:
             button.deleteLater()
+        for button in self.lesson_delete:
+            button.deleteLater()
+        for button in self.lesson_edit:
+            button.deleteLater()
+        self.lesson_gridLayout.removeItem(self.verticalSpacer)
+        
+        self.lesson_delete = {}
+        self.lesson_edit = {}
         self.lesson_buttons = []
         self.lesson_index = 0
         
@@ -215,6 +223,8 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             self.lesson_delete[delete] = self.lesson_index 
             
             self.lesson_index += 1
+            
+        self.lesson_gridLayout.addItem(self.verticalSpacer, self.lesson_index, 0, 1, 1)
 
     def set_courseCode_moduleIndex(self, courseCode, moduleIndex):
         self.cID = courseCode

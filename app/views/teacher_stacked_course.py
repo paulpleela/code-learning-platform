@@ -124,6 +124,8 @@ class Teacher_Stacked_Course(QMainWindow):
         ##################################### 8
         self.lesson_pdf = LessonPDF()
         self.stacked.addWidget(self.lesson_pdf)
+        
+        self.lesson_pdf.nav_bar.back_button.clicked.connect(self.go_to_lesson_quiz)
         ##################################### 9
         self.lesson_video = LessonVideo()
         self.stacked.addWidget(self.lesson_video)
@@ -131,7 +133,7 @@ class Teacher_Stacked_Course(QMainWindow):
         for button in self.module_list.edit_buttons:
             button.clicked.connect(self.go_to_module_edit)
         
-        ################################# 8
+        ################################# 10
         self.module_rename = Module_Rename()
         self.stacked.addWidget(self.module_rename)
         
@@ -146,12 +148,21 @@ class Teacher_Stacked_Course(QMainWindow):
         course_code = self.module_list.cID
         self.course_code = course_code
         self.lq_list.set_courseCode_moduleIndex(course_code, index)
+        for button in self.lq_list.lesson_edit:
+            button.clicked.connect(self.go_to_lesson_edit)
+        for button in self.lq_list.lesson_buttons:
+            button.clicked.connect(self.go_to_lesson)
+        for index, button in enumerate(self.lq_list.lesson_buttons):
+            def callback(idx=index):
+                return lambda: self.go_to_lesson(idx)
+            button.clicked.connect(callback())
+        
         print("Button clicked with index:", index)
         self.stacked.setCurrentIndex(1)
 
     def go_to_lesson_quiz(self):
         self.stacked.setCurrentIndex(1)
-        
+
     def go_to_quiz(self):
         self.stacked.setCurrentIndex(2)
     
@@ -176,6 +187,7 @@ class Teacher_Stacked_Course(QMainWindow):
             else:
                 self.lesson_video.setFilePath(file_path)
                 self.stacked.setCurrentIndex(9)
+        
 
     
     def go_to_module(self, index):
@@ -192,10 +204,7 @@ class Teacher_Stacked_Course(QMainWindow):
             button.clicked.connect(self.go_to_module_edit)
         self.stacked.setCurrentIndex(7)
 
-        for index, button in enumerate(self.lq_list.lesson_buttons):
-            def callback(idx=index):
-                return lambda: self.go_to_lesson(idx)
-            button.clicked.connect(callback())
+        
 
     def go_to_course_edit(self):
         self.stacked.setCurrentIndex(6)
@@ -207,7 +216,7 @@ class Teacher_Stacked_Course(QMainWindow):
             self.course_rename.confirm.clicked.connect(lambda: self.submit_course_rename(position))
     
     def go_to_module_edit(self):
-        self.stacked.setCurrentIndex(8)
+        self.stacked.setCurrentIndex(10)
         
         sender_button = self.sender()
         
