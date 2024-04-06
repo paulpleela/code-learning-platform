@@ -17,8 +17,6 @@ from model.module import *
 from model.quiz import *
 from model.submission import *
 from model.testCaseResult import *
-from model.testCase import *
-
 
 '''
 # ZODB database setup
