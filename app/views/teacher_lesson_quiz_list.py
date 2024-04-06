@@ -78,7 +78,7 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         self.quiz_gridLayout.setColumnStretch(1, 1)
         self.quiz_scroll.setWidget(self.quiz_widget)
         
-        self.return_2.setText('Return to ...')
+        self.return_2.setText('<< Go Back')
         self.add_lesson_btn = QPushButton(Form)
         self.add_lesson_btn.setObjectName(u"add_Lesson")
         self.add_lesson_btn.setText("Add Lesson")
@@ -190,6 +190,14 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         # Clear existing lesson buttons
         for button in self.lesson_buttons:
             button.deleteLater()
+        for button in self.lesson_delete:
+            button.deleteLater()
+        for button in self.lesson_edit:
+            button.deleteLater()
+        self.lesson_gridLayout.removeItem(self.verticalSpacer)
+        
+        self.lesson_delete = {}
+        self.lesson_edit = {}
         self.lesson_buttons = []
         self.lesson_index = 0
         
@@ -215,6 +223,9 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             self.lesson_delete[delete] = self.lesson_index 
             
             self.lesson_index += 1
+            
+        self.lesson_gridLayout.addItem(self.verticalSpacer, self.lesson_index, 0, 1, 1)
+            
 
     def set_courseCode_moduleIndex(self, courseCode, moduleIndex):
         self.cID = courseCode

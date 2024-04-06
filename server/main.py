@@ -44,7 +44,7 @@ class QuizzModel(BaseModel):
     questionName: str
     questionInstruction: str
     inputVarNameList: list
-    testCaseDict: Dict
+    testCaseDict: dict
     #submissionDict: Dict
     #which_student_finsished_StatusDict: Dict
 
