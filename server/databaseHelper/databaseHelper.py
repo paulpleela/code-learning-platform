@@ -394,16 +394,16 @@ class LessonOperations:
             if course.checkModule_ByIndex(module_index):    # True
                 module = course.moduleList[module_index]
                 if module.checkLesson_ByIndex(lesson_index):    # True
-                    module.lessonList[lesson_index] = updated_lesson
+                    module.lessonList[int(lesson_index)] = updated_lesson
                     transaction.commit()
         
     def delete_lesson_ByIndex(self, course_code, module_index, lesson_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):    # True
-                module = course.moduleList[module_index]
+                module = course.moduleList[int(module_index)]
                 if module.checkLesson_ByIndex(lesson_index):    # True
-                    del module.lessonList[lesson_index]
+                    del module.lessonList[int(lesson_index)]
                     transaction.commit()
 
 class QuizzOperations:
@@ -415,16 +415,16 @@ class QuizzOperations:
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):
-                module = course.moduleList[module_index]
+                module = course.moduleList[int(module_index)]
                 if module.checkQuizz_ByIndex(quizz_index):
-                    return module.quizzList[quizz_index]
+                    return module.quizzList[int(quizz_index)]
         return None
 
     def get_all_quizzs(self, course_code, module_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):
-                module = course.moduleList[module_index]
+                module = course.moduleList[int(module_index)]
                 return module.quizzList
         return []
 
@@ -445,18 +445,18 @@ class QuizzOperations:
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):
-                module = course.moduleList[module_index]
+                module = course.moduleList[int(module_index)]
                 if module.checkQuizz_ByIndex(quizz_index):
-                    module.quizzList[quizz_index] = updated_quizz
+                    module.quizzList[int(quizz_index)] = updated_quizz
                     transaction.commit()
 
     def delete_quizz_ByIndex(self, course_code, module_index, quizz_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):
-                module = course.moduleList[module_index]
+                module = course.moduleList[int(module_index)]
                 if module.checkQuizz_ByIndex(quizz_index):
-                    del module.quizzList[quizz_index]
+                    del module.quizzList[int(quizz_index)]
                     transaction.commit()
 
 class TestCaseOperations:
