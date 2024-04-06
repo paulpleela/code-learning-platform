@@ -434,18 +434,18 @@ class QuizzOperations:
         return []
 
     ''' -----------------What Teacher can do to the quizz-----------------'''
-    def create_quizz(self, course_code, quizz):
+    def create_quizz(self, course_code, moduleIndex,quizz):
         try:
             if hasattr(self.root, 'courses') and course_code in self.root.courses:
                 course = self.root.courses[course_code]
-                if not hasattr(course, 'quizzList'):
-                    course.quizzList = []
-                course.quizzList.append(quizz)
-                transaction.commit()
-                return True  # Operation succeeded
+                if course.checkModule_ByIndex(moduleIndex):
+                    module = course.moduleList[int(moduleIndex)]
+                    if not hasattr(module, 'quizzList'):
+                        module.quizzList = []
+                    module.quizzList.append(quizz)
+                    transaction.commit()
+                    return True  # Operation succeeded
         except Exception as e:
-            # Rollback transaction in case of any exception
-            transaction.rollback()
             print("An error occurred:", str(e))
             return False
 
