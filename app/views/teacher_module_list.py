@@ -131,12 +131,10 @@ class Teacher_Module_list(QMainWindow):
                 self.edit_buttons.clear()
                 self.module_buttons.clear()
                 self.index = 0
-                # Fetch and update modules to reflect the changes
-                self.set_courseCode(self.cID)
 
     def set_courseCode(self, courseCode):
         self.cID = courseCode
-        
+        print("SETTING COURSE CODE:", self.cID)
         # Fetch modules data from the backend
         response = requests.get(f"http://127.0.0.1:8000/modules/{courseCode}")
 

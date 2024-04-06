@@ -23,10 +23,11 @@ class LessonPDF(QMainWindow):
         self.nav_bar = Go_Back_Nav()
         self.layout.addWidget(self.nav_bar, alignment=Qt.AlignBottom)
 
-        # Specify the path to the PDF file here
-        pdf_path = r"path\to\file.pdf"
-        if pdf_path:
-            self.webView.setUrl(QUrl("file:///" + pdf_path.replace('\\', '/')))
+
+    def setFilePath(self, filePath):
+        if filePath:
+            self.webView.setUrl(QUrl("file:///" + filePath.replace('\\', '/')))
+
 
         # self.nav_bar.previous_button.clicked.connect(self.previous_page)
         # self.nav_bar.next_button.clicked.connect(self.next_page)

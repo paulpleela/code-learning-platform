@@ -20,6 +20,8 @@ from views.add_quiz_question import QuizQuestion
 from views.rename import Rename
 from views.teacher_module_list import Teacher_Module_list
 from views.module_rename import Module_Rename
+from views.lesson_pdf import LessonPDF
+from views.lesson_video import LessonVideo
 
 import requests
 
@@ -28,7 +30,7 @@ class Teacher_Stacked_Course(QMainWindow):
         super().__init__()
         self.username = username
         self.setupUi(self)
-        
+        self.courseCode = ""
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
@@ -119,7 +121,12 @@ class Teacher_Stacked_Course(QMainWindow):
         #     print("BUTTON", button)
         #     button.clicked.connect(lambda idx=index: self.go_to_lesson_quiz_index(idx))
         #     index += 1
-
+        ##################################### 8
+        self.lesson_pdf = LessonPDF()
+        self.stacked.addWidget(self.lesson_pdf)
+        ##################################### 9
+        self.lesson_video = LessonVideo()
+        self.stacked.addWidget(self.lesson_video)
 
         for button in self.module_list.edit_buttons:
             button.clicked.connect(self.go_to_module_edit)
@@ -129,12 +136,15 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.addWidget(self.module_rename)
         
         self.module_rename.cancel.clicked.connect(self.back_from_rename2module)
+
+        
      
     def go_to_course(self):
         self.stacked.setCurrentIndex(0)
     
     def go_to_lesson_quiz_index(self, index):
         course_code = self.module_list.cID
+        self.course_code = course_code
         self.lq_list.set_courseCode_moduleIndex(course_code, index)
         print("Button clicked with index:", index)
         self.stacked.setCurrentIndex(1)
@@ -148,11 +158,29 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_answer(self):
         self.stacked.setCurrentIndex(3)
     
-    def go_to_lesson(self):
-        pass
+    def go_to_lesson(self, lessonIndex):
+        courseCode = self.lq_list.cID
+        moduleIndex = self.lq_list.moduleIndex
+        print("cc", courseCode)
+        print("moduleIndex", moduleIndex)
+        response = requests.get(f"http://127.0.0.1:8000/lesson/{courseCode}/{moduleIndex}/{lessonIndex}")
+
+        if response.status_code == 200:
+            data = response.json()
+            file_path = "server/static/" + data
+            dot_index = file_path.rfind('.')
+            file_type = file_path[dot_index + 1:]
+            if file_type == "pdf":
+                self.lesson_pdf.setFilePath(file_path)
+                self.stacked.setCurrentIndex(8)
+            else:
+                self.lesson_video.setFilePath(file_path)
+                self.stacked.setCurrentIndex(9)
+
     
     def go_to_module(self, index):
         course_code = self.course_list.get_courseCode(index)
+        self.course_code = course_code
         self.module_list.set_courseCode(course_code)
 
         for index, button in enumerate(self.module_list.module_buttons):
@@ -163,7 +191,12 @@ class Teacher_Stacked_Course(QMainWindow):
         for button in self.module_list.edit_buttons:
             button.clicked.connect(self.go_to_module_edit)
         self.stacked.setCurrentIndex(7)
-        
+
+        for index, button in enumerate(self.lq_list.lesson_buttons):
+            def callback(idx=index):
+                return lambda: self.go_to_lesson(idx)
+            button.clicked.connect(callback())
+
     def go_to_course_edit(self):
         self.stacked.setCurrentIndex(6)
         
@@ -341,8 +374,14 @@ class Teacher_Stacked_Course(QMainWindow):
             self.back_from_edit()
                    
     def add_lesson_from_update(self):
-        files = {'file': open(self.update_lesson.lesson_file_edit.text(), 'rb')}
-        response = requests.post(f"http://127.0.0.1:8000/lesson/{self.lq_list.cID}/{self.lq_list.moduleIndex}/{self.update_lesson.lesson_name_edit.text()}", files=files)
+        file_path = self.update_lesson.lesson_file_edit.toPlainText()
+        files = {'file': open(file_path, 'rb')}
+
+        last_dot_index = file_path.rfind('.')
+        if last_dot_index != -1:
+            file_extension = file_path[last_dot_index:]
+
+        response = requests.post(f"http://127.0.0.1:8000/lesson/{self.lq_list.cID}/{self.lq_list.moduleIndex}/{self.update_lesson.lesson_name_edit.text()}/{file_extension}", files=files)
 
         if response:
                 self.lq_list.lesson_gridLayout.removeItem(self.lq_list.verticalSpacer)
@@ -351,7 +390,7 @@ class Teacher_Stacked_Course(QMainWindow):
                 self.lq_list.lesson_gridLayout.addWidget(button, self.lq_list.lesson_index, 0, 1, 1)
                 button.setText(self.update_lesson.lesson_name_edit.text())
                 self.lq_list.lesson_buttons.append(button)
-                button.clicked.connect(self.go_to_lesson)
+                button.clicked.connect(lambda: self.go_to_lesson(self.lq_list.lesson_index-1))
                 
                 edit = QPushButton(self.lq_list.lesson_widget)
                 edit.setObjectName(f"edit_{self.lq_list.lesson_index + 1}")
@@ -370,6 +409,9 @@ class Teacher_Stacked_Course(QMainWindow):
                 self.lq_list.lesson_index += 1
 
                 self.lq_list.lesson_gridLayout.addItem(self.lq_list.verticalSpacer, self.lq_list.lesson_index, 0, 1, 1)
+
+                print(response.status_code)
+                print(response.text)
             
             
     def add_lesson(self):

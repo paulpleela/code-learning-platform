@@ -24,7 +24,10 @@ class Course(persistent.Persistent):
       
       def checkModule_ByIndex(self, index):
             # [Module1, Module2, Module3]
+            print("Index from module", index)
+            print(len(self.moduleList))
             if int(index) < len(self.moduleList):
+                  print("checkmodule", int(index))
                   return True
             else:
                   return False
