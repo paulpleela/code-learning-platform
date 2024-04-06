@@ -276,39 +276,39 @@ async def delete_lesson(courseCode: str, moduleIndex: str, lessonIndex: str):
     return {"message": "Lesson deleted successfully"}
 
 '''----------------------------------    Quizz      ---------------------------------- '''
-@app.post("/quizz/{courseCode}/{moduleIndex}/{lessonIndex}")
-async def create_quizz(courseCode: str, moduleIndex: str, lessonIndex: str, quizz: QuizzModel):
+@app.post("/quizz/{courseCode}/{moduleIndex}")
+async def create_quizz(courseCode: str, moduleIndex: str, quizz: QuizzModel):
     
     quizzObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, {})
-    success = db_helper.quizz_operations.create_quizz(courseCode, moduleIndex, lessonIndex, quizzObject)
+    success = db_helper.quizz_operations.create_quizz(courseCode, moduleIndex, quizzObject)
 
     return {"success": success}
 
-@app.get("/quizzes/{courseCode}/{moduleIndex}/{lessonIndex}")
-async def get_all_quizzes(courseCode: str, moduleIndex: str, lessonIndex: str):
-    quizzes = db_helper.quizz_operations.get_all_quizzes(courseCode, moduleIndex, lessonIndex)
+@app.get("/quizzes/{courseCode}/{moduleIndex}")
+async def get_all_quizzes(courseCode: str, moduleIndex: str):
+    quizzes = db_helper.quizz_operations.get_all_quizzs(courseCode, moduleIndex)
     return {"quizzes": quizzes}
 
-@app.get("/quizz/{courseCode}/{moduleIndex}/{lessonIndex}/{quizzIndex}")
-async def get_quizz_ByIndex(courseCode: str, moduleIndex: str, lessonIndex: str, quizzIndex: str):
-    quizz = db_helper.quizz_operations.get_quizz_ByIndex(courseCode, moduleIndex, lessonIndex, quizzIndex)
+@app.get("/quizz/{courseCode}/{moduleIndex}/{quizzIndex}")
+async def get_quizz_ByIndex(courseCode: str, moduleIndex: str, quizzIndex: str):
+    quizz = db_helper.quizz_operations.get_quizz_ByIndex(courseCode, moduleIndex, quizzIndex)
     if not quizz:
         raise HTTPException(status_code=404, detail="Quizz not found")
 
     return quizz
 
-@app.put("/quizz/{courseCode}/{moduleIndex}/{lessonIndex}/{quizzIndex}")
-async def update_quizz(courseCode: str, moduleIndex: str, lessonIndex: str, quizzIndex: str, quizz: QuizzModel):
+@app.put("/quizz/{courseCode}/{moduleIndex}/{quizzIndex}")
+async def update_quizz(courseCode: str, moduleIndex: str,  quizzIndex: str, quizz: QuizzModel):
     quizObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, {})
-    db_helper.quizz_operations.update_quizz_ByIndex(courseCode, moduleIndex, lessonIndex, quizzIndex, quizObject)
+    db_helper.quizz_operations.update_quizz_ByIndex(courseCode, moduleIndex, quizzIndex, quizObject)
 
-@app.delete("/quizz/{courseCode}/{moduleIndex}/{lessonIndex}/{quizzIndex}")
-async def delete_quizz(courseCode: str, moduleIndex: str, lessonIndex: str, quizzIndex: str):
-    existing_quizz = db_helper.quizz_operations.get_quizz_ByIndex(courseCode, moduleIndex, lessonIndex, quizzIndex)
+@app.delete("/quizz/{courseCode}/{moduleIndex}/{quizzIndex}")
+async def delete_quizz(courseCode: str, moduleIndex: str, quizzIndex: str):
+    existing_quizz = db_helper.quizz_operations.get_quizz_ByIndex(courseCode, moduleIndex, quizzIndex)
     if not existing_quizz:
         raise HTTPException(status_code=404, detail="Quizz not found")
 
-    success = db_helper.quizz_operations.delete_quizz_ByIndex(courseCode, moduleIndex, lessonIndex, quizzIndex)
+    success = db_helper.quizz_operations.delete_quizz_ByIndex(courseCode, moduleIndex, quizzIndex)
     if success:
         return {"message": "Quizz deleted successfully"}
 
