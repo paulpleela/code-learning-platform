@@ -289,6 +289,17 @@ async def get_all_quizzes(courseCode: str, moduleIndex: str):
     quizzes = db_helper.quizz_operations.get_all_quizzs(courseCode, moduleIndex)
     return {"quizzes": quizzes}
 
+@app.get("/quizzes/quizNamesList/{courseCode}/{moduleIndex}")
+async def get_all_quizzNames(courseCode: str, moduleIndex: str):
+    quizzes = db_helper.quizz_operations.get_all_quizzs(courseCode, moduleIndex)
+
+    # create quizz name list from quizz object list
+    quizzNames = []
+    for quizz in quizzes:
+        quizzNames.append(quizz["name"])
+    
+    return {"quizzNames": quizzNames}
+
 @app.get("/quizz/{courseCode}/{moduleIndex}/{quizzIndex}")
 async def get_quizz_ByIndex(courseCode: str, moduleIndex: str, quizzIndex: str):
     quizz = db_helper.quizz_operations.get_quizz_ByIndex(courseCode, moduleIndex, quizzIndex)
