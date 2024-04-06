@@ -66,7 +66,7 @@ class Module_list(QMainWindow):
         self.return_2 = QPushButton(Form)
         self.return_2.setObjectName(u"return_2")
         self.return_2.setGeometry(QRect(30, 510, 131, 24))
-        self.return_2.setText('Return to ...')
+        self.return_2.setText('<< Go Back')
         
         self.courseID = QLabel(Form)
         self.courseID.setText(f"courseID : {self.cID}")

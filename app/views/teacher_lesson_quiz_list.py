@@ -89,9 +89,9 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         self.add_quiz_btn.setText("Add Quiz")
         self.add_quiz_btn.setGeometry(QRect(510, 480, 201, 24))
         
-        self.courseID = QLabel(Form)
-        self.courseID.setText(f"courseID : {self.cID}")
-        self.courseID.setGeometry(QRect(350, 520, 300, 24))
+        # self.courseID = QLabel(Form)
+        # self.courseID.setText(f"courseID : {self.cID}")
+        # self.courseID.setGeometry(QRect(350, 520, 300, 24))
         
         # for loop making pushButton and Label
         # Lesson
