@@ -74,11 +74,11 @@ class Lesson_Quiz_list(QMainWindow):
         self.quiz_gridLayout.setColumnStretch(1, 1)
         self.quiz_scroll.setWidget(self.quiz_widget)
         
-        self.return_2.setText('Return to ...')
+        self.return_2.setText('<< Go Back')
         
-        self.courseID = QLabel(Form)
-        self.courseID.setText(f"courseID : {self.cID}")
-        self.courseID.setGeometry(QRect(350, 520, 300, 24))
+        # self.courseID = QLabel(Form)
+        # self.courseID.setText(f"courseID : {self.cID}")
+        # self.courseID.setGeometry(QRect(350, 520, 300, 24))
         
         # for loop making pushButton and Label
         # Lesson
