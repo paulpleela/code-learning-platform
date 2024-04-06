@@ -1,12 +1,11 @@
 import persistent
 
 class Quiz(persistent.Persistent):
-      def __init__(self, questionText, maxScore, testCasesList, TimeLimit, submissionDict, which_student_finsished_StatusDict):
-            self.questionText = questionText
-            self.maxScore = maxScore
-            self.testCasesList = testCasesList
-            self.timeLimit = TimeLimit
-
+      def __init__(self, questionName, questionInstruction,inputVarNameList, testCaseDict, submissionDict, which_student_finsished_StatusDict):
+            self.questionName = questionName
+            self.questionInstruction = questionInstruction
+            self.inputVarNameList = inputVarNameList
+            self.testCaseDict = testCaseDict                # {(1,2,3): "", }
             self.submissionDict = submissionDict
             self.which_student_finsished_StatusDict = which_student_finsished_StatusDict # self.studentStatus = {"username": True}
       
