@@ -45,12 +45,13 @@ Module
     - lessonList
 
 Quizz
-    - name
-    - questionList
-
-Question
-    - question
-    - answerList
+            questionName
+            questionInstruction
+            inputVarNameList
+            testCaseDict                # {(1,2,3): "", }
+           submissionDict
+            which_student_finsished_StatusDict # self.studentStatus = {"username": True}
+      
 
 Answer
     - answer
@@ -61,9 +62,6 @@ Submission
     - quizzName
     - answerList
 
-TestCase
-    - input
-    - output
 
 TestCaseResult
     - studentName
@@ -430,15 +428,19 @@ class QuizzOperations:
 
     ''' -----------------What Teacher can do to the quizz-----------------'''
     def create_quizz(self, course_code, quizz):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
-            
-            # first go to the module list of the course
-            if hasattr(course, 'moduleList'):
-                for module in course.moduleList.values():
-                    if hasattr(module, 'quizzList'):
-                        module.quizzList.append(quizz)
-                        transaction.commit()
+        try:
+            if hasattr(self.root, 'courses') and course_code in self.root.courses:
+                course = self.root.courses[course_code]
+                if not hasattr(course, 'quizzList'):
+                    course.quizzList = []
+                course.quizzList.append(quizz)
+                transaction.commit()
+                return True  # Operation succeeded
+        except Exception as e:
+            # Rollback transaction in case of any exception
+            transaction.rollback()
+            print("An error occurred:", str(e))
+            return False
 
 
     def update_quizz_ByIndex(self, course_code, module_index, quizz_index, updated_quizz):

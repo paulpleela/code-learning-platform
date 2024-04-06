@@ -39,14 +39,14 @@ class ModuleModel(BaseModel):
 class LessonModel(BaseModel):
     name: str
 
-# questionText, maxScore, testCasesList, TimeLimit, submissionDict, which_student_finsished_StatusDict
+
 class QuizzModel(BaseModel):
-    questionText: str
-    maxScore: int
-    testCasesList: Optional[Dict[str, str]]
-    TimeLimit: int
-    submissionDict: Optional[Dict[str, str]]
-    which_student_finsished_StatusDict: Optional[Dict[str, bool]]
+    questionName: str
+    questionInstruction: str
+    inputVarNameList: list
+    testCaseDict: Dict
+    #submissionDict: Dict
+    #which_student_finsished_StatusDict: Dict
 
 
 class SubmissionModel(BaseModel):
@@ -285,7 +285,8 @@ async def delete_lesson(courseCode: str, moduleIndex: str, lessonIndex: str):
 @app.post("/quizz/{courseCode}/{moduleIndex}/{lessonIndex}")
 async def create_quizz(courseCode: str, moduleIndex: str, lessonIndex: str, quizz: QuizzModel):
     
-    success = db_helper.quizz_operations.create_quizz(courseCode, moduleIndex, lessonIndex, quizz)
+    quizzObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, {})
+    success = db_helper.quizz_operations.create_quizz(courseCode, moduleIndex, lessonIndex, quizzObject)
 
     return {"success": success}
 
@@ -304,7 +305,8 @@ async def get_quizz_ByIndex(courseCode: str, moduleIndex: str, lessonIndex: str,
 
 @app.put("/quizz/{courseCode}/{moduleIndex}/{lessonIndex}/{quizzIndex}")
 async def update_quizz(courseCode: str, moduleIndex: str, lessonIndex: str, quizzIndex: str, quizz: QuizzModel):
-    db_helper.quizz_operations.update_quizz_ByIndex(courseCode, moduleIndex, lessonIndex, quizzIndex, quizz)
+    quizObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, {})
+    db_helper.quizz_operations.update_quizz_ByIndex(courseCode, moduleIndex, lessonIndex, quizzIndex, quizObject)
 
 @app.delete("/quizz/{courseCode}/{moduleIndex}/{lessonIndex}/{quizzIndex}")
 async def delete_quizz(courseCode: str, moduleIndex: str, lessonIndex: str, quizzIndex: str):
