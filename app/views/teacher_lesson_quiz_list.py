@@ -156,6 +156,8 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
     
     def delete_lesson(self):
         sender_button = self.sender()
+        
+        # request = f"/quizz/{self.cID}/{module}/{quizIndex}"
                 
         position = None
         if sender_button in self.lesson_delete:

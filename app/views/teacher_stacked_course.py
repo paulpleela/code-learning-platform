@@ -158,7 +158,7 @@ class Teacher_Stacked_Course(QMainWindow):
         for button in self.lq_list.lesson_edit:
             button.clicked.connect(self.go_to_lesson_edit)
         for button in self.lq_list.lesson_buttons:
-            button.clicked.connect(self.go_to_lesson)
+            button.clicked.connect(lambda: self.go_to_lesson(index))
 
         for index, button in enumerate(self.lq_list.lesson_buttons):
             def callback(idx=index):
@@ -182,7 +182,7 @@ class Teacher_Stacked_Course(QMainWindow):
         print("GO TO QUIZ INDEX?")
         course_code = self.module_list.cID
         self.course_code = course_code
-        self.lq_list.set_courseCode_moduleIndex(course_code, index, "quiz")
+        # self.lq_list.set_courseCode_moduleIndex(course_code, index, "quiz")
         # for button in self.lq_list.lesson_edit:
         #     button.clicked.connect(self.go_to_lesson_edit)
         # for button in self.lq_list.quiz_delete:
