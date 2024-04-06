@@ -164,9 +164,9 @@ class Teacher_Stacked_Course(QMainWindow):
             def callback(idx=index):
                 return lambda: self.go_to_lesson(idx)
             button.clicked.connect(callback())
-        for index, button in enumerate(self.lq_list.quiz_buttons):
-            def callback(idx=index):
-                return lambda: self.quiz.selectQuiz(idx)
+        for i, button in enumerate(self.lq_list.quiz_buttons):
+            def callback(idx=i):
+                return lambda: self.quiz.selectQuiz(course_code, index, idx)
             button.clicked.connect(callback())
         
         print("Button clicked with index:", index)
@@ -179,17 +179,12 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(2)
         
     def go_to_quiz_index(self, index):
-        print("GO TO QUIZ INDEX?")
         course_code = self.module_list.cID
         self.course_code = course_code
-        # self.lq_list.set_courseCode_moduleIndex(course_code, index, "quiz")
-        # for button in self.lq_list.lesson_edit:
-        #     button.clicked.connect(self.go_to_lesson_edit)
-        # for button in self.lq_list.quiz_delete:
-        #     button.clicked.connect(self.go_to_lesson)
-        for index, button in enumerate(self.lq_list.quiz_buttons):
-            def callback(idx=index):
-                return lambda: self.quiz.selectQuiz(idx)
+        self.lq_list.set_courseCode_moduleIndex(course_code, index, "quiz")
+        for i, button in enumerate(self.lq_list.quiz_buttons):
+            def callback(idx=i):
+                return lambda: self.quiz.selectQuiz(course_code, index, idx)
             button.clicked.connect(callback())
         
         
