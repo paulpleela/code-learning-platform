@@ -219,7 +219,6 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
     def set_courseCode_moduleIndex(self, courseCode, moduleIndex):
         self.cID = courseCode
         self.moduleIndex = moduleIndex
-        print("cID: ", self.cID, "!!!!!!!!!!!!!!!!!")
         response = requests.get(f"http://127.0.0.1:8000/lessons/{courseCode}/{moduleIndex}")
 
         if response.status_code == 200:

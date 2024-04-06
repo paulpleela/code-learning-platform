@@ -65,8 +65,13 @@ class Teacher_Stacked_Course(QMainWindow):
         self.lq_list.add_lesson_btn.clicked.connect(self.add_lesson)
         self.lq_list.add_quiz_btn.clicked.connect(self.add_quiz)
         
-        for button in self.lq_list.quiz_buttons:
-            button.clicked.connect(self.go_to_quiz)
+        for index, button in enumerate(self.lq_list.quiz_buttons):
+            def callback(idx=index):
+                return lambda: self.go_to_quiz_index(idx)
+            button.clicked.connect(callback())
+
+        # for button in self.lq_list.quiz_buttons:
+        #     button.clicked.connect(self.go_to_quiz)
         
         for button in self.lq_list.lesson_edit:
             button.clicked.connect(self.go_to_lesson_edit)
@@ -153,6 +158,10 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(1)
         
     def go_to_quiz(self):
+        self.stacked.setCurrentIndex(2)
+        
+    def go_to_quiz_index(self, index):
+        self.quiz.selectQuiz(index)
         self.stacked.setCurrentIndex(2)
     
     def go_to_answer(self):
@@ -457,7 +466,7 @@ class Teacher_Stacked_Course(QMainWindow):
             # You can implement the functionality here, such as saving the question and test cases, etc.
             # For demonstration purposes, let's just print a message
             self.add_quiz_from_update()
-            print("Quiz question added2.")
+            
             self.back_from_quiz()
             
         elif self.add_quiz_question.row_counter == 0:
@@ -491,10 +500,16 @@ class Teacher_Stacked_Course(QMainWindow):
             self.lq_list.quiz_index += 1
 
             self.lq_list.quiz_gridLayout.addItem(self.lq_list.verticalSpacer_2, self.lq_list.quiz_index, 0, 1, 1)
-            
+
+    def add_quiz_outside(self, courseCode, moduleIndex):
+        self.add_quiz_question.add_quiz_question(courseCode, moduleIndex)
+        self.go_to_lesson_quiz_index(moduleIndex)
     def add_quiz(self):
-        self.stacked.setCurrentIndex(5)  
-        self.add_quiz_question.add_question_button.clicked.connect(self.update_from_quiz)
+        self.stacked.setCurrentIndex(5) 
+        print(self.lq_list.cID, self.lq_list.moduleIndex)
+        self.add_quiz_question.add_question_button.clicked.connect(lambda: self.add_quiz_outside(self.lq_list.cID, self.lq_list.moduleIndex))
+        print('exit')
+
         
     # def add_lesson(self):
     #     # if self.course_list.lineEdit.text() != '' :            

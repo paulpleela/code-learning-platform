@@ -196,4 +196,7 @@ class QuizPage(QMainWindow):
     #     print("Go to previous page")
 
     # def next_page(self):
-    #     print("Go to next page")
+    #     print("Go to next page") 
+
+    def selectQuiz(self, index):
+        pass

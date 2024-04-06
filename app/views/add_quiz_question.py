@@ -3,6 +3,8 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, Q
 from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt, QRect
 
+import requests
+
 class QuizQuestion(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -226,22 +228,81 @@ class QuizQuestion(QMainWindow):
             else:
                 self.error_message.hide()
 
-    def add_quiz_question(self):
-        # Update error message if necessary
+    def add_quiz_question(self, courseCode, moduleIndex):
         self.update_error_message()
 
         # Check if there are no errors and at least one test case row is added
-        if self.error_message.isHidden() and self.row_counter > 0:
-            # This method would be responsible for adding the quiz question to your application
-            # You can implement the functionality here, such as saving the question and test cases, etc.
-            # For demonstration purposes, let's just print a message
-            print("Quiz question added")
-            # self.clear_fields()
+        if self.row_counter > 0:
+            input_var_names = []
+            test_cases = {}
+
+            for row in range(1, self.row_counter + 1):
+                input_values = []
+                output_value = None
+
+                for col in range(1, self.test_cases_grid_layout.columnCount()):
+                    widget = self.test_cases_grid_layout.itemAtPosition(row, col).widget()
+                    if isinstance(widget, QLineEdit):
+                        # Convert the text to the appropriate type
+                        value = self.convert_to_python_type(widget.text().strip())
+                        # If it's the last column, it's the output value
+                        if col == self.test_cases_grid_layout.columnCount() - 1:
+                            output_value = value
+                        else:
+                            input_values.append(value)
+
+                # If there are input values and an output value, add them to test_cases dictionary
+                if input_values and output_value is not None:
+                    # Convert input values to a tuple and add to test_cases
+                    test_cases[str(tuple(input_values))] = output_value
+
+            # Gather input variable names from the first row
+            for col in range(1, self.test_cases_grid_layout.columnCount() - 1):
+                widget = self.test_cases_grid_layout.itemAtPosition(0, col).widget()
+                if isinstance(widget, QLineEdit):
+                    input_var_names.append(widget.text().strip())
+
+            # Get question name and question instructions
+            question_name = self.question_name_edit.text().strip()
+            question_instructions = self.question_instructions_edit.toPlainText().strip()
+
+            data = {
+                "questionName": question_name,
+                "questionInstruction": question_instructions,
+                "inputVarNameList": input_var_names,
+                "testCaseDict": test_cases
+            }
+
+            response = requests.post(f"http://127.0.0.1:8000/quizz/{courseCode}/{moduleIndex}", json=data)
+
+            # Check if the request was successful
+            if response.status_code == 200:
+                self.clear_fields()
+                print("added quiz")
+            else:
+                print(response.text)
+
         elif self.row_counter == 0:
             # Show error message if no test cases are added
             self.error_message.setText("Add at least 1 test case")
             self.error_message.show()
 
+    def convert_to_python_type(self, value):
+        try:
+            # Try converting to integer
+            return int(value)
+        except ValueError:
+            try:
+                # Try converting to float
+                return float(value)
+            except ValueError:
+                # Try converting to dictionary
+                try:
+                    return eval(value)
+                except (NameError, SyntaxError):
+                    # If conversion to dictionary fails, return the value as is (string)
+                    return value
+            
     def clear_fields(self):
         # Clear question name and instructions
         self.question_name_edit.clear()
