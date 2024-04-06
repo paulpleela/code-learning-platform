@@ -10,7 +10,7 @@ class Module(persistent.Persistent):
 
 
       def checkLesson_ByIndex(self, lessonIndex):
-            if int(lessonIndex) < len(self.LessonList):
+            if int(lessonIndex) < len(self.lessonList):
                   return True
             else:
                   return False
@@ -28,10 +28,10 @@ class Module(persistent.Persistent):
             self.DueDate = moduleDueDate
 
       def add_lesson(self, lesson):
-            self.LessonList.append(lesson)
+            self.lessonList.append(lesson)
 
       def remove_lesson(self, lesson):
-            self.LessonList.remove(lesson)
+            self.lessonList.remove(lesson)
       
       def add_question(self, question):
             self.QuestionsList.append(question)

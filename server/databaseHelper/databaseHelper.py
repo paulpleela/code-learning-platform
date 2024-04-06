@@ -348,13 +348,16 @@ class LessonOperations:
     
     ''' -----------------What Both students and teachers can do to the lesson-----------------'''
     def get_lesson_ByIndex(self, course_code, module_index, lesson_index):
+        print("here")
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
             if course.checkModule_ByIndex(module_index):    # True
-                module = course.moduleList[module_index]
+                module = course.moduleList[int(module_index)]
+                print("Hereddddd")
                 if module.checkLesson_ByIndex(lesson_index):    # True
-                    return module.lessonList[int(lesson_index)]
-        return None
+                    print(module.lessonList[int(lesson_index)].filePath)
+                    return module.lessonList[int(lesson_index)].filePath
+            return None
     
     def get_all_lessons(self, course_code, module_index):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -367,20 +370,24 @@ class LessonOperations:
     ''' -----------------What Teacher can do to the lesson-----------------'''
     def create_lesson(self, course_code, moduleIndex, lesson):
         # Check if the course exists
-
+        print("creating lesson")
+        print("courseCode")
         try:
+            print("!!", hasattr(self.root, 'courses'))
+            print(self.root.courses[course_code])
             if hasattr(self.root, 'courses') and course_code in self.root.courses:
                 course = self.root.courses[course_code]
+                print("coursse exit")
                 if course.checkModule_ByIndex(moduleIndex):
+                    print("chkec module by index")
                     module = course.moduleList[int(moduleIndex)]
                     if not hasattr(module, 'lessonList'):
                         module.lessonList = []
+                    print("module create lesson")
                     module.lessonList.append(lesson)
                     transaction.commit()
                     return True  # Operation succeeded
         except Exception as e:
-            # Rollback transaction in case of any exception
-            transaction.rollback()
             print("An error occurred:", str(e))
             return False
         

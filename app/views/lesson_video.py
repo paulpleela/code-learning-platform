@@ -13,7 +13,7 @@ from PySide6.QtMultimediaWidgets import QVideoWidget
 MP4 = 'video/mp4'
 
 
-class MainWindow(QMainWindow):
+class LessonVideo(QMainWindow):
 
     def __init__(self):
         super().__init__()
@@ -94,21 +94,28 @@ class MainWindow(QMainWindow):
         print(error_string, file=sys.stderr)
         self.show_status_message(error_string)
 
+    def setFilePath(self, file_path):
+        url = QUrl.fromLocalFile(file_path)
+        self._playlist.append(url)
+        self._playlist_index = len(self._playlist) - 1
+        self._player.setSource(url)
+        self._player.play()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    main_win = MainWindow()
-    available_geometry = main_win.screen().availableGeometry()
-    main_win.resize(available_geometry.width() / 3,
-                    available_geometry.height() / 2)
 
-    # Set the fixed path to your desired file
-    file_path = "path/to/mp4/file"
-    url = QUrl.fromLocalFile(file_path)
-    main_win._playlist.append(url)
-    main_win._playlist_index = len(main_win._playlist) - 1
-    main_win._player.setSource(url)
-    main_win._player.play()
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     main_win = MainWindow()
+#     available_geometry = main_win.screen().availableGeometry()
+#     main_win.resize(available_geometry.width() / 3,
+#                     available_geometry.height() / 2)
 
-    main_win.show()
-    sys.exit(app.exec())
+#     # Set the fixed path to file
+#     file_path = "path/to/mp4/file"
+#     url = QUrl.fromLocalFile(file_path)
+#     main_win._playlist.append(url)
+#     main_win._playlist_index = len(main_win._playlist) - 1
+#     main_win._player.setSource(url)
+#     main_win._player.play()
+
+#     main_win.show()
+#     sys.exit(app.exec())

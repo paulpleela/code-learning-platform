@@ -209,23 +209,13 @@ async def delete_module(courseCode:str, moduleIndex: str):
     return {"message": "Module deleted successfully"}
 
 '''----------------------------------    Lesson      ---------------------------------- '''
-@app.post("/lesson/{courseCode}/{moduleIndex}/{lessonName}")
-async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file: UploadFile = File(None)):
-
-    if file is None:
-        return {"error": "No file provided"}
-
-    if file.content_type == "application/pdf":
-        file_extension = ".pdf"
-    elif file.content_type == "video/mp4":
-        file_extension = ".mp4"
-    else:
-        return {"error": "Unsupported file type"}
-
-    lessonCode = CodeGenerator.generate_code(prefix="L", length=8)
+@app.post("/lesson/{courseCode}/{moduleIndex}/{lessonName}/{file_type}")
+async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file_type: str, file: UploadFile = File(None)):    
+    lessonCode = fileCodeGenerator.generate_code(prefix="L", length=8)
     # Generate a unique filename
-    file_name = f"{lessonCode}{file_extension}"
+    file_name = f"{lessonCode}{file_type}"
 
+    print("Everything", courseCode, moduleIndex, lessonName, file_name)
     # Create the directory if it doesn't exist
     UPLOAD_DIRECTORY = "static"
     if not os.path.exists(UPLOAD_DIRECTORY):
@@ -236,9 +226,12 @@ async def create_lesson(courseCode: str, moduleIndex: str, lessonName: str, file
     with open(file_path, "wb") as buffer:
         buffer.write(await file.read())
 
+    print("file path", file_path)
     # Optionally, you can save the file information to a database
     # For example:
-    lessonObject = Lesson(lessonName, file_path)
+
+    lessonObject = Lesson(lessonName, file_name)
+    print("create lesson api", courseCode)
     success = db_helper.lesson_operations.create_lesson(courseCode, moduleIndex, lessonObject)
 
     return {"success": success}
@@ -262,6 +255,7 @@ async def get_all_lessonNames(courseCode: str, moduleIndex: str):
 @app.get("/lesson/{courseCode}/{moduleIndex}/{lessonIndex}")
 async def get_lesson_ByIndex(courseCode: str, moduleIndex: str, lessonIndex: str):
     lesson = db_helper.lesson_operations.get_lesson_ByIndex(courseCode, moduleIndex, lessonIndex)
+    print("lesson file path", lesson)
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
 
