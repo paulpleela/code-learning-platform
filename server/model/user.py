@@ -18,7 +18,7 @@ class User(persistent.Persistent):
 class Student(User, persistent.Persistent):
       def __init__(self, username, name, password, role,  enrolledCourseList):
             super().__init__(username, name, password, role)
-  
+
             self.enrolledCourseList = enrolledCourseList
 
       def enroll_course(self, courseCode):
