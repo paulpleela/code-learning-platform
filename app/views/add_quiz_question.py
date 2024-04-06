@@ -230,9 +230,9 @@ class QuizQuestion(QMainWindow):
 
     def add_quiz_question(self, courseCode, moduleIndex):
         self.update_error_message()
-
+        
         # Check if there are no errors and at least one test case row is added
-        if self.row_counter > 0:
+        if self.error_message.isHidden() and self.row_counter > 0:
             input_var_names = []
             test_cases = {}
 
@@ -272,6 +272,9 @@ class QuizQuestion(QMainWindow):
                 "inputVarNameList": input_var_names,
                 "testCaseDict": test_cases
             }
+
+            print("????", input_var_names)
+            print(test_cases)
 
             response = requests.post(f"http://127.0.0.1:8000/quizz/{courseCode}/{moduleIndex}", json=data)
 

@@ -33,7 +33,7 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         self.lesson_edit = {}
         self.lesson_index = 0
         
-        self.quizzes = ['ign', 'fed', 'cga']
+        self.quizzes = []
         self.quiz_buttons = []
         self.quiz_edit = {}
         self.quiz_delete = {}
@@ -227,13 +227,66 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         self.lesson_gridLayout.addItem(self.verticalSpacer, self.lesson_index, 0, 1, 1)
             
 
-    def set_courseCode_moduleIndex(self, courseCode, moduleIndex):
+    def updateQuizUi(self, quizzes):
+        print('update')
+        # Clear existing lesson buttons
+        for button in self.quiz_buttons:
+            button.deleteLater()
+        for button in self.quiz_delete:
+            button.deleteLater()
+        for button in self.quiz_edit:
+            button.deleteLater()
+        self.lesson_gridLayout.removeItem(self.verticalSpacer)
+        
+        self.quiz_delete = {}
+        self.quiz_edit = {}
+        self.quiz_buttons = []
+        self.quiz_index = 0
+        
+        # Add new lessons
+        for quiz_name in quizzes:
+            button = QPushButton(self.quiz_widget)
+            button.setObjectName(f"quiz_{self.quiz_index + 1}")
+            button.setText(quiz_name)
+            self.quiz_gridLayout.addWidget(button, self.quiz_index, 0, 1, 1)
+            self.quiz_buttons.append(button)
+            
+            edit = QPushButton(self.quiz_widget)
+            edit.setObjectName(f"qedit_{self.quiz_index + 1}")
+            edit.setText('Edit')
+            self.quiz_gridLayout.addWidget(edit, self.quiz_index, 1, 1, 1)
+            self.quiz_edit[edit] = self.quiz_index
+            
+            delete = QPushButton(self.quiz_widget)
+            delete.setObjectName(f"qdelete_{self.quiz_index + 1}")
+            delete.setText('Delete')
+            delete.clicked.connect(self.delete_quiz)
+            self.quiz_gridLayout.addWidget(delete, self.quiz_index, 2, 1, 1)
+            self.quiz_delete[delete] = self.quiz_index 
+            
+            self.quiz_index += 1
+            
+        self.quiz_gridLayout.addItem(self.verticalSpacer, self.quiz_index, 0, 1, 1)
+            
+
+    def set_courseCode_moduleIndex(self, courseCode, moduleIndex, lesson_or_quiz):
         self.cID = courseCode
         self.moduleIndex = moduleIndex
-        response = requests.get(f"http://127.0.0.1:8000/lessons/{courseCode}/{moduleIndex}")
 
-        if response.status_code == 200:
-            data = response.json()
-            lessons = [lesson_obj["name"] for lesson_obj in data["lessons"]]
-            self.updateLessonsUi(lessons)
-            print(data)
+        if lesson_or_quiz == "lesson":
+            response = requests.get(f"http://127.0.0.1:8000/lessons/{courseCode}/{moduleIndex}")
+
+            if response.status_code == 200:
+                data = response.json()
+                lessons = [lesson_obj["name"] for lesson_obj in data["lessons"]]
+                self.updateLessonsUi(lessons)
+                print(data)
+        else:
+            print('begin')
+            response = requests.get(f"http://127.0.0.1:8000/quizzes/{courseCode}/{moduleIndex}")
+            print("quiz reponse", response.text)
+            if response.status_code == 200:
+                data = response.json()
+                quizzes = [quiz_obj["questionName"] for quiz_obj in data["quizzes"]]
+                self.updateQuizUi(quizzes)
+                print("quizdata", data)
