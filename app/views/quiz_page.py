@@ -6,6 +6,8 @@ from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont, QPainter, 
 from PySide6.QtCore import Qt, QRect, QSize
 
 from views.navigation import NavigationBar
+import requests
+import json
 
 class LineNumberArea(QWidget):
     def __init__(self, editor):
@@ -147,10 +149,9 @@ class QuizPage(QMainWindow):
         self.run_button.clicked.connect(self.run_code)
 
         instructions = QVBoxLayout()
-        instruction_text = QTextEdit()
-        instruction_text.setPlainText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
-        instruction_text.setReadOnly(True)
-        instructions.addWidget(instruction_text)
+        self.instruction_text = QTextEdit()
+        self.instruction_text.setReadOnly(True)
+        instructions.addWidget(self.instruction_text)
 
         code_runner = QVBoxLayout()
         splitter = QSplitter(Qt.Vertical)
@@ -198,5 +199,9 @@ class QuizPage(QMainWindow):
     # def next_page(self):
     #     print("Go to next page") 
 
-    def selectQuiz(self, index):
-        pass
+    def selectQuiz(self, courseCode, moduleIndex, quizIndex):
+        response = requests.get(f"http://127.0.0.1:8000/quizz/{courseCode}/{moduleIndex}/{quizIndex}")
+        
+        if response.status_code == 200:
+            self.instruction_text.setPlainText(response.json().get("questionInstruction", ""))
+            
