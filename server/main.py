@@ -349,4 +349,5 @@ async def get_certifications_byUserName(userName: str):
 @app.get("/calendar/{userName}")
 async def get_calendar_byUserName(userName: str):
     calendar = db_helper.calendar_operations.return_calendar_by_userName(userName)
+    
     return {"calendar": calendar}
