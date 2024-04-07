@@ -629,7 +629,15 @@ class dashboardOperations:
         return dashboard
 
                 
-
+    def checkIfUserIsStudent(self, userName):
+        if hasattr(self.root, 'students') and userName in self.root.students:
+            return True
+        return False
+    
+    def checkIfUserIsTeacher(self, userName):
+        if hasattr(self.root, 'teachers') and userName in self.root.teachers:
+            return True
+        return False
 
 class ZODBHelper:
     def __init__(self, db_file):
