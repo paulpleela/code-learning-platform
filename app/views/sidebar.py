@@ -291,7 +291,7 @@ class Sidebar(object):
         self.stackedWidget.setObjectName(u"stackedWidget")
         
         ################################################
-        dashboard = Dashboard()
+        dashboard = Dashboard(self.username)
         self.page = dashboard
         
         self.page.setObjectName(u"page")
@@ -479,11 +479,16 @@ class Sidebar(object):
     def set_user(self, role, username):
         self.role = role
         self.username = username
+        
+        self.page = Dashboard(username)
+        self.stackedWidget.removeWidget(self.stackedWidget.widget(0))
+        self.stackedWidget.insertWidget(0, self.page)
+        
         if self.role == "teacher":
             stack_course = Teacher_Stacked_Course(username)
         else:
             stack_course = Stacked_Course(username)
-
+ 
         self.page_3 = stack_course
         self.stackedWidget.removeWidget(self.stackedWidget.widget(2))  # Remove the current page_3
         self.stackedWidget.insertWidget(2, self.page_3)

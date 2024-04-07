@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QPushButton, QApplication
 from .sidebar import Sidebar
 from PySide6.QtCore import QObject, Signal
+from views.sidebar import Sidebar
 
 class MainWindow(QMainWindow):
 
@@ -50,6 +51,7 @@ class MainWindow(QMainWindow):
     ## functions for changing menu page
     def on_dashboard_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(0)
+        
 
     def on_calendar_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)

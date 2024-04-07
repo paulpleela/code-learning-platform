@@ -34,6 +34,7 @@ def authenticate():
         main_window.set_user(role, username)
 
         widget.setCurrentIndex(2)
+        
         widget.setWindowTitle("PyQuizT")
     else:
         try:

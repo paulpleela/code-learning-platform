@@ -219,6 +219,12 @@ class Stacked_Course(QMainWindow):
                     # self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
                     
                     # print(QPushButton(self.course_list.scrollAreaWidgetContents))
+                    delete = QPushButton(self.course_list.scrollAreaWidgetContents)
+                    delete.setObjectName(f"delete_{self.course_list.index + 1}")
+                    delete.setText('Leave')
+                    self.course_list.delete_buttons[delete]  = self.course_list.index
+                    delete.clicked.connect(self.course_list.delete_course)
+                    self.course_list.gridLayout.addWidget(delete, self.course_list.index, 1, 1, 1)
 
                     self.course_list.index += 1
 
