@@ -115,7 +115,6 @@ class Teacher_Module_list(QMainWindow):
         
         if position is not None:
             response = requests.delete(f"http://127.0.0.1:8000/module/{self.cID}/{position}")
-            print("del res", response)
             if response:
                 # Remove widgets in the same row as the delete button
                 for j in range(self.gridLayout.columnCount()):
@@ -126,21 +125,27 @@ class Teacher_Module_list(QMainWindow):
                             if widget is not None:
                                 self.gridLayout.removeWidget(widget)
                                 widget.deleteLater()
+
+                        
                 # Clear references to deleted buttons
                 self.delete_buttons.clear()
                 self.edit_buttons.clear()
                 self.module_buttons.clear()
                 self.index = 0
+                self.updateAPI()
 
     def set_courseCode(self, courseCode):
         self.cID = courseCode
-        print("SETTING COURSE CODE:", self.cID)
+        self.updateAPI()
+
+
+    def updateAPI(self):
         # Fetch modules data from the backend
-        response = requests.get(f"http://127.0.0.1:8000/modules/{courseCode}")
+        response = requests.get(f"http://127.0.0.1:8000/modules/{self.cID}")
 
         if response.status_code == 200:
             # Clear existing modules
-            self.clear_modules()
+            self.module.clear()
 
             # Parse the response and add modules to the UI
             data = response.json()
@@ -152,17 +157,12 @@ class Teacher_Module_list(QMainWindow):
             # Update the UI with new modules
             self.update_ui_with_modules()
 
-    def clear_modules(self):
-        self.module.clear()
-
     def update_ui_with_modules(self):
         # Clear the layout
         for i in reversed(range(self.gridLayout.count())):
-            widget = self.gridLayout.itemAt(i).widget()
-            if widget:
-                widget.deleteLater()
-            # if widget is not None:
-            #     widget.setParent(None)
+                widget = self.gridLayout.itemAt(i).widget()
+                if widget:
+                    widget.deleteLater()
         self.gridLayout.removeItem(self.verticalSpacer)
         # Reinitialize index
         self.index = 0
@@ -200,7 +200,7 @@ class Teacher_Module_list(QMainWindow):
         self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
         # Update course ID label
-        self.courseID.setText(f"courseID : {self.cID}")
+        self.courseID.setText(f"Course Code : {self.cID}")
 
         # Update the scroll area widget
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)

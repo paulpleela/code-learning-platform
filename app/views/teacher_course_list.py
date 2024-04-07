@@ -110,33 +110,29 @@ class Teacher_Course_list(QMainWindow):
         self.enroll_btn.setText('Add Course')
 
         QMetaObject.connectSlotsByName(Form)
-    # setupUi
+        # setupUi
+        
     def delete_course(self):
-        sender_button = self.sender()                    
+        sender_button = self.sender()
         position = None
         if sender_button in self.delete_buttons:
             position = self.delete_buttons[sender_button]
         print(position)
-        if position != None:
+        if position is not None and 0 <= position < len(self.course_codes):
             response = requests.delete(f"http://127.0.0.1:8000/course/{self.course_codes[position]}/{self.username}")
 
             if response.status_code == 200:
                 data = response.json()
                 success = data["success"]
                 print(f"Deletion success: {success}")
-                # code to remove from UI            
-                if position != None:
-                    for j in range(self.gridLayout.columnCount()):
-                        item = self.gridLayout.itemAtPosition(position, j)
-                        # item = self.gridLayout.itemAtPosition(row, j)
-                        if item:
-                            widget = item.widget()
-                            self.gridLayout.removeWidget(widget)
-                            widget.deleteLater()
-                    del self.delete_buttons[sender_button]
-                    # print(self.delete_buttons)
+                self.updateUI()  # Update UI after successful deletion
+
             else:
                 print(f"Failed to delete course. Status code: {response.status_code}, Error: {response.text}")
+        else:
+            print("Failed to delete course: invalid position or course code")
+
+
 
     def updateAPI(self):
         response = requests.get("http://127.0.0.1:8000/api/teacher/course_list", params={"username": self.username})
@@ -159,3 +155,32 @@ class Teacher_Course_list(QMainWindow):
         print("index", index)
         return self.course_codes[index]
     
+    def updateUI(self):
+        # Clear existing course buttons
+        for button in self.course_buttons:
+            button.deleteLater()
+        self.course_buttons.clear()
+
+        # Re-fetch course list from API
+        self.updateAPI()
+
+        # Re-create course buttons
+        for index, course_name in enumerate(self.course):
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"course_{index + 1}")
+            button.setText(course_name)
+            self.gridLayout.addWidget(button, index, 0, 1, 1)
+            self.course_buttons.append(button)
+
+            edit = QPushButton(self.scrollAreaWidgetContents)
+            edit.setObjectName(f"edit_{index + 1}")
+            edit.setText('Edit')
+            self.gridLayout.addWidget(edit, index, 1, 1, 1)
+            self.edit_buttons[edit] = index
+
+            delete = QPushButton(self.scrollAreaWidgetContents)
+            delete.setObjectName(f"delete_{index + 1}")
+            delete.setText('Delete')
+            self.delete_buttons[delete] = index
+            delete.clicked.connect(self.delete_course)
+            self.gridLayout.addWidget(delete, index, 2, 1, 1)
