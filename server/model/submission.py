@@ -1,23 +1,7 @@
 import persistent
 
 class Submission(persistent.Persistent):
-      def __init__(self, pythonCode, textcaseResultList, score, submissionTime):
+      def __init__(self, pythonCode, textcaseResultList):
             self.pythonCode = pythonCode
-            self.textcaseResultList = textcaseResultList
-            self.score = score
-            self.submissionTime = submissionTime
+            self.textcaseResultList = textcaseResultList    # [none, none, fail]
 
-      def edit_details(self, pythonCode, textcaseResultList, score, submissionTime):
-            self.pythonCode = pythonCode
-            self.textcaseResultList = textcaseResultList
-            self.score = score
-            self.submissionTime = submissionTime
-
-      def run_test_cases(self, pythonCode):
-            pass
-
-      def calculate_score(self, textcaseResultList):
-            pass
-
-      
-          

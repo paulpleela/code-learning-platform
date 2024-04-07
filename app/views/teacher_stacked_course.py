@@ -158,7 +158,7 @@ class Teacher_Stacked_Course(QMainWindow):
         for button in self.lq_list.lesson_edit:
             button.clicked.connect(self.go_to_lesson_edit)
         for button in self.lq_list.lesson_buttons:
-            button.clicked.connect(self.go_to_lesson)
+            button.clicked.connect(lambda: self.go_to_lesson(index))
 
 
         for button in self.lq_list.quiz_edit:

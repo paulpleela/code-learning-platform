@@ -50,14 +50,9 @@ class QuizzModel(BaseModel):
 
 
 class SubmissionModel(BaseModel):
-    name: str
-    content: str
-    answer: str
+    pythonCode: str
+    testCaseResults: list # [fail, none, fail]
 
-class testCaseModel(BaseModel):
-    name: str
-    input: str
-    output: str
 
 print("------------------------------   Server running......    ------------------------------")
 
@@ -279,7 +274,7 @@ async def delete_lesson(courseCode: str, moduleIndex: str, lessonIndex: str):
 @app.post("/quizz/{courseCode}/{moduleIndex}")
 async def create_quizz(courseCode: str, moduleIndex: str, quizz: QuizzModel):
     
-    quizzObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, {})
+    quizzObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, [])
     success = db_helper.quizz_operations.create_quizz(courseCode, moduleIndex, quizzObject)
 
     return {"success": success}
@@ -310,7 +305,7 @@ async def get_quizz_ByIndex(courseCode: str, moduleIndex: str, quizzIndex: str):
 
 @app.put("/quizz/{courseCode}/{moduleIndex}/{quizzIndex}")
 async def update_quizz(courseCode: str, moduleIndex: str,  quizzIndex: str, quizz: QuizzModel):
-    quizObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, {})
+    quizObject = Quiz(quizz.questionName, quizz.questionInstruction, quizz.inputVarNameList, quizz.testCaseDict, {}, [])
     db_helper.quizz_operations.update_quizz_ByIndex(courseCode, moduleIndex, quizzIndex, quizObject)
 
 @app.delete("/quizz/{courseCode}/{moduleIndex}/{quizzIndex}")
@@ -326,45 +321,12 @@ async def delete_quizz(courseCode: str, moduleIndex: str, quizzIndex: str):
 
 '''----------------------------------    Submission      ---------------------------------- '''
 
-@app.post("/submission")
-async def create_submission(submission: SubmissionModel):
-    db_helper.submission_operations.create_submission(submission)
+@app.post("/submission/{courseCode}/{moduleIndex}/{quizzIndex}/{userName}")
+async def create_submission(courseCode: str, moduleIndex: str, quizzIndex: str, userName: str, submissionModel: SubmissionModel):
 
-    return {"message": "Submission created successfully"}
+    submission = Submission(submissionModel.pythonCode, submissionModel.testCaseResults)
 
+    success = db_helper.submission_operations.create_submission(courseCode, moduleIndex, quizzIndex, userName, submission)
 
-@app.get("/submissions")
-async def get_all_submissions():
-    submissions = db_helper.submission_operations.get_all_submissions()
-    return {"submissions": submissions}
+    return {"success": success}
 
-@app.get("/submission/{submissionName}")
-async def get_submission(submissionName: str):
-    submission = db_helper.submission_operations.get_submission(submissionName)
-    if not submission:
-        raise HTTPException(status_code=404, detail="Submission not found")
-
-    return submission
-
-@app.put("/submission/{submissionName}")
-async def update_submission(submissionName: str, submission: SubmissionModel):
-    db_helper.submission_operations.update_submission(submissionName, submission)
-
-
-@app.delete("/submission/{submissionName}")
-async def delete_submission(submissionName: str):
-    existing_submission = db_helper.get_submission(submissionName)
-    if not existing_submission:
-        raise HTTPException(status_code=404, detail="Submission not found")
-
-    db_helper.delete_submission(submissionName)
-
-    return {"message": "Submission deleted successfully"}
-
-'''----------------------------------    Test Case      ---------------------------------- '''
-
-@app.post("/testcase")
-async def create_testcase(testcase: testCaseModel):
-    db_helper.testcase_operations.create_testcase(testcase)
-
-    return {"message": "Test Case created successfully"}

@@ -7,7 +7,7 @@ class Course(persistent.Persistent):
             self.courseCode = courseCode
             self.courseTeacherName = courseTeacherName
 
-            self.moduleList = moduleList                # List of modules objects
+            self = moduleList                # List of modules objects
             self.studentList = studentList              # List of students by userName
             self.studentStatusList =  studentStatusList # {"username": True}
  
