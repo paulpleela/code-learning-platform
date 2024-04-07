@@ -115,14 +115,19 @@ class Course_list(QMainWindow):
         if sender_button in self.delete_buttons:
             position = self.delete_buttons[sender_button]
         
-        if position != None:
-            for j in range(self.gridLayout.columnCount()):
-                item = self.gridLayout.itemAtPosition(position, j)
-                if item:
-                    widget = item.widget()
-                    self.gridLayout.removeWidget(widget)
-                    widget.deleteLater()
-            del self.delete_buttons[sender_button]
+            if position is not None and 0 <= position < len(self.course_codes):
+                response = requests.post("http://127.0.0.1:8000/api/unenroll", params={"courseCode": self.course_codes[position], "username": self.username})
+
+                if response.status_code == 200:
+                    data = response.json()
+                    success = data["success"]
+                    print(f"Deletion success: {success}")
+                    self.updateUI()  # Update UI after successful deletion
+
+                else:
+                    print(f"Failed to delete course. Status code: {response.status_code}, Error: {response.text}")
+            else:
+                print("Failed to delete course: invalid position or course code")
 
     # def enroll_course(self):
     #     self.gridLayout.removeItem(self.verticalSpacer)
@@ -154,3 +159,6 @@ class Course_list(QMainWindow):
 
         self.course = course_names
         self.course_codes = course_codes
+    
+    def get_courseCode(self, index):
+        return self.course_codes[index]
