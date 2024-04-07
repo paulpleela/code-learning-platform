@@ -159,7 +159,7 @@ async def delete_course(courseCode: str, username: str):
 @app.post("/module/{moduleName}/{courseCode}")
 async def create_module(moduleName: str, courseCode: str):
 
-    moduleObject = Module(moduleName, [], [], "", set())
+    moduleObject = Module(moduleName, [], [], "", [])
     success = db_helper.module_operations.create_module(moduleObject, courseCode)
     
     return {"success": success}
