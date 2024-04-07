@@ -19,11 +19,19 @@ from PySide6.QtWidgets import (QApplication, QPushButton, QScrollArea, QSizePoli
     QSpacerItem, QVBoxLayout, QWidget, QMainWindow, QLineEdit, QGridLayout, QLabel)
 
 from PySide6 import QtCore, QtGui, QtWidgets
-
+import requests
 class ListItem(QMainWindow):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
-        self.name = ['list1', 'list2', 'list3']
+        self.username = username
+        response = requests.get(f"http://127.0.0.1:8000/certifications/{self.username}")
+        
+        print("data certifications", data["certifications"])
+
+        self.name = []
+        if response.status_code == 200:
+            data = response.json()
+            self.name = data["certifications"]
         self.buttons = []
         self.index = 0
         

@@ -51,14 +51,14 @@ class CalendarTable(QWidget):
 
         self.setLayout(layout)
 
-        self.updateCalendar()
+        self.updateCalendar(None)
 
-    def updateCalendar(self):
-        username = ""
-        response = requests.get(f"http://127.0.0.1:8000/calendar/{username}")
+    def updateCalendar(self, username):
+        if username != None:
+            response = requests.get(f"http://127.0.0.1:8000/calendar/{username}")
 
-        if response.status_code == 200:
-            assignments = response.json()["calendar"]
+            if response.status_code == 200:
+                assignments = response.json()["calendar"]
 
         current_date = self.current_date.addDays(-self.current_date.dayOfWeek())
 
@@ -127,15 +127,15 @@ class CalendarTable(QWidget):
         self.table.resizeRowsToContents()
 
     def resizeEvent(self, event):
-        self.updateCalendar()
+        self.updateCalendar(None)
 
     def prevWeek(self):
         self.current_date = self.current_date.addDays(-7)  
-        self.updateCalendar()
+        self.updateCalendar(None)
 
     def nextWeek(self):
         self.current_date = self.current_date.addDays(7)  
-        self.updateCalendar()
+        self.updateCalendar(None)
 
     def handleItemClick(self, item):
         assignment_name = item.text()
@@ -167,4 +167,4 @@ class Calendar(QMainWindow):
     def handle_calendar_resize(self):
         # Call the resizeEvent method of the calendar widget
         self.calendar.resizeEvent(None)
-        
+    
