@@ -593,6 +593,9 @@ class dashboardOperations:
         dashboard["totalCompletedModules"] = totalCompletedModules
         dashboard["totalModules"] = totalModules
 
+        print("dashboard", dashboard['courseNameList'])
+        print("dashboard", dashboard['totalCompletedModules'])
+        print("dashboard", dashboard['totalModules'])
         return dashboard
     
     def get_dashboard_by_teacherUserName(self, userName):
