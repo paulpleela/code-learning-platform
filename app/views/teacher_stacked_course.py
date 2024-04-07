@@ -196,6 +196,8 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(2)
     
     def go_to_answer(self):
+        self.quiz.checkSubmission()
+        self.show_ans.setResults(self.quiz.results)
         self.stacked.setCurrentIndex(3)
     
     def go_to_lesson(self, lessonIndex):

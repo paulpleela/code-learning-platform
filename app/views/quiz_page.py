@@ -178,6 +178,8 @@ class QuizPage(QMainWindow):
         widget.setLayout(layout)
         self.setCentralWidget(widget)
 
+        self.results = []
+
     def run_code(self):
         code = self.input_text.toPlainText()
         if "input(" in code:
@@ -261,7 +263,7 @@ class QuizPage(QMainWindow):
             try:
                 completed_process = subprocess.run(['python', '-c', input_values[i] + code], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=timeout)
                 if completed_process.returncode == 0 and completed_process.stdout.strip() == expected_output[i].strip():
-                    results.append(None)
+                    results.append("Passed")
                 else:
                     results.append((input_values[i], completed_process.stdout.strip() or completed_process.stderr.strip()))
             except subprocess.TimeoutExpired:
@@ -269,7 +271,7 @@ class QuizPage(QMainWindow):
             except Exception as e:
                 results.append(str(e))
 
-        return results
+        self.results = results
     
     def convert_to_python_type(self, value):
         try:

@@ -25,8 +25,9 @@ class Quiz_answer_list(QtWidgets.QWidget):
         super().__init__()
         self.buttons = []
         self.index = 0
-        self.test_case = ['a' , 'b' , 'c' , 'd']
-        self.answer = ['a' , 'b' , 'c' , 'd']
+        self.results = []
+        self.test_case = []
+        self.answer = []
         
         self.setupUi(self)
         
@@ -45,26 +46,9 @@ class Quiz_answer_list(QtWidgets.QWidget):
         self.gridLayout = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(u"gridLayout")
         
-        # for loop making pushButton and Label
-        for _ in range(len(self.test_case)):
-            button = QPushButton(self.scrollAreaWidgetContents)
-            button.setObjectName(f"pushButton_{self.index + 1}")
-            button.setText(f"Test_case_{self.index + 1}")
-            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
-            self.buttons.append(button)
-            
-            label = QLabel(self.scrollAreaWidgetContents)
-            label.setObjectName(f"label_{self.index + 1}")
-            label.setText("Correct?")
-            self.gridLayout.addWidget(label, self.index, 1, 1, 1)
-            
-            self.index += 1
-        # makes verticleSpacer
         self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
         
-        ############################################
-
         self.gridLayout.setColumnStretch(5, 0)
         self.gridLayout.setColumnStretch(1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
@@ -77,13 +61,48 @@ class Quiz_answer_list(QtWidgets.QWidget):
         self.next.setObjectName(u"next")
         self.next.setGeometry(QRect(650, 510, 131, 24))
         self.next.setText("Exit Quiz")
-
         self.next.setVisible(False)
         
-        if self.test_case == self.answer:
-            self.next.setVisible(True)
-
         QMetaObject.connectSlotsByName(Form)
-    # setupUi
 
+    def setResults(self, results):
+        self.results = results
+        
+        # Clearing previous buttons and labels
+        for button in self.buttons:
+            button.deleteLater()
+        self.buttons = []
+        
+        # Clearing previous labels
+        for i in range(self.gridLayout.count()):
+            item = self.gridLayout.itemAt(i)
+            if item.widget():
+                item.widget().deleteLater()
 
+        self.index = 0
+        all_passed = True
+        # Adding buttons and labels based on results data
+        for result in self.results:
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"pushButton_{self.index + 1}")
+            button.setText(f"Test_case_{self.index + 1}")
+            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
+            self.buttons.append(button)
+            
+            label = QLabel(self.scrollAreaWidgetContents)
+            label.setObjectName(f"label_{self.index + 1}")
+            if result == "Passed":
+                label.setText(result)
+            else:
+                label.setText("Error")
+                all_passed = False
+            self.gridLayout.addWidget(label, self.index, 1, 1, 1)
+            
+            self.index += 1
+        
+        # Adding vertical spacer
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
+        
+        # Checking if all test cases are correct
+        if all_passed:
+            self.next.setVisible(True)
