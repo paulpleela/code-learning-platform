@@ -22,12 +22,26 @@ from PySide6.QtWidgets import *
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt
 
+import requests 
+
 class Dashboard(QMainWindow):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
-        self.name = ['list1', 'list2', 'list3']
-        self.complete = [2 , 5 , 3]
-        self.number_of_total = [3, 5 , 8]
+        self.name = []
+        self.complete = []
+        self.number_of_total = []
+        self.username = username
+        
+        response = requests.get(f"http://127.0.0.1:8000/dashboard/checkUser/{self.username}")
+        print(self.username , response)
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
+            if data["role"] == 'student':
+                self.updateStudentAPI()
+            elif data["role"] == 'teacher':
+                self.updateTeacherAPI()
+        print(self.name, self.complete, self.number_of_total)
         
         self.buttons = []
         self.index = 0
@@ -58,7 +72,10 @@ class Dashboard(QMainWindow):
             self.buttons.append(button)
             
             bar = QProgressBar(self.scrollAreaWidgetContents)
-            bar.setValue(self.complete[self.index]/self.number_of_total[self.index] * 100)
+            if self.number_of_total[self.index] == 0:
+                bar.setValue(0)
+            else:
+                bar.setValue(self.complete[self.index]/self.number_of_total[self.index] * 100)
             bar.setAlignment(Qt.AlignCenter) 
             bar.setStyleSheet('''   QProgressBar {
                                     border: solid grey;
@@ -83,5 +100,88 @@ class Dashboard(QMainWindow):
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
+    
+    def updateStudentAPI(self):
+        response = requests.get(f"http://127.0.0.1:8000/dashboard/student/{self.username}")
+        course_nameList = []
+        totalFinished = []
+        totalModule = []
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
+            course_nameList = data["dashboard"]["courseNameList"]
+            totalFinished = data["dashboard"]["totalCompletedModules"]
+            totalModule = data["dashboard"]["totalModules"]
+        
+        self.name = course_nameList
+        self.complete = totalFinished
+        self.number_of_total = totalModule
+    
+    def updateTeacherAPI(self):
+        response = requests.get(f"http://127.0.0.1:8000/dashboard/teacher/{self.username}")
+        course_nameList = []
+        totalFinished = []
+        totalModule = []
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
+            course_nameList = data["dashboard"]["courseNameList"]
+            totalFinished = data["dashboard"]["totalFinishedStudents"]
+            totalModule = data["dashboard"]["totalStudents"]
+        
+        self.name = course_nameList
+        self.complete = totalFinished
+        self.number_of_total = totalModule
+        
+    def updateUI(self):
+        # Clear existing course buttons
+        # for button in self.course_buttons:
+        #     button.deleteLater()
+        for i in reversed(range(self.gridLayout.count())):
+            widget = self.gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        self.gridLayout.removeItem(self.verticalSpacer)
+        
+        self.buttons = []
+        #Update API
+        response = requests.get("http://127.0.0.1:8000/dashboard/checkUser/", params={"username": self.username})
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data["role"] == 'student':
+                self.updateStudentAPI()
+            elif data["role"] == 'teacher':
+                self.updateTeacherAPI()
+        
+        # Re-create course buttons
+        for _ in range(len(self.name)):
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"pushButton_{self.index + 1}")
+            button.setText(self.name[self.index])
+            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
+            self.buttons.append(button)
+            
+            bar = QProgressBar(self.scrollAreaWidgetContents)
+            bar.setValue(self.complete[self.index]/self.number_of_total[self.index] * 100)
+            bar.setAlignment(Qt.AlignCenter) 
+            bar.setStyleSheet('''   QProgressBar {
+                                    border: solid grey;
+                                    border-radius: 15px;
+                                    color: black;
+                                    }
+                                    QProgressBar::chunk 
+                                    {
+                                    background-color: #05B8CC;
+                                    border-radius :15px;
+                                    }      ''')
+            self.gridLayout.addWidget(bar , self.index , 1 ,  1, 1)
+            
+            self.index += 1
+        # makes verticleSpacer
+        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
+
+
 
 
