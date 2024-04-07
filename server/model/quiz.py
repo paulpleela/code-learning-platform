@@ -21,8 +21,9 @@ class Quiz(persistent.Persistent):
       # and add the student userName to which_student_finsished_StatusList
       def checkEverySubmissionPassed_byWhichStudent_And_add_studentName(self):
             for student in self.submissionDict:
-                  if None not in self.submissionDict[student].textcaseResultList:
+                  if all(self.submissionDict[student].textcaseResultList):
                         self.which_student_finsished_StatusList.append(student)
             return self.which_student_finsished_StatusList
+
 
       
