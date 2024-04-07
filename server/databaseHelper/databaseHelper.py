@@ -555,7 +555,15 @@ class calendarOperations:
                     calendarForThatStudent[module.dueDate].append((course.Name, module.name, courseCode))
 
 
-        
+class dashboardOperations:
+    def __init__(self, root):
+        self.root = root
+
+    def get_dashboard_by_userName(self, userName):
+        dashboard = {}
+        if hasattr(self.root, 'students') and userName in self.root.students:
+            student = self.root.students[userName]
+            enrolledCourseList = student.enrolledCourseList
 class ZODBHelper:
     def __init__(self, db_file):
         self.db_file = db_file
