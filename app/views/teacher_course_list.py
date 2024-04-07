@@ -157,9 +157,17 @@ class Teacher_Course_list(QMainWindow):
     
     def updateUI(self):
         # Clear existing course buttons
-        for button in self.course_buttons:
-            button.deleteLater()
-        self.course_buttons.clear()
+        # for button in self.course_buttons:
+        #     button.deleteLater()
+        for i in reversed(range(self.gridLayout.count())):
+            widget = self.gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        self.gridLayout.removeItem(self.verticalSpacer)
+        
+        self.edit_buttons = {}
+        self.delete_buttons = {}
+        self.course_buttons = []
 
         # Re-fetch course list from API
         self.updateAPI()
