@@ -12,7 +12,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from views.list_item import ListItem
 from views.lesson_pdf import LessonPDF
-
+import requests
 class Stacked_Certificate(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -33,9 +33,11 @@ class Stacked_Certificate(QMainWindow):
         ############################## 0
         self.certificate_list = ListItem()
         self.stacked.addWidget(self.certificate_list)
-        
-        for button in self.certificate_list.buttons:
-            button.clicked.connect(self.go_to_show_pdf)
+
+        for idx, button in enumerate(self.certificate_list.buttons):
+            def callback(index=idx):
+                return lambda: self.go_to_show_pdf(index)
+            button.clicked.connect(callback())
         
         ############################## 1
         
@@ -51,5 +53,8 @@ class Stacked_Certificate(QMainWindow):
     def go_to_certificate_list(self):
         self.stacked.setCurrentIndex(0)
         
-    def go_to_show_pdf(self):
-        self.stacked.setCurrentIndex(1)
+    def go_to_show_pdf(self, index):
+        response = requests.get(f"http://127.0.0.1:8000/certifications/")
+
+        if response.status_code == 200:
+            self.stacked.setCurrentIndex(1)

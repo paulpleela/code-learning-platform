@@ -27,7 +27,7 @@ class Student(User, persistent.Persistent):
       def __init__(self, username, name, password, role,  enrolledCourseList):
             super().__init__(username, name, password, role)
             # store the courseName, teacherName in the certification
-            self.certification = [] # [certification1, certification2, certification3]
+            self.certificationList = [] # [certification1, certification2, certification3]
             self.enrolledCourseList = enrolledCourseList
 
       def enroll_course(self, courseCode):
