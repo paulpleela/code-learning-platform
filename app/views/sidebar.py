@@ -29,6 +29,7 @@ from views.lesson_quiz_list import Lesson_Quiz_list
 from views.stacked_course import Stacked_Course
 from views.teacher_stacked_course import Teacher_Stacked_Course
 from views.stacked_certificate import Stacked_Certificate
+from views.dashboard import Dashboard
 
 class Sidebar(object):
     def setupUi(self, MainWindow):
@@ -290,8 +291,8 @@ class Sidebar(object):
         self.stackedWidget.setObjectName(u"stackedWidget")
         
         ################################################
-        list_item = ListItem()
-        self.page = list_item
+        dashboard = Dashboard()
+        self.page = dashboard
         
         self.page.setObjectName(u"page")
         self.gridLayout_2 = QGridLayout(self.page)
