@@ -132,13 +132,13 @@ class Stacked_Course(QMainWindow):
                     self.course_list.buttons.append(button)
                     button.clicked.connect(self.go_to_module)
                     
-                    label = QLabel(self.course_list.scrollAreaWidgetContents)
-                    label.setObjectName(f"label_{self.course_list.index+1}")
-                    label.setText(QCoreApplication.translate("Form", u"Complete?", None))
+                    # label = QLabel(self.course_list.scrollAreaWidgetContents)
+                    # label.setObjectName(f"label_{self.course_list.index+1}")
+                    # label.setText(QCoreApplication.translate("Form", u"Complete?", None))
                     
-                    self.course_list.lineEdit.clear()
+                    # self.course_list.lineEdit.clear()
 
-                    self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
+                    # self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
                     
                     # print(QPushButton(self.course_list.scrollAreaWidgetContents))
                     delete = QPushButton(self.course_list.scrollAreaWidgetContents)
@@ -146,7 +146,7 @@ class Stacked_Course(QMainWindow):
                     delete.setText('Leave')
                     self.course_list.delete_buttons[delete]  = self.course_list.index
                     delete.clicked.connect(self.course_list.delete_course)
-                    self.course_list.gridLayout.addWidget(delete, self.course_list.index, 2, 1, 1)
+                    self.course_list.gridLayout.addWidget(delete, self.course_list.index, 1, 1, 1)
                     
                     self.course_list.index += 1
 

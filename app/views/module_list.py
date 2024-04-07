@@ -68,9 +68,9 @@ class Module_list(QMainWindow):
         self.return_2.setGeometry(QRect(30, 510, 131, 24))
         self.return_2.setText('<< Go Back')
         
-        self.courseID = QLabel(Form)
-        self.courseID.setText(f"courseID : {self.cID}")
-        self.courseID.setGeometry(QRect(350, 520, 300, 24))
+        # self.courseID = QLabel(Form)
+        # self.courseID.setText(f"courseID : {self.cID}")
+        # self.courseID.setGeometry(QRect(350, 520, 300, 24))
         ############################################
 
         self.gridLayout.setColumnStretch(0, 5)
