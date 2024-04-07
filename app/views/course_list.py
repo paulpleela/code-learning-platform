@@ -72,17 +72,17 @@ class Course_list(QMainWindow):
             self.gridLayout.addWidget(button, self.index, 0, 1, 1)
             self.buttons.append(button)
             
-            label = QLabel(self.scrollAreaWidgetContents)
-            label.setObjectName(f"label_{self.index + 1}")
-            label.setText("Complete?")
-            self.gridLayout.addWidget(label, self.index, 1, 1, 1)
+            # label = QLabel(self.scrollAreaWidgetContents)
+            # label.setObjectName(f"label_{self.index + 1}")
+            # label.setText("Complete?")
+            # self.gridLayout.addWidget(label, self.index, 1, 1, 1)
             
             delete = QPushButton(self.scrollAreaWidgetContents)
             delete.setObjectName(f"delete_{self.index + 1}")
             delete.setText('Leave')
             self.delete_buttons[delete]  = self.index
             delete.clicked.connect(self.delete_course)
-            self.gridLayout.addWidget(delete, self.index, 2, 1, 1)
+            self.gridLayout.addWidget(delete, self.index, 1, 1, 1)
             
             self.index += 1
         # makes verticleSpacer
