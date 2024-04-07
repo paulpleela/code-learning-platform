@@ -625,7 +625,9 @@ class dashboardOperations:
         dashboard["courseNameList"] = courseNameList
         dashboard["totalFinishedStudents"] = totalFinishedStudents
         dashboard["totalStudents"] = totalStudents
-
+        print("dashboard", dashboard['courseNameList'])
+        print("dashboard", dashboard['totalFinishedStudents'])
+        print("dashboard", dashboard['totalStudents'])
         return dashboard
 
                 
