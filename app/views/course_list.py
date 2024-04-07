@@ -161,4 +161,4 @@ class Course_list(QMainWindow):
         self.course_codes = course_codes
     
     def get_courseCode(self, index):
-        return self.course_codes[index]
+        return self.course_codes[index - 1]
