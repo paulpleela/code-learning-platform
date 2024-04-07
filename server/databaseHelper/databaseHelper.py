@@ -480,7 +480,7 @@ class submissionOperations:
     def __init__(self, root):
         self.root = root
 
-    def create_submission(self, course_code, module_index, quizz_index, userName, submission, certificateObject):
+    def create_submission(self, course_code, module_index, quizz_index, userName, submission):
         try:
             if hasattr(self.root, 'courses') and course_code in self.root.courses:
                 course = self.root.courses[course_code]
