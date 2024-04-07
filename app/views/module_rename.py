@@ -18,6 +18,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGridLayout, QLineEdit, QPushButton, QLabel, QDateEdit,
     QSizePolicy, QSpacerItem, QWidget, QMainWindow)
 
+from PySide6.QtWidgets import (QApplication, QGridLayout, QLineEdit, QPushButton, QLabel, QDateEdit,
+    QSizePolicy, QSpacerItem, QWidget, QMainWindow, QCheckBox)
+
 class Module_Rename(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -41,7 +44,7 @@ class Module_Rename(QMainWindow):
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.rename_gridLayout.addItem(self.verticalSpacer_2, 8, 1, 1, 1)
+        self.rename_gridLayout.addItem(self.verticalSpacer_2, 9, 1, 1, 1)
 
         self.module_name = QLabel(self.gridLayoutWidget)
         self.module_name.setObjectName(u"module_name")
@@ -59,23 +62,29 @@ class Module_Rename(QMainWindow):
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.rename_gridLayout.addItem(self.horizontalSpacer, 7, 1, 1, 1)
+        self.rename_gridLayout.addItem(self.horizontalSpacer, 8, 1, 1, 1) 
 
         self.confirm = QPushButton(self.gridLayoutWidget)
         self.confirm.setObjectName(u"confirm")
 
-        self.rename_gridLayout.addWidget(self.confirm, 7, 2, 1, 1)
+        self.rename_gridLayout.addWidget(self.confirm, 8, 2, 1, 1)
 
         self.cancel = QPushButton(self.gridLayoutWidget)
         self.cancel.setObjectName(u"cancel")
 
-        self.rename_gridLayout.addWidget(self.cancel, 7, 0, 1, 1)
+        self.rename_gridLayout.addWidget(self.cancel, 8, 0, 1, 1)
 
         self.deadline_edit = QDateEdit(self.gridLayoutWidget)
         self.deadline_edit.setObjectName(u"deadline_edit")
 
         self.rename_gridLayout.addWidget(self.deadline_edit, 6, 0, 1, 3)
 
+        self.no_deadline_checkbox = QCheckBox("No deadline", self.gridLayoutWidget)
+        self.no_deadline_checkbox.setObjectName(u"no_deadline_checkbox")
+
+        self.rename_gridLayout.addWidget(self.no_deadline_checkbox, 7, 0, 1, 3)
+
+        self.no_deadline_checkbox.stateChanged.connect(self.toggle_deadline_edit)
 
         self.retranslateUi(Form)
 
@@ -88,4 +97,9 @@ class Module_Rename(QMainWindow):
         self.module_deadline.setText(QCoreApplication.translate("Form", u"Module Deadline:", None))
         self.confirm.setText(QCoreApplication.translate("Form", u"Confirm", None))
         self.cancel.setText(QCoreApplication.translate("Form", u"Cancel", None))
-    # retranslateUi
+
+    def toggle_deadline_edit(self, state):
+        if state == Qt.Checked:
+            self.deadline_edit.setEnabled(False)
+        else:
+            self.deadline_edit.setEnabled(True)

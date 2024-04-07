@@ -7,7 +7,8 @@ from PySide6.QtCore import Qt, QRect, QSize
 
 from views.navigation import NavigationBar
 import requests
-import json
+import ast
+import subprocess
 
 class LineNumberArea(QWidget):
     def __init__(self, editor):
@@ -202,6 +203,78 @@ class QuizPage(QMainWindow):
     def selectQuiz(self, courseCode, moduleIndex, quizIndex):
         response = requests.get(f"http://127.0.0.1:8000/quizz/{courseCode}/{moduleIndex}/{quizIndex}")
         
+        # {"questionName":"3","questionInstruction":"3",
+        #  "inputVarNameList":["var_1"],
+        #  "testCaseDict":{"(1,)":1},"submissionDict":{},
+        #  "which_student_finsished_StatusDict":{}}
+
         if response.status_code == 200:
-            self.instruction_text.setPlainText(response.json().get("questionInstruction", ""))
+            res = response.json()
+            self.instruction_text.setPlainText(res.get("questionInstruction", ""))
             
+            self.input_var_names = res.get("inputVarNameList", "")
+            self.test_cases = res.get("testCaseDict", "")
+            
+            sample_input = next(iter(self.test_cases))
+            sample_output = self.test_cases[sample_input]
+            sample_input_tuple = ast.literal_eval(sample_input) # convert string to tuple
+
+            sample_test_case = "'''\nSample Input Values:\n"
+
+            for i in range(len(self.input_var_names)):
+                sample_test_case += f"{self.input_var_names[i]} = "
+
+                var_type = type(sample_input_tuple[i])
+                if var_type == str:
+                    sample_test_case += f"'{sample_input_tuple[i]}'\n"
+                else:
+                    sample_test_case += f"{sample_input_tuple[i]}\n"
+
+            sample_test_case += f"\nSample Printed Output:\n{sample_output}\n'''\n\n"
+
+            self.input_text.setPlainText(sample_test_case)
+
+            self.checkSubmission()
+
+    def checkSubmission(self):
+        input_values = []
+        expected_output = []
+
+        for input_tuple_str in self.test_cases.keys():
+            input_tuple = ast.literal_eval(input_tuple_str)
+            input_text = ""
+            for i in range(len(self.input_var_names)):
+                typed_input_tuple = self.convert_to_python_type(input_tuple[i])
+                if type(typed_input_tuple) == str:
+                    input_text += f"{self.input_var_names[i]} = '{typed_input_tuple}'\n"
+                else:
+                    input_text += f"{self.input_var_names[i]} = {typed_input_tuple}\n"
+
+            input_values.append(input_text)
+            expected_output.append(str(self.test_cases[input_tuple_str]))                
+
+        code = self.input_text.toPlainText()
+
+        results = []
+        timeout = 10
+        for i in range(len(input_values)):
+            try:
+                completed_process = subprocess.run(['python', '-c', input_values[i] + code], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=timeout)
+                if completed_process.returncode == 0 and completed_process.stdout.strip() == expected_output[i].strip():
+                    results.append(None)
+                else:
+                    results.append((input_values[i], completed_process.stdout.strip() or completed_process.stderr.strip()))
+            except subprocess.TimeoutExpired:
+                results.append((input_values[i], "Timeout: Code execution took longer than {} seconds.".format(timeout)))
+            except Exception as e:
+                results.append(str(e))
+
+        return results
+    
+    def convert_to_python_type(self, value):
+        try:
+            # Try evaluating the expression
+            return eval(value)
+        except Exception as e:
+            # If evaluation fails, return the value as is
+            return value

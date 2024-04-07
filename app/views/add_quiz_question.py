@@ -292,19 +292,11 @@ class QuizQuestion(QMainWindow):
 
     def convert_to_python_type(self, value):
         try:
-            # Try converting to integer
-            return int(value)
-        except ValueError:
-            try:
-                # Try converting to float
-                return float(value)
-            except ValueError:
-                # Try converting to dictionary
-                try:
-                    return eval(value)
-                except (NameError, SyntaxError):
-                    # If conversion to dictionary fails, return the value as is (string)
-                    return value
+            # Try evaluating the expression
+            return eval(value)
+        except Exception as e:
+            # If evaluation fails, return the value as is
+            return value
             
     def clear_fields(self):
         # Clear question name and instructions

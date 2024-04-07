@@ -160,6 +160,12 @@ class Teacher_Stacked_Course(QMainWindow):
         for button in self.lq_list.lesson_buttons:
             button.clicked.connect(self.go_to_lesson)
 
+
+        for button in self.lq_list.quiz_edit:
+            button.clicked.connect(self.go_to_quiz_edit)
+        for button in self.lq_list.quiz_buttons:
+            button.clicked.connect(self.go_to_quiz)
+
         for index, button in enumerate(self.lq_list.lesson_buttons):
             def callback(idx=index):
                 return lambda: self.go_to_lesson(idx)
@@ -186,7 +192,6 @@ class Teacher_Stacked_Course(QMainWindow):
             def callback(idx=i):
                 return lambda: self.quiz.selectQuiz(course_code, index, idx)
             button.clicked.connect(callback())
-        
         
         self.stacked.setCurrentIndex(2)
     
@@ -218,7 +223,6 @@ class Teacher_Stacked_Course(QMainWindow):
         course_code = self.course_list.get_courseCode(index)
         self.course_code = course_code
         self.module_list.set_courseCode(course_code)
-
         for index, button in enumerate(self.module_list.module_buttons):
             def callback(idx=index):
                 return lambda: self.go_to_lesson_quiz_index(idx)
@@ -289,7 +293,7 @@ class Teacher_Stacked_Course(QMainWindow):
                     self.course_list.gridLayout.addWidget(button, self.course_list.index, 0, 1, 1)
                     button.setText(self.course_list.lineEdit.text())
                     self.course_list.course_buttons.append(button)
-                    button.clicked.connect(self.go_to_module)
+                    button.clicked.connect(self.go_to_module)  # Connect to go_to_module directly
                     
                     edit = QPushButton(self.course_list.scrollAreaWidgetContents)
                     edit.setObjectName(f"edit_{self.course_list.index + 1}")
@@ -309,16 +313,17 @@ class Teacher_Stacked_Course(QMainWindow):
 
                     self.course_list.gridLayout.addItem(self.course_list.verticalSpacer, self.course_list.index, 0, 1, 1)
                     self.course_list.updateAPI()
-                    for idx, button in enumerate(self.course_list.course_buttons):
-                        def callback(index=idx):
-                            return lambda: self.go_to_module(index)
-                        button.clicked.connect(callback())
+                    
+                else:
+                    # Log the error message to the console
+                    print("Error:", response.text)
 
             else:
-                # Print an error message if the request failed
+                # Log the error message to the console
                 print("Error:", response.text)
 
             self.course_list.lineEdit.clear()
+
             
     def add_module(self):
         if self.module_list.lineEdit.text() != '' :
