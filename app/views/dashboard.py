@@ -56,7 +56,7 @@ class Dashboard(QMainWindow):
             self.buttons.append(button)
             
             bar = QProgressBar(self.scrollAreaWidgetContents)
-            bar.setValue(self.complete[self.index]/self.number_of_module * 100)
+            bar.setValue(self.complete[self.index]/self.number_of_module[self.index] * 100)
             bar.setStyleSheet('''   QProgressBar {
                                     border: solid grey;
                                     border-radius: 15px;
