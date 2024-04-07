@@ -190,12 +190,19 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
 
     def updateLessonsUi(self, lessons):
         # Clear existing lesson buttons
-        for button in self.lesson_buttons:
-            button.deleteLater()
-        for button in self.lesson_delete:
-            button.deleteLater()
-        for button in self.lesson_edit:
-            button.deleteLater()
+        for i in reversed(range(self.lesson_gridLayout.count())):
+            widget = self.lesson_gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        # for button in self.lesson_buttons:
+        #     self.lesson_gridLayout.removeItem(button)
+        #     # button.deleteLater()
+        # for button in self.lesson_delete:
+        #     self.lesson_gridLayout.removeItem(button)
+        #     # button.deleteLater()
+        # for button in self.lesson_edit:
+        #     self.lesson_gridLayout.removeItem(button)
+        #     # button.deleteLater()
         self.lesson_gridLayout.removeItem(self.verticalSpacer)
         
         self.lesson_delete = {}
@@ -231,13 +238,11 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
 
     def updateQuizUi(self, quizzes):
         print('update')
-        # Clear existing lesson buttons
-        for button in self.quiz_buttons:
-            button.deleteLater()
-        for button in self.quiz_delete:
-            button.deleteLater()
-        for button in self.quiz_edit:
-            button.deleteLater()
+        # Clear old Element
+        for i in reversed(range(self.quiz_gridLayout.count())):
+            widget = self.quiz_gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
         self.quiz_gridLayout.removeItem(self.verticalSpacer_2)
         
         self.quiz_delete = {}
