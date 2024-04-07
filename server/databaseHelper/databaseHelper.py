@@ -553,7 +553,7 @@ class calendarOperations:
                         calendarForThatStudent[module.dueDate] = []
                     # add the courseName, moduleName, courseCode to the calendar
                     calendarForThatStudent[module.dueDate].append((course.Name, module.name, courseCode))
-
+        return calendarForThatStudent
 
 class dashboardOperations:
     def __init__(self, root):
@@ -593,6 +593,9 @@ class dashboardOperations:
         dashboard["totalCompletedModules"] = totalCompletedModules
         dashboard["totalModules"] = totalModules
 
+        print("dashboard", dashboard['courseNameList'])
+        print("dashboard", dashboard['totalCompletedModules'])
+        print("dashboard", dashboard['totalModules'])
         return dashboard
     
     def get_dashboard_by_teacherUserName(self, userName):
@@ -625,11 +628,21 @@ class dashboardOperations:
         dashboard["courseNameList"] = courseNameList
         dashboard["totalFinishedStudents"] = totalFinishedStudents
         dashboard["totalStudents"] = totalStudents
-
+        print("dashboard", dashboard['courseNameList'])
+        print("dashboard", dashboard['totalFinishedStudents'])
+        print("dashboard", dashboard['totalStudents'])
         return dashboard
 
                 
-
+    def checkIfUserIsStudent(self, userName):
+        if hasattr(self.root, 'students') and userName in self.root.students:
+            return True
+        return False
+    
+    def checkIfUserIsTeacher(self, userName):
+        if hasattr(self.root, 'teachers') and userName in self.root.teachers:
+            return True
+        return False
 
 class ZODBHelper:
     def __init__(self, db_file):

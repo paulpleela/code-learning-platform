@@ -368,3 +368,12 @@ async def get_dashboard_by_teacherUserName(userName: str):
     dashboard = db_helper.dashboard_operations.get_dashboard_by_teacherUserName(userName)
 
     return {"dashboard": dashboard}
+
+@app.get("/dashboard/checkUser/{userName}")
+async def check_user(userName: str):
+    if db_helper.dashboard_operations.checkIfUserIsStudent(userName):
+        return {"role": "student"}
+
+    elif db_helper.dashboard_operations.checkIfUserIsTeacher(userName):
+        return {"role": "teacher"}
+    return {"role": "none"}
