@@ -330,3 +330,8 @@ async def create_submission(courseCode: str, moduleIndex: str, quizzIndex: str, 
 
     return {"success": success}
 
+
+@app.get("/submissions/{courseCode}/{moduleIndex}/{quizzIndex}")
+async def get_all_submissions(courseCode: str, moduleIndex: str, quizzIndex: str):
+    submissions = db_helper.submission_operations.get_all_submissions(courseCode, moduleIndex, quizzIndex)
+    return {"submissions": submissions}

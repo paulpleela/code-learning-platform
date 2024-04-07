@@ -502,7 +502,17 @@ class submissionOperations:
             print("An error occurred:", str(e))
             return False
 
-
+    def get_submission_ByUserName(self, course_code, module_index, quizz_index, userName):
+        if hasattr(self.root, 'courses') and course_code in self.root.courses:
+            course = self.root.courses[course_code]
+            if course.checkModule_ByIndex(module_index):
+                module = course.moduleList[int(module_index)]
+                if module.checkQuizz_ByIndex(quizz_index):
+                    quizz = module.quizzList[int(quizz_index)]
+                    if hasattr(quizz, 'submissionDict') and userName in quizz.submissionDict:
+                        return quizz.submissionDict[userName]
+        return None
+    
 class ZODBHelper:
     def __init__(self, db_file):
         self.db_file = db_file
