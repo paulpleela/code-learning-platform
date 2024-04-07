@@ -13,8 +13,8 @@ class certification(persistent.Persistent):
 # abstract class User and two clases, student and teacher, inherit from it
 class User(persistent.Persistent):
       def __init__(self, username, name, password, role):
-            self.username = name
-            self.name = username
+            self.username = username
+            self.name = name
             self.password = password
             self.role = role
 
