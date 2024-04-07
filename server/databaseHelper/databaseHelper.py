@@ -72,7 +72,7 @@ TestCaseResult
 '''
 class CodeGenerator:
     def __init__(self):
-        self.used_course_codes = set()
+        self.used_codes = set()
 
     def generate_code(self, prefix='C', length=6):
         while True:
@@ -81,8 +81,8 @@ class CodeGenerator:
             # Combine the prefix with the random portion
             course_code = f'{prefix}{random_portion}'
             # Check if the generated course code is unique
-            if course_code not in self.used_course_codes:
-                self.used_course_codes.add(course_code)
+            if course_code not in self.used_codes:
+                self.used_codes.add(course_code)
                 return course_code
 
 class UserRegistration:
@@ -468,11 +468,35 @@ class QuizzOperations:
                     del module.quizzList[int(quizz_index)]
                     transaction.commit()
 
-class TestCaseOperations:
+class submissionOperations:
     def __init__(self, root):
         self.root = root
 
-    
+    def create_submission(self, course_code, module_index, quizz_index, userName, submission):
+        try:
+            if hasattr(self.root, 'courses') and course_code in self.root.courses:
+                course = self.root.courses[course_code]
+                if course.checkModule_ByIndex(module_index):
+                    module = course.moduleList[int(module_index)]
+                    if module.checkQuizz_ByIndex(quizz_index):
+                        quizz = module.quizzList[int(quizz_index)]
+                        
+                        if not hasattr(quizz, 'submissionList'):
+                            quizz.submissionDict = {}
+
+                        quizz.submissionDict[userName] = submission
+
+                        # check if student textcaseResultList has all None values, the student pass and 
+                        # append the student to the which_student_finsished_StatusDict with "username": True
+                        if all(value == None for value in submission.testCaseResultList):   # True
+                            quizz.which_student_finsished_StatusList.append(userName)
+
+                        transaction.commit()
+                        return True  # Operation succeeded
+        except Exception as e:
+            print("An error occurred:", str(e))
+            return False
+
 
 class ZODBHelper:
     def __init__(self, db_file):
@@ -491,6 +515,7 @@ class ZODBHelper:
 
         self.lesson_operations = LessonOperations(self.root)
         self.quizz_operations = QuizzOperations(self.root) 
+        self.submission_operations = submissionOperations(self.root)
           
 
     def close(self):

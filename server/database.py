@@ -16,7 +16,7 @@ from model.lesson import *
 from model.module import *
 from model.quiz import *
 from model.submission import *
-from model.testCaseResult import *
+
 
 '''
 # ZODB database setup
