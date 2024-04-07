@@ -205,7 +205,12 @@ class QuizPage(QMainWindow):
     # def next_page(self):
     #     print("Go to next page") 
 
-    def selectQuiz(self, courseCode, moduleIndex, quizIndex):
+    def selectQuiz(self, courseCode, moduleIndex, quizIndex, username):
+        self.courseCode = courseCode
+        self.moduleIndex = moduleIndex
+        self.quizIndex = quizIndex
+        self.username = username
+
         response = requests.get(f"http://127.0.0.1:8000/quizz/{courseCode}/{moduleIndex}/{quizIndex}")
         
         # {"questionName":"3","questionInstruction":"3",
@@ -239,7 +244,6 @@ class QuizPage(QMainWindow):
 
             self.input_text.setPlainText(sample_test_case)
 
-            self.checkSubmission()
 
     def checkSubmission(self):
         input_values = []
@@ -275,6 +279,14 @@ class QuizPage(QMainWindow):
                 results.append(str(e))
 
         self.results = results
+
+        test_case_results = []
+        for res in results:
+            test_case_results.append(res[0] == "Passed")
+
+        response = requests.post(f"http://127.0.0.1:8000/submission/{self.courseCode}/{self.moduleIndex}/{self.quizIndex}/{self.username}", json={"pythonCode": code, "testCaseResults": test_case_results})
+        if response.status_code == 200:
+            print("submission saved")
     
     def convert_to_python_type(self, value):
         try:

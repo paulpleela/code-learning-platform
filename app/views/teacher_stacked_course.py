@@ -180,7 +180,7 @@ class Teacher_Stacked_Course(QMainWindow):
             button.clicked.connect(callback())
         for i, button in enumerate(self.lq_list.quiz_buttons):
             def callback(idx=i):
-                return lambda: self.quiz.selectQuiz(course_code, index, idx)
+                return lambda: self.quiz.selectQuiz(course_code, index, idx, self.username)
             button.clicked.connect(callback())
         
         print("Button clicked with index:", index)
