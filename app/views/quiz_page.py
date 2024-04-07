@@ -2,7 +2,7 @@ import sys
 import subprocess
 import re
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTextEdit, QPushButton, QPlainTextEdit, QTextEdit, QSplitter, QHBoxLayout
-from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont, QPainter, QTextFormat
+from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont, QPainter, QTextFormat, QColor
 from PySide6.QtCore import Qt, QRect, QSize
 
 from views.navigation import NavigationBar
@@ -178,22 +178,27 @@ class QuizPage(QMainWindow):
         widget.setLayout(layout)
         self.setCentralWidget(widget)
 
+        self.results = []
+
     def run_code(self):
         code = self.input_text.toPlainText()
         if "input(" in code:
-            self.output_text.setTextColor(Qt.red)
+            self.output_text.setTextColor(QColor(Qt.red))
             self.output_text.setText("Error:\n" + "input() function not allowed")
             return
         
-        result = subprocess.run(["python", "-c", code], capture_output=True, text=True)
-
-        if result.returncode == 0:
-            self.output_text.setTextColor(Qt.black)
-            self.output_text.setText(result.stdout)
-        else:
-            self.output_text.setTextColor(Qt.red)
-            self.output_text.setText("Error:\n" + result.stderr)
-
+        try:
+            result = subprocess.run(["python", "-c", code], capture_output=True, text=True, timeout=5)
+            
+            if result.returncode == 0:
+                self.output_text.setTextColor(QColor(Qt.black))
+                self.output_text.setText(result.stdout)
+            else:
+                self.output_text.setTextColor(QColor(Qt.red))
+                self.output_text.setText("Error:\n" + result.stderr)
+        except subprocess.TimeoutExpired:
+            self.output_text.setTextColor(QColor(Qt.red))
+            self.output_text.setText("Error:\n" + "Code execution timed out (5 seconds)")
     # def previous_page(self):
     #     print("Go to previous page")
 
@@ -256,20 +261,20 @@ class QuizPage(QMainWindow):
         code = self.input_text.toPlainText()
 
         results = []
-        timeout = 10
+        timeout = 5
         for i in range(len(input_values)):
             try:
                 completed_process = subprocess.run(['python', '-c', input_values[i] + code], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=timeout)
                 if completed_process.returncode == 0 and completed_process.stdout.strip() == expected_output[i].strip():
-                    results.append(None)
+                    results.append(("Passed", input_values[i], f"Expected: {expected_output[i].strip()}\n\nPrinted: {completed_process.stdout.strip()}"))
                 else:
-                    results.append((input_values[i], completed_process.stdout.strip() or completed_process.stderr.strip()))
+                    results.append(("Error", input_values[i], f"Expected: {expected_output[i].strip()}\n\nPrinted: {completed_process.stdout.strip() or completed_process.stderr.strip()}"))
             except subprocess.TimeoutExpired:
-                results.append((input_values[i], "Timeout: Code execution took longer than {} seconds.".format(timeout)))
+                results.append(("Timeout", input_values[i], "Timeout: Code execution took longer than {} seconds.".format(timeout)))
             except Exception as e:
                 results.append(str(e))
 
-        return results
+        self.results = results
     
     def convert_to_python_type(self, value):
         try:
