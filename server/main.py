@@ -35,6 +35,7 @@ class CourseCreated(BaseModel):
 
 class ModuleModel(BaseModel):
     name: str
+    dueDate: str
 
 class LessonModel(BaseModel):
     name: str
@@ -190,8 +191,9 @@ async def get_moduleByIndex(courseCode: str, moduleIndex: str):
     return module
 
 @app.put("/module/{courseCode}/{moduleIndex}")
-async def update_module(courseCode: str, moduleIndex: str, module: ModuleModel):
-    db_helper.module_operations.update_module(courseCode, moduleIndex, module)
+async def update_module(courseCode: str, moduleIndex: str, moduleModel: ModuleModel):
+    
+    db_helper.module_operations.update_module(courseCode, moduleIndex, moduleModel)
 
 @app.delete("/module/{courseCode}/{moduleIndex}")
 async def delete_module(courseCode:str, moduleIndex: str):
@@ -342,3 +344,10 @@ async def get_all_submissions(courseCode: str, moduleIndex: str, quizzIndex: str
 async def get_certifications_byUserName(userName: str):
     certifications = db_helper.certification_operations.get_certification_by_userName(userName)
     return {"certifications": certifications}
+
+'''----------------------------------    Calendar      ---------------------------------- '''
+@app.get("/calendar/{userName}")
+async def get_calendar_byUserName(userName: str):
+    calendar = db_helper.calendar_operations.return_calendar_by_userName(userName)
+    
+    return {"calendar": calendar}

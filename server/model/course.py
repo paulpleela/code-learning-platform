@@ -44,7 +44,7 @@ class Course(persistent.Persistent):
                               
                               studentObject.add_certification(self.Name, self.courseTeacherName)
 
-            
+
       '''Module'''
       def add_module(self, module):
             self.moduleList.append(module)
