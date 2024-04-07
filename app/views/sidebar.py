@@ -369,7 +369,7 @@ class Sidebar(object):
         
         #####################
         
-        stack_certificate = Stacked_Certificate()
+        stack_certificate = Stacked_Certificate(self.username)
         self.page_4 = stack_certificate
         self.page_4.setObjectName(u"page_4")
         self.gridLayout_5 = QGridLayout(self.page_4)
@@ -488,9 +488,15 @@ class Sidebar(object):
             stack_course = Teacher_Stacked_Course(username)
         else:
             stack_course = Stacked_Course(username)
- 
+
+
         self.page_3 = stack_course
         self.stackedWidget.removeWidget(self.stackedWidget.widget(2))  # Remove the current page_3
         self.stackedWidget.insertWidget(2, self.page_3)
+
+        self.page_4 = ListItem(username)
+        self.stackedWidget.removeWidget(self.stackedWidget.widget(3))  # Remove the current page_4
+        self.stackedWidget.insertWidget(3, self.page_4)
+
         self.stackedWidget.setCurrentIndex(0)
         self.dashboard_btn_1.setChecked(True) # Toggle UI index selection

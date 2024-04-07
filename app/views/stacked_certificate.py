@@ -15,8 +15,9 @@ from views.lesson_pdf import LessonPDF
 import views.certificate_generator as certificate_generator
 
 class Stacked_Certificate(QMainWindow):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
+        self.username = username
         self.setupUi(self)
         
     def setupUi(self, Form):
@@ -32,12 +33,12 @@ class Stacked_Certificate(QMainWindow):
         self.stacked.setGeometry(QRect(0, 0, 811, 541))
         
         ############################## 0
-        self.certificate_list = ListItem()
+        self.certificate_list = ListItem(self.username)
         self.stacked.addWidget(self.certificate_list)
 
         for idx, button in enumerate(self.certificate_list.buttons):
             def callback(index=idx):
-                return lambda: self.go_to_show_pdf(index)
+                return lambda: self.go_to_show_pdf(index, self.certificate_list.name)
             button.clicked.connect(callback())
         
         ############################## 1
@@ -54,7 +55,7 @@ class Stacked_Certificate(QMainWindow):
     def go_to_certificate_list(self):
         self.stacked.setCurrentIndex(0)
         
-    def go_to_show_pdf(self, username, index):
-        file_path = certificate_generator.setInfo(username, index)
+    def go_to_show_pdf(self, index, data):
+        file_path = certificate_generator.setInfo(index, data)
         self.show_pdf.setFilePath(file_path)
         self.stacked.setCurrentIndex(1)

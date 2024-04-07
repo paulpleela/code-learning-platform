@@ -208,6 +208,7 @@ class Stacked_Course(QMainWindow):
                     course_name = self.getCourseName(self.course_list.lineEdit.text()).strip('"')
                     button.setText(course_name)
                     self.course_list.buttons.append(button)
+                    self.course_list.course_codes.append(self.course_list.lineEdit.text())
                     button.clicked.connect(lambda : self.go_to_module(len(self.course_list.buttons) - 1))
                     
                     # label = QLabel(self.course_list.scrollAreaWidgetContents)

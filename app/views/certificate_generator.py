@@ -54,10 +54,8 @@ def create_new_pdf(input_pdf_path, output_pdf_path, replacements, placeholder_po
         output.write(output_stream)
         
 
-def setInfo(username, index):
-    response = requests.get(f"http://127.0.0.1:8000/certifications/{username}")
-    data = response.json()["certifications"][index]
-    if response.status_code == 200:
+def setInfo(index, data):
+        data = data[index]
         code = code_gen.generate_code()
 
         replacements = {
