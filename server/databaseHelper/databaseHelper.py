@@ -519,7 +519,7 @@ class certificationOperations:
     def __init__(self, root):
         self.root = root
 
-    def get_certification_by_userName(self):
+    def get_certification_by_userName(self, userName):
         if hasattr(self.root, 'students') and self.userName in self.root.students:
             student = self.root.students[self.userName]
             return student.certificationList    # [certification1, certification2, certification3] list of certification objects
