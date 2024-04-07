@@ -19,6 +19,7 @@ from views.quiz_answer_list import Quiz_answer_list
 from views.update_lesson import EditLessonForm
 from views.add_quiz_question import QuizQuestion
 from views.module_list import Module_list
+from views.show_test_case import Show_Test_Case
 
 class Stacked_Course(QMainWindow):
     def __init__(self, username):
@@ -75,6 +76,9 @@ class Stacked_Course(QMainWindow):
         self.show_ans.next.clicked.connect(self.go_to_lesson_quiz)
         self.show_ans.go_back.clicked.connect(self.go_to_quiz)
         
+        for button in self.show_ans.buttons:
+            button.clicked.connect(self.go_to_show_test_case)
+        
         #################################### 4
         self.module_list = Module_list()
         self.stacked.addWidget(self.module_list)
@@ -83,7 +87,12 @@ class Stacked_Course(QMainWindow):
             button.clicked.connect(self.go_to_lesson_quiz)
         
         self.module_list.return_2.clicked.connect(self.go_to_course)
+        ###################################### 5
+        self.show_test_case = Show_Test_Case()
+        self.stacked.addWidget(self.show_test_case)
         
+        self.show_test_case.go_back.clicked.connect(self.go_to_answer)
+        ######################################
         QMetaObject.connectSlotsByName(Form)
     
     def go_to_course(self):
@@ -100,6 +109,9 @@ class Stacked_Course(QMainWindow):
         
     def go_to_module(self):
         self.stacked.setCurrentIndex(4)
+        
+    def go_to_show_test_case(self):
+        self.stacked.setCurrentIndex(5)
     
     def go_to_lesson(self):
         pass
@@ -127,6 +139,14 @@ class Stacked_Course(QMainWindow):
                     self.course_list.lineEdit.clear()
 
                     self.course_list.gridLayout.addWidget(label, self.course_list.index, 1, 1, 1)
+                    
+                    # print(QPushButton(self.course_list.scrollAreaWidgetContents))
+                    delete = QPushButton(self.course_list.scrollAreaWidgetContents)
+                    delete.setObjectName(f"delete_{self.course_list.index + 1}")
+                    delete.setText('Leave')
+                    self.course_list.delete_buttons[delete]  = self.course_list.index
+                    delete.clicked.connect(self.course_list.delete_course)
+                    self.course_list.gridLayout.addWidget(delete, self.course_list.index, 2, 1, 1)
                     
                     self.course_list.index += 1
 

@@ -132,17 +132,17 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             self.quiz_gridLayout.addWidget(button, self.quiz_index, 0, 1, 1)
             self.quiz_buttons.append(button)
             
-            edit = QPushButton(self.quiz_widget)
-            edit.setObjectName(f"edit_{self.quiz_index + 1}")
-            edit.setText('Edit')
-            self.quiz_gridLayout.addWidget(edit, self.quiz_index, 1, 1, 1)
-            self.quiz_edit[edit] = self.quiz_index
+            # edit = QPushButton(self.quiz_widget)
+            # edit.setObjectName(f"edit_{self.quiz_index + 1}")
+            # edit.setText('Edit')
+            # self.quiz_gridLayout.addWidget(edit, self.quiz_index, 1, 1, 1)
+            # self.quiz_edit[edit] = self.quiz_index
             
             delete = QPushButton(self.quiz_widget)
             delete.setObjectName(f"delete_{self.quiz_index + 1}")
             delete.setText('Delete')
             delete.clicked.connect(self.delete_quiz)
-            self.quiz_gridLayout.addWidget(delete, self.quiz_index, 2, 1, 1)
+            self.quiz_gridLayout.addWidget(delete, self.quiz_index, 1, 1, 1)
             self.quiz_delete[delete] = self.quiz_index 
             
             self.quiz_index += 1
@@ -245,7 +245,7 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
         self.quiz_buttons = []
         self.quiz_index = 0
         
-        # Add new lessons
+        # Add new quiz
         for quiz_name in quizzes:
             button = QPushButton(self.quiz_widget)
             button.setObjectName(f"quiz_{self.quiz_index + 1}")
@@ -253,17 +253,17 @@ class Teacher_Lesson_Quiz_list(QMainWindow):
             self.quiz_gridLayout.addWidget(button, self.quiz_index, 0, 1, 1)
             self.quiz_buttons.append(button)
             
-            edit = QPushButton(self.quiz_widget)
-            edit.setObjectName(f"qedit_{self.quiz_index + 1}")
-            edit.setText('Edit')
-            self.quiz_gridLayout.addWidget(edit, self.quiz_index, 1, 1, 1)
-            self.quiz_edit[edit] = self.quiz_index
+            # edit = QPushButton(self.quiz_widget)
+            # edit.setObjectName(f"qedit_{self.quiz_index + 1}")
+            # edit.setText('Edit')
+            # self.quiz_gridLayout.addWidget(edit, self.quiz_index, 1, 1, 1)
+            # self.quiz_edit[edit] = self.quiz_index
             
             delete = QPushButton(self.quiz_widget)
             delete.setObjectName(f"qdelete_{self.quiz_index + 1}")
             delete.setText('Delete')
             delete.clicked.connect(self.delete_quiz)
-            self.quiz_gridLayout.addWidget(delete, self.quiz_index, 2, 1, 1)
+            self.quiz_gridLayout.addWidget(delete, self.quiz_index, 1, 1, 1)
             self.quiz_delete[delete] = self.quiz_index 
             
             self.quiz_index += 1

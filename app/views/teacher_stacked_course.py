@@ -22,6 +22,7 @@ from views.teacher_module_list import Teacher_Module_list
 from views.module_rename import Module_Rename
 from views.lesson_pdf import LessonPDF
 from views.lesson_video import LessonVideo
+from views.show_test_case import Show_Test_Case
 
 import requests
 
@@ -60,7 +61,7 @@ class Teacher_Stacked_Course(QMainWindow):
         ###################################### 1 
         self.lq_list = Teacher_Lesson_Quiz_list()
         self.stacked.addWidget(self.lq_list)
-        self.lq_list.return_2.clicked.connect(self.go_to_module)
+        self.lq_list.return_2.clicked.connect(self.go_to_module_non_index)
         
         self.lq_list.add_lesson_btn.clicked.connect(self.add_lesson)
         self.lq_list.add_quiz_btn.clicked.connect(self.add_quiz)
@@ -94,6 +95,9 @@ class Teacher_Stacked_Course(QMainWindow):
         
         self.show_ans.next.clicked.connect(self.go_to_lesson_quiz)
         self.show_ans.go_back.clicked.connect(self.go_to_quiz)
+        
+        for button in self.show_ans.buttons:
+            button.clicked.connect(self.go_to_show_test_case)
         
         ################################## 4
         self.update_lesson = EditLessonForm()
@@ -144,8 +148,14 @@ class Teacher_Stacked_Course(QMainWindow):
         self.stacked.addWidget(self.module_rename)
         
         self.module_rename.cancel.clicked.connect(self.back_from_rename2module)
-
+        ################################# 11
+        self.show_test_case = Show_Test_Case()
+        self.stacked.addWidget(self.show_test_case)
         
+        self.show_test_case.go_back.clicked.connect(self.go_to_answer)
+
+    def go_to_module_non_index(self):
+        self.stacked.setCurrentIndex(7)
      
     def go_to_course(self):
         self.stacked.setCurrentIndex(0)
@@ -253,6 +263,9 @@ class Teacher_Stacked_Course(QMainWindow):
         if sender_button in self.module_list.edit_buttons:
             position = self.module_list.edit_buttons[sender_button]
             self.module_rename.confirm.clicked.connect(lambda: self.submit_module_rename(position))
+    
+    def go_to_show_test_case(self):
+        self.stacked.setCurrentIndex(11)
     
     def back_from_rename2course(self):
         self.stacked.setCurrentIndex(0)

@@ -82,6 +82,7 @@ class Course_list(QMainWindow):
             delete.setText('Leave')
             self.delete_buttons[delete]  = self.index
             delete.clicked.connect(self.delete_course)
+            self.gridLayout.addWidget(delete, self.index, 2, 1, 1)
             
             self.index += 1
         # makes verticleSpacer
