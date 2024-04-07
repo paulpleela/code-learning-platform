@@ -96,8 +96,6 @@ class Teacher_Stacked_Course(QMainWindow):
         self.show_ans.next.clicked.connect(self.go_to_lesson_quiz)
         self.show_ans.go_back.clicked.connect(self.go_to_quiz)
         
-        for button in self.show_ans.buttons:
-            button.clicked.connect(self.go_to_show_test_case)
         
         ################################## 4
         self.update_lesson = EditLessonForm()
@@ -208,6 +206,13 @@ class Teacher_Stacked_Course(QMainWindow):
     def go_to_answer(self):
         self.quiz.checkSubmission()
         self.show_ans.setResults(self.quiz.results)
+
+        for idx, button in enumerate(self.show_ans.buttons):
+            def callback(index=idx):
+                return lambda: self.go_to_show_test_case(index)
+            button.clicked.connect(callback())
+
+
         self.stacked.setCurrentIndex(3)
     
     def go_to_lesson(self, lessonIndex):
@@ -264,7 +269,12 @@ class Teacher_Stacked_Course(QMainWindow):
             position = self.module_list.edit_buttons[sender_button]
             self.module_rename.confirm.clicked.connect(lambda: self.submit_module_rename(position))
     
-    def go_to_show_test_case(self):
+    def go_to_show_test_case(self, index):
+        print("clicked", index)
+        result = self.show_ans.results[index]
+        print(result)
+        self.show_test_case.updateUi(result)
+        # self.show_ans.buttons
         self.stacked.setCurrentIndex(11)
     
     def back_from_rename2course(self):

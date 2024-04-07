@@ -91,11 +91,10 @@ class Quiz_answer_list(QtWidgets.QWidget):
             
             label = QLabel(self.scrollAreaWidgetContents)
             label.setObjectName(f"label_{self.index + 1}")
-            if result == "Passed":
-                label.setText(result)
-            else:
-                label.setText("Error")
+            label.setText(result[0])
+            if result[0] != "Passed":
                 all_passed = False
+
             self.gridLayout.addWidget(label, self.index, 1, 1, 1)
             
             self.index += 1

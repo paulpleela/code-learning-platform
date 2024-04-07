@@ -21,8 +21,8 @@ from PySide6.QtWidgets import (QApplication, QLabel, QPlainTextEdit, QPushButton
 class Show_Test_Case(QWidget):
     def __init__(self):
         super().__init__()
-        self.input_info = "Hello"
-        self.output_info = "Hi"
+        self.input_info = ""
+        self.output_info = ""
         
         self.setupUi(self)
         
@@ -76,3 +76,8 @@ class Show_Test_Case(QWidget):
         self.go_back.setText(QCoreApplication.translate("Form", u"<< Go Back", None))
     # retranslateUi
 
+    def updateUi(self, result_tuple):
+        self.input_info = result_tuple[1]
+        self.output_info = result_tuple[2]
+        self.input.setText(self.input_info)
+        self.output.setText(self.output_info)
