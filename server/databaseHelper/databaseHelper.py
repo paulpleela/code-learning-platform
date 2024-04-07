@@ -409,7 +409,12 @@ class LessonOperations:
                 module = course.moduleList[int(module_index)]
                 if module.checkLesson_ByIndex(lesson_index):    # True
                     del module.lessonList[int(lesson_index)]
-                    transaction.commit()
+                    try:
+                            
+                        os.remove(module.lessonList[int(lesson_index)].filePath)
+                        print(f"File '{module.lessonList[int(lesson_index)].filePath}' deleted successfully")
+                    except OSError as e:
+                        print(f"Error deleting file '{module.lessonList[int(lesson_index)].filePath}': {e}")
 
 class QuizzOperations:
     def __init__(self, root):
