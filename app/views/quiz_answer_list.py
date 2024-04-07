@@ -49,7 +49,7 @@ class Quiz_answer_list(QtWidgets.QWidget):
         self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
         
-        self.gridLayout.setColumnStretch(5, 0)
+        self.gridLayout.setColumnStretch(0, 5)
         self.gridLayout.setColumnStretch(1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.go_back = QPushButton(Form)
