@@ -332,6 +332,7 @@ async def create_submission(courseCode: str, moduleIndex: str, quizzIndex: str, 
 
     submission = Submission(submissionModel.pythonCode, submissionModel.testCaseResults)
 
+    
     success = db_helper.submission_operations.create_submission(courseCode, moduleIndex, quizzIndex, userName, submission)
 
     return {"success": success}

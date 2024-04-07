@@ -41,8 +41,10 @@ class Course(persistent.Persistent):
                   for studentName in module.students_completed:
                         if studentName not in self.studentStatusList:
                               self.studentStatusList.append(studentName)
-                              
+                              print("Student Status List", self.studentStatusList)
+
                               studentObject.add_certification(self.Name, self.courseTeacherName)
+                              print("Certification List", studentObject.certificationList)
 
 
       '''Module'''
