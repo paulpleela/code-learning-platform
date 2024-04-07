@@ -2,6 +2,13 @@ from pydantic import BaseModel
 from typing import Optional, Dict
 import persistent
 
+import datetime
+
+class certification(persistent.Persistent):
+      courseName: str
+      teacherName: str
+      Date: str
+
 # abstract class User and two clases, student and teacher, inherit from it
 class User(persistent.Persistent):
       def __init__(self, username, name, password, role):
@@ -18,7 +25,8 @@ class User(persistent.Persistent):
 class Student(User, persistent.Persistent):
       def __init__(self, username, name, password, role,  enrolledCourseList):
             super().__init__(username, name, password, role)
-
+            # store the courseName, teacherName in the certification
+            self.certification = [] # [certification1, certification2, certification3]
             self.enrolledCourseList = enrolledCourseList
 
       def enroll_course(self, courseCode):
@@ -33,6 +41,15 @@ class Student(User, persistent.Persistent):
             else:
                   return False
             
+      # add the courseName, teacherName, Date to the certification
+      def add_certification(self, courseName, teacherName):
+
+            today_Date = datetime.datetime.today()
+            formatted_date = today_Date.strftime("%B %d, %Y")
+            certification = {"courseName": courseName, "teacherName": teacherName, "Date": str(formatted_date)}
+
+            self.certification.append(certification)
+
       def print_details(self):
             print("Username:", self.username)
             print("Role:", self.role)

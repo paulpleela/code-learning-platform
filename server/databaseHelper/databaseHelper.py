@@ -485,12 +485,12 @@ class submissionOperations:
                             quizz.submissionDict = {}
 
                         quizz.submissionDict[userName] = submission
-
-                        # check if student textcaseResultList has all None values, the student pass and 
-                        # append the student to the which_student_finsished_StatusDict with "username": True
-                        if all(value == None for value in submission.testCaseResultList):   # True
-                            quizz.which_student_finsished_StatusList.append(userName)
-
+                        # check if student textcaseResultList has all "pass" values, the student pass and 
+                        # add the student userName to which_student_finsished_StatusList
+                        quizz.checkEverySubmissionPassed_byWhichStudent_And_add_studentName()
+                        module.checkEveryQuizzCompleted_byWhichStudent_And_add_studentName()
+                        course.checkEveryModuleFinished_And_add_studentName()
+                        
                         transaction.commit()
                         return True  # Operation succeeded
         except Exception as e:

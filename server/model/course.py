@@ -7,9 +7,9 @@ class Course(persistent.Persistent):
             self.courseCode = courseCode
             self.courseTeacherName = courseTeacherName
 
-            self = moduleList                # List of modules objects
+            self.moduleList = moduleList                # List of modules objects
             self.studentList = studentList              # List of students by userName
-            self.studentStatusList =  studentStatusList # {"username": True}
+            self.studentStatusList =  studentStatusList # [username1, username2, username3]
  
       def edit_details(self, Name, courseCode, courseTeacherName):
             self.Name = Name
@@ -18,6 +18,7 @@ class Course(persistent.Persistent):
 
       def checkStudent_ByUserName(self, userName):
             if userName in self.studentList:
+                  
                   return True
             else:
                   return False
@@ -34,7 +35,16 @@ class Course(persistent.Persistent):
             
       
 
+      def checkEveryModuleFinished_And_add_studentName(self):
+            # if student name is in the module.students_completed, then the student has completed the module and add the student name to the studentStatusList
+            for module in self.moduleList:
+                  for studentName in module.students_completed:
+                        if studentName not in self.studentStatusList:
+                              self.studentStatusList.append(studentName)
+    
+    
 
+                              
       '''Module'''
       def add_module(self, module):
             self.moduleList.append(module)
