@@ -2,15 +2,28 @@ import io
 import PyPDF2
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+import random
+import string
+import requests
 
-data = {
-    "teacher_name": "",
-    "student_name": "",
-    "course_name": "",
-    "date_completed": "",
-    "student_username": "",
-    "course_code": ""
-}
+class CodeGenerator:
+    def __init__(self):
+        self.used_codes = set()
+
+    def generate_code(self, prefix='CRT', length=6):
+        while True:
+            # Generate a random portion for the course code
+            random_portion = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+            # Combine the prefix with the random portion
+            course_code = f'{prefix}{random_portion}'
+            # Check if the generated course code is unique
+            if course_code not in self.used_codes:
+                self.used_codes.add(course_code)
+                return course_code
+
+
+code_gen = CodeGenerator()
+
 
 def create_new_pdf(input_pdf_path, output_pdf_path, replacements, placeholder_positions):
     packet = io.BytesIO()
@@ -39,22 +52,31 @@ def create_new_pdf(input_pdf_path, output_pdf_path, replacements, placeholder_po
 
     with open(output_pdf_path, "wb") as output_stream:
         output.write(output_stream)
+        
 
-replacements = {
-    '{TEACHER}': data["teacher_name"],
-    '{DATE}': data["date_completed"],
-    '{COURSE}': data["course_name"],
-    '{STUDENT}': data["student_name"]
-}
+def setInfo(username, index):
+    response = requests.get(f"http://127.0.0.1:8000/certifications/{username}")
+    data = response.json()["certifications"][index]
+    if response.status_code == 200:
+        code = code_gen.generate_code()
 
-placeholder_positions = {
-    '{TEACHER}': (100, 125),
-    '{DATE}': (165, 227),
-    '{COURSE}': (90, 260),
-    '{STUDENT}': (90, 350)
-}
+        replacements = {
+            '{TEACHER}': data["teacherName"],
+            '{DATE}': data["Date"],
+            '{COURSE}': data["courseName"],
+            '{STUDENT}': data["userName"]
+        }
 
-input_pdf_path = "server/static/certificate_template.pdf"
-output_pdf_path = "server/static/certificate_{}_{}.pdf".format(data["student_username"], data["course_code"])
+        placeholder_positions = {
+            '{TEACHER}': (100, 125),
+            '{DATE}': (165, 227),
+            '{COURSE}': (90, 260),
+            '{STUDENT}': (90, 350)
+        }
 
-create_new_pdf(input_pdf_path, output_pdf_path, replacements, placeholder_positions)
+        input_pdf_path = "server/static/certificate/certificate_template.pdf"
+        output_pdf_path = f"server/static/certificate/{code}.pdf"
+
+        create_new_pdf(input_pdf_path, output_pdf_path, replacements, placeholder_positions)
+        
+        return output_pdf_path

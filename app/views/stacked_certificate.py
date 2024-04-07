@@ -12,7 +12,8 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from views.list_item import ListItem
 from views.lesson_pdf import LessonPDF
-import requests
+import views.certificate_generator as certificate_generator
+
 class Stacked_Certificate(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -53,8 +54,7 @@ class Stacked_Certificate(QMainWindow):
     def go_to_certificate_list(self):
         self.stacked.setCurrentIndex(0)
         
-    def go_to_show_pdf(self, index):
-        response = requests.get(f"http://127.0.0.1:8000/certifications/")
-
-        if response.status_code == 200:
-            self.stacked.setCurrentIndex(1)
+    def go_to_show_pdf(self, username, index):
+        file_path = certificate_generator.setInfo(username, index)
+        self.show_pdf.setFilePath(file_path)
+        self.stacked.setCurrentIndex(1)

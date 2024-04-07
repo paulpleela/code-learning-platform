@@ -162,3 +162,34 @@ class Course_list(QMainWindow):
     
     def get_courseCode(self, index):
         return self.course_codes[index]
+    
+    def updateUI(self):
+        # Clear existing course buttons
+        # for button in self.course_buttons:
+        #     button.deleteLater()
+        for i in reversed(range(self.gridLayout.count())):
+            widget = self.gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        self.gridLayout.removeItem(self.verticalSpacer)
+        
+        self.delete_buttons = {}
+        self.buttons = []
+
+        # Re-fetch course list from API
+        self.updateAPI()
+
+        # Re-create course buttons
+        for index, course_name in enumerate(self.course):
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"course_{index + 1}")
+            button.setText(course_name)
+            self.gridLayout.addWidget(button, index, 0, 1, 1)
+            self.buttons.append(button)
+
+            delete = QPushButton(self.scrollAreaWidgetContents)
+            delete.setObjectName(f"delete_{index + 1}")
+            delete.setText('Delete')
+            self.delete_buttons[delete] = index
+            delete.clicked.connect(self.delete_course)
+            self.gridLayout.addWidget(delete, index, 1, 1, 1)

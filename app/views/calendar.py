@@ -5,18 +5,13 @@ import sys
 from PySide6.QtGui import QFontMetrics
 import textwrap
 from PySide6.QtCore import QObject, Slot
+import requests
 
 class CalendarTable(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.assignments = {
-            "2024-04-01": ["Data Structures and Algorithms: Module 2", "A"],
-            "2024-04-02": ["A2"],
-            "2024-04-05": ["A3", "AA"],
-            "2024-04-06": ["A4"],
-            "2024-04-07": ["As5"]
-        }
+        self.assignments = {}
         self.current_date = QDate.currentDate()
 
         self.initUI()
@@ -59,6 +54,12 @@ class CalendarTable(QWidget):
         self.updateCalendar()
 
     def updateCalendar(self):
+        username = ""
+        response = requests.get(f"http://127.0.0.1:8000/calendar/{username}")
+
+        if response.status_code == 200:
+            assignments = response.json()["calendar"]
+
         current_date = self.current_date.addDays(-self.current_date.dayOfWeek())
 
         start_date = current_date.toString("MMM d")
