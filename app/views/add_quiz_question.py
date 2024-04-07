@@ -241,15 +241,17 @@ class QuizQuestion(QMainWindow):
                 output_value = None
 
                 for col in range(1, self.test_cases_grid_layout.columnCount()):
-                    widget = self.test_cases_grid_layout.itemAtPosition(row, col).widget()
-                    if isinstance(widget, QLineEdit):
-                        # Convert the text to the appropriate type
-                        value = self.convert_to_python_type(widget.text().strip())
-                        # If it's the last column, it's the output value
-                        if col == self.test_cases_grid_layout.columnCount() - 1:
-                            output_value = value
-                        else:
-                            input_values.append(value)
+                    items = self.test_cases_grid_layout.itemAtPosition(row, col)
+                    if items != None:
+                        widget = items.widget()
+                        if isinstance(widget, QLineEdit):
+                            # Convert the text to the appropriate type
+                            value = self.convert_to_python_type(widget.text().strip())
+                            # If it's the last column, it's the output value
+                            if col == self.test_cases_grid_layout.columnCount() - 1:
+                                output_value = value
+                            else:
+                                input_values.append(value)
 
                 # If there are input values and an output value, add them to test_cases dictionary
                 if input_values and output_value is not None:

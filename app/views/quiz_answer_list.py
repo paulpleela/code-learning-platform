@@ -49,7 +49,7 @@ class Quiz_answer_list(QtWidgets.QWidget):
         self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
         
-        self.gridLayout.setColumnStretch(5, 0)
+        self.gridLayout.setColumnStretch(0, 5)
         self.gridLayout.setColumnStretch(1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.go_back = QPushButton(Form)
@@ -78,7 +78,7 @@ class Quiz_answer_list(QtWidgets.QWidget):
             item = self.gridLayout.itemAt(i)
             if item.widget():
                 item.widget().deleteLater()
-
+        self.gridLayout.removeItem(self.verticalSpacer)
         self.index = 0
         all_passed = True
         # Adding buttons and labels based on results data
