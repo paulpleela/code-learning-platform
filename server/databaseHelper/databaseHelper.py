@@ -555,7 +555,82 @@ class calendarOperations:
                     calendarForThatStudent[module.dueDate].append((course.Name, module.name, courseCode))
 
 
-        
+class dashboardOperations:
+    def __init__(self, root):
+        self.root = root
+
+    def get_dashboard_by_studentUserName(self, userName):
+        '''
+        dashboard = {
+        "courseNameList": ["Math", "Science", "English"],
+        "totalCompletedModules": [1, 2, 3],
+        "totalModules": [3, 3, 3],
+
+        }
+        '''
+        dashboard = {}
+
+        courseNameList = []
+        totalCompletedModules = []
+        totalModules = []
+
+        if hasattr(self.root, 'students') and userName in self.root.students:
+            student = self.root.students[userName]
+            
+
+            enrolledCourseList = student.enrolledCourseList # [courseCode1, courseCode2, courseCode3] list of courseCode strings
+            
+            for courseCode in enrolledCourseList:
+                course = self.root.courses[courseCode]
+                courseNameList.append(course.Name)
+                totalModules.append(len(course.moduleList))
+                completedModules = 0
+                for module in course.moduleList:
+                    if userName in module.students_completed:
+                        completedModules += 1
+                totalCompletedModules.append(completedModules)
+        dashboard["courseNameList"] = courseNameList
+        dashboard["totalCompletedModules"] = totalCompletedModules
+        dashboard["totalModules"] = totalModules
+
+        return dashboard
+    
+    def get_dashboard_by_teacherUserName(self, userName):
+        '''
+        dashboard = {
+            "courseNameList": ["Math", "Science", "English"],
+            "totalFinishedStudents": [1, 2, 3],
+            "totalStudents": [3, 3, 3],
+
+        }
+        '''
+        dashboard = {}
+        courseNameList = []
+        totalFinishedStudents = []
+        totalStudents = []
+
+        if hasattr(self.root, 'teachers') and userName in self.root.teachers:
+            teacher = self.root.teachers[userName]
+            ownedCourseList = teacher.ownedCourseList
+
+            for courseCode in ownedCourseList:
+                course = self.root.courses[courseCode]
+                courseNameList.append(course.Name)
+                totalStudents.append(len(course.studentList))
+                finishedStudents = 0
+                for student in course.studentList:
+                    if student in course.studentStatusList:
+                        finishedStudents += 1
+                totalFinishedStudents.append(finishedStudents)
+        dashboard["courseNameList"] = courseNameList
+        dashboard["totalFinishedStudents"] = totalFinishedStudents
+        dashboard["totalStudents"] = totalStudents
+
+        return dashboard
+
+                
+
+
 class ZODBHelper:
     def __init__(self, db_file):
         self.db_file = db_file
@@ -577,6 +652,6 @@ class ZODBHelper:
 
         self.certification_operations = certificationOperations(self.root)
         self.calendar_operations = calendarOperations(self.root)
-
+        self.dashboard_operations = dashboardOperations(self.root)
     def close(self):
         self.connection.close()

@@ -13,8 +13,8 @@ class certification(persistent.Persistent):
 # abstract class User and two clases, student and teacher, inherit from it
 class User(persistent.Persistent):
       def __init__(self, username, name, password, role):
-            self.username = username
-            self.name = name
+            self.username = name
+            self.name = username
             self.password = password
             self.role = role
 
@@ -51,7 +51,7 @@ class Student(User, persistent.Persistent):
                   "courseName": courseName, 
                   "teacherName": teacherName, 
                   "Date": str(formatted_date),
-                  "userName": userName
+                  "userName": self.username
                   }
 
             self.certification.append(certification)

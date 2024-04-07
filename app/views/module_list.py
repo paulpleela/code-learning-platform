@@ -19,12 +19,13 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
     QScrollArea, QSizePolicy, QSpacerItem, QWidget, QStackedWidget, QMainWindow, QLineEdit)
 
 from PySide6 import QtCore, QtGui, QtWidgets
-
+import requests
 class Module_list(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.module = ['mol1', 'mol2', 'mol3']
-        self.cID = "abcdefgh"
+        self.module = []
+        self.status = []
+        self.cID = ""
         self.buttons = []
         self.index = 0
         
@@ -80,3 +81,64 @@ class Module_list(QMainWindow):
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
+    def set_courseCode(self, courseCode, username):
+        self.cID = courseCode
+        self.username = username
+        self.updateAPI()
+
+
+    def updateAPI(self):
+        # Fetch modules data from the backend
+        response = requests.get(f"http://127.0.0.1:8000/modules/{self.cID}")
+
+        if response.status_code == 200:
+            # Clear existing modules
+            self.module.clear()
+
+            # Parse the response and add modules to the UI
+            data = response.json()
+            print(data)
+            for module_obj in data["modules"]:
+                print(module_obj)
+                self.module.append(module_obj["name"])
+                if self.username in module_obj["students_completed"]:
+                    self.status.append("Completed")
+                else:
+                    self.status.append(module_obj["dueDate"])
+                
+            # Update the UI with new modules
+            self.update_ui_with_modules()
+
+    def update_ui_with_modules(self):
+        # Clear the layout
+        for i in reversed(range(self.gridLayout.count())):
+                widget = self.gridLayout.itemAt(i).widget()
+                if widget:
+                    widget.deleteLater()
+        self.gridLayout.removeItem(self.verticalSpacer)
+        # Reinitialize index
+        self.index = 0
+        self.module_buttons = []
+        
+        # Add new modules to the layout
+        for i in range(len(self.module)):
+            # Add module button
+            button = QPushButton(self.scrollAreaWidgetContents)
+            button.setObjectName(f"module_{self.index + 1}")
+            button.setText(self.module[i])
+            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
+            self.module_buttons.append(button)
+
+            label = QLabel(self.scrollAreaWidgetContents)
+            label.setObjectName(f"label_{self.index + 1}")
+            label.setText(self.status[i] if self.status[i] != "" else "No Deadline")
+            self.gridLayout.addWidget(label, self.index, 1, 1, 1)
+
+            self.index += 1
+
+        #Add VerticalSpacer
+        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
+
+        # Update the scroll area widget
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)

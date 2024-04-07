@@ -19,16 +19,17 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
     QScrollArea, QSizePolicy, QSpacerItem, QWidget, QMainWindow)
 
 from PySide6 import QtCore, QtGui, QtWidgets
-
+import requests
 class Lesson_Quiz_list(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.lessons = ['abc', 'def', 'ghi']
-        self.cID = "abcdefgh"
+        self.lessons = []
+        self.cID = ""
+        self.moduleIndex = None
         self.lesson_buttons = []
         self.lesson_index = 0
         
-        self.quizzes = ['ign', 'fed', 'cga']
+        self.quizzes = []
         self.quiz_buttons = []
         self.quiz_index = 0
         
@@ -119,8 +120,83 @@ class Lesson_Quiz_list(QMainWindow):
         self.quiz_gridLayout.addItem(self.verticalSpacer_2, self.quiz_index, 0, 1, 1)
         
         QMetaObject.connectSlotsByName(Form)
+
+    def updateLessonsUi(self, lessons):
+        # Clear existing lesson buttons
+        for i in reversed(range(self.lesson_gridLayout.count())):
+            widget = self.lesson_gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        # for button in self.lesson_buttons:
+        #     self.lesson_gridLayout.removeItem(button)
+        #     # button.deleteLater()
+        # for button in self.lesson_delete:
+        #     self.lesson_gridLayout.removeItem(button)
+        #     # button.deleteLater()
+        # for button in self.lesson_edit:
+        #     self.lesson_gridLayout.removeItem(button)
+        #     # button.deleteLater()
+        self.lesson_gridLayout.removeItem(self.verticalSpacer)
         
+        self.lesson_buttons = []
+        self.lesson_index = 0
+        
+        # Add new lessons
+        for lesson_name in lessons:
+            button = QPushButton(self.lesson_widget)
+            button.setObjectName(f"lesson_{self.lesson_index + 1}")
+            button.setText(lesson_name)
+            self.lesson_gridLayout.addWidget(button, self.lesson_index, 0, 1, 1)
+            self.lesson_buttons.append(button)
+            
+            self.lesson_index += 1
+            
+        self.lesson_gridLayout.addItem(self.verticalSpacer, self.lesson_index, 0, 1, 1)
+            
+
+    def updateQuizUi(self, quizzes):
+        print('update')
+        # Clear old Element
+        for i in reversed(range(self.quiz_gridLayout.count())):
+            widget = self.quiz_gridLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        self.quiz_gridLayout.removeItem(self.verticalSpacer_2)
+        
+        self.quiz_buttons = []
+        self.quiz_index = 0
+        
+        # Add new quiz
+        for quiz_name in quizzes:
+            button = QPushButton(self.quiz_widget)
+            button.setObjectName(f"quiz_{self.quiz_index + 1}")
+            button.setText(quiz_name)
+            self.quiz_gridLayout.addWidget(button, self.quiz_index, 0, 1, 1)
+            self.quiz_buttons.append(button)
+            
+            self.quiz_index += 1
+            
+        self.quiz_gridLayout.addItem(self.verticalSpacer_2, self.quiz_index, 0, 1, 1)
+
     # setupUi
+    def set_courseCode_moduleIndex(self, courseCode, moduleIndex, lesson_or_quiz):
+        self.cID = courseCode
+        self.moduleIndex = moduleIndex
 
+        if lesson_or_quiz == "lesson":
+            response = requests.get(f"http://127.0.0.1:8000/lessons/{courseCode}/{moduleIndex}")
 
-
+            if response.status_code == 200:
+                data = response.json()
+                lessons = [lesson_obj["name"] for lesson_obj in data["lessons"]]
+                self.updateLessonsUi(lessons)
+                print(data)
+        else:
+            print('begin')
+            response = requests.get(f"http://127.0.0.1:8000/quizzes/{courseCode}/{moduleIndex}")
+            print("quiz reponse", response.text)
+            if response.status_code == 200:
+                data = response.json()
+                quizzes = [quiz_obj["questionName"] for quiz_obj in data["quizzes"]]
+                self.updateQuizUi(quizzes)
+                print("quizdata", data)

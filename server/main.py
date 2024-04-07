@@ -139,6 +139,10 @@ async def enroll_course(courseCode: str, username: str):
     success = db_helper.course_operations.enroll_course(courseCode, username)
     return {"success": success}
 
+@app.post("/api/unenroll")
+async def unenroll_course(courseCode: str, username: str):
+    success = db_helper.course_operations.unenroll_course(courseCode, username)
+    return {"success": success}
 
 # update operation 
 @app.put("/course/rename/{courseCode}/{newName}")
@@ -349,5 +353,18 @@ async def get_certifications_byUserName(userName: str):
 @app.get("/calendar/{userName}")
 async def get_calendar_byUserName(userName: str):
     calendar = db_helper.calendar_operations.return_calendar_by_userName(userName)
-    
+
     return {"calendar": calendar}
+
+'''----------------------------------    Dashboard      ---------------------------------- '''
+@app.get("/dashboard/student/{userName}")
+async def get_dashboard_by_studentUserName(userName: str):
+    dashboard = db_helper.dashboard_operations.get_dashboard_by_studentUserName(userName)
+   
+    return {"dashboard": dashboard}
+
+@app.get("/dashboard/teacher/{userName}")
+async def get_dashboard_by_teacherUserName(userName: str):
+    dashboard = db_helper.dashboard_operations.get_dashboard_by_teacherUserName(userName)
+
+    return {"dashboard": dashboard}
