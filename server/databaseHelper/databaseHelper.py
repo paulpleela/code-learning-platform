@@ -553,7 +553,7 @@ class calendarOperations:
                         calendarForThatStudent[module.dueDate] = []
                     # add the courseName, moduleName, courseCode to the calendar
                     calendarForThatStudent[module.dueDate].append((course.Name, module.name, courseCode))
-
+        return calendarForThatStudent
 
 class dashboardOperations:
     def __init__(self, root):
