@@ -24,6 +24,7 @@ Student
     - password
     - role
     - enrolledCourseList
+    - certificationList
 
 Course
     - name
@@ -137,6 +138,7 @@ class UserAuthentication:
         if hasattr(self.root, 'teachers'):
             for teacher in self.root.teachers.values():
                 teacher.print_details()
+
 
 class CourseOperations:
     def __init__(self, root):
@@ -513,6 +515,17 @@ class submissionOperations:
                         return quizz.submissionDict[userName]
         return None
     
+class certificationOperations:
+    def __init__(self, root):
+        self.root = root
+
+    def get_certification_by_userName(self):
+        if hasattr(self.root, 'students') and self.userName in self.root.students:
+            student = self.root.students[self.userName]
+            return student.certificationList    # [certification1, certification2, certification3] list of certification objects
+        return []
+
+
 class ZODBHelper:
     def __init__(self, db_file):
         self.db_file = db_file
@@ -531,6 +544,8 @@ class ZODBHelper:
         self.lesson_operations = LessonOperations(self.root)
         self.quizz_operations = QuizzOperations(self.root) 
         self.submission_operations = submissionOperations(self.root)
+
+        self.certification_operations = certificationOperations(self.root)
           
 
     def close(self):

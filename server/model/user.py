@@ -8,6 +8,7 @@ class certification(persistent.Persistent):
       courseName: str
       teacherName: str
       Date: str
+      userName: str
 
 # abstract class User and two clases, student and teacher, inherit from it
 class User(persistent.Persistent):
@@ -42,11 +43,16 @@ class Student(User, persistent.Persistent):
                   return False
             
       # add the courseName, teacherName, Date to the certification
-      def add_certification(self, courseName, teacherName):
+      def add_certification(self, courseName, teacherName, userName):
 
             today_Date = datetime.datetime.today()
             formatted_date = today_Date.strftime("%B %d, %Y")
-            certification = {"courseName": courseName, "teacherName": teacherName, "Date": str(formatted_date)}
+            certification = {
+                  "courseName": courseName, 
+                  "teacherName": teacherName, 
+                  "Date": str(formatted_date),
+                  "userName": userName
+                  }
 
             self.certification.append(certification)
 

@@ -335,3 +335,10 @@ async def create_submission(courseCode: str, moduleIndex: str, quizzIndex: str, 
 async def get_all_submissions(courseCode: str, moduleIndex: str, quizzIndex: str, userName: str):
     submissions = db_helper.submission_operations.get_submission_ByUserName(courseCode, moduleIndex, quizzIndex, userName)
     return {"submissions": submissions}
+
+'''----------------------------------    Certification      ---------------------------------- '''
+
+@app.get("/certifications/{userName}")
+async def get_certifications_byUserName(userName: str):
+    certifications = db_helper.certification_operations.get_certification_by_userName(userName)
+    return {"certifications": certifications}
