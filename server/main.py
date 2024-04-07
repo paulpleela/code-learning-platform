@@ -359,28 +359,12 @@ async def get_calendar_byUserName(userName: str):
 '''----------------------------------    Dashboard      ---------------------------------- '''
 @app.get("/dashboard/student/{userName}")
 async def get_dashboard_by_studentUserName(userName: str):
-    dashboard = db_helper.dashboard_operations.return_dashboard_by_userName(userName)
-
-    dashboard = {
-        "courseNameList": ["Math", "Science", "English"],
-        "totalCompletedModules": [1, 2, 3],
-        "totalModules": [3, 3, 3],
-
-    }
-
-
-    
+    dashboard = db_helper.dashboard_operations.get_dashboard_by_studentUserName(userName)
+   
     return {"dashboard": dashboard}
 
 @app.get("/dashboard/teacher/{userName}")
 async def get_dashboard_by_teacherUserName(userName: str):
-    dashboard = db_helper.dashboard_operations.return_dashboard_by_userName(userName)
-
-    dashboard = {
-        "courseNameList": ["Math", "Science", "English"],
-        "totalFinishedStudents": [1, 2, 3],
-        "totalStudents": [3, 3, 3],
-
-    }
+    dashboard = db_helper.dashboard_operations.get_dashboard_by_teacherUserName(userName)
 
     return {"dashboard": dashboard}
