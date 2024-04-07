@@ -78,7 +78,7 @@ class Quiz_answer_list(QtWidgets.QWidget):
             item = self.gridLayout.itemAt(i)
             if item.widget():
                 item.widget().deleteLater()
-
+        self.gridLayout.removeItem(self.verticalSpacer)
         self.index = 0
         all_passed = True
         # Adding buttons and labels based on results data
