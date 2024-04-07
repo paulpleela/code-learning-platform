@@ -549,9 +549,14 @@ class calendarOperations:
                 course = self.root.courses[courseCode]  # get the course object by courseCode
 
                 for module in course.moduleList:    #  moduleList = [module1, module2, module3] list of module objects
-                    if module.dueDate not in calendarForThatStudent:    
+                    if module.dueDate not in calendarForThatStudent:  
+                        print("module.dueDate", module.dueDate)  
                         calendarForThatStudent[module.dueDate] = []
                     # add the courseName, moduleName, courseCode to the calendar
+                    print("course.Name", course.Name)
+                    print("module.name", module.name)
+                    print("courseCode", courseCode)
+                    print("calendarForThatStudent", calendarForThatStudent[module.dueDate])
                     calendarForThatStudent[module.dueDate].append((course.Name, module.name, courseCode))
         return calendarForThatStudent
 
