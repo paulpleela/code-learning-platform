@@ -329,11 +329,12 @@ class ModuleOperations:
             print("An error occurred:", str(e))
             return False  # Operation failed
         
-    def update_module(self, course_code, moduleIndex, updated_module):
+    def update_module(self, course_code, moduleIndex, moduleModel):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
             course = self.root.courses[course_code]
 
-            self.root.courses[course_code].moduleList[moduleIndex] = updated_module
+            course.moduleList[moduleIndex].name = moduleModel.name
+            course.moduleList[moduleIndex].dueDate = moduleModel.dueDate
 
     def delete_module(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:
@@ -525,7 +526,36 @@ class certificationOperations:
             return student.certificationList    # [certification1, certification2, certification3] list of certification objects
         return []
 
+class calendarOperations:
+    def __init__(self, root):
+        self.root = root
 
+    '''
+    calendarForThatStudent = {
+    
+        "2024-01-01": [(courseName, moduleName, courseCode), (courseName, moduleName, courseCode)],
+        "2024-01-02": [(courseName, moduleName, courseCode), (courseName, moduleName, courseCode)],
+        "2024-01-03": [(courseName, moduleName, courseCode), (courseName, moduleName, courseCode)],    
+        }
+    
+    '''
+    def return_calendar_by_userName(self, userName):
+        calendarForThatStudent = {}
+        if hasattr(self.root, 'students') and userName in self.root.students:
+            student = self.root.students[userName]
+            enrolledCourseList = student.enrolledCourseList # [courseCode1, courseCode2, courseCode3] list of courseCode strings
+
+            for courseCode in enrolledCourseList:
+                course = self.root.courses[courseCode]  # get the course object by courseCode
+
+                for module in course.moduleList:    #  moduleList = [module1, module2, module3] list of module objects
+                    if module.dueDate not in calendarForThatStudent:    
+                        calendarForThatStudent[module.dueDate] = []
+                    # add the courseName, moduleName, courseCode to the calendar
+                    calendarForThatStudent[module.dueDate].append((course.Name, module.name, courseCode))
+
+
+        
 class ZODBHelper:
     def __init__(self, db_file):
         self.db_file = db_file
@@ -546,7 +576,7 @@ class ZODBHelper:
         self.submission_operations = submissionOperations(self.root)
 
         self.certification_operations = certificationOperations(self.root)
-          
+        self.calendar_operations = calendarOperations(self.root)
 
     def close(self):
         self.connection.close()
