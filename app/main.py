@@ -131,4 +131,5 @@ if __name__ == "__main__":
     widget.setWindowTitle("Login | PyQuizT")
     widget.show()
 
+
     sys.exit(app.exec())
