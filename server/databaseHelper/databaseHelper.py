@@ -489,7 +489,7 @@ class submissionOperations:
                         # add the student userName to which_student_finsished_StatusList
                         quizz.checkEverySubmissionPassed_byWhichStudent_And_add_studentName()
                         module.checkEveryQuizzCompleted_byWhichStudent_And_add_studentName()
-                        course.checkEveryModuleFinished_And_add_studentName()
+                        course.checkEveryModuleFinished_And_add_studentName(self.root.students[userName])
                         
                         transaction.commit()
                         return True  # Operation succeeded
