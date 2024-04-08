@@ -493,6 +493,7 @@ class submissionOperations:
         try:
             if hasattr(self.root, 'courses') and course_code in self.root.courses:
                 course = self.root.courses[course_code]
+
                 if course.checkModule_ByIndex(module_index):
                     module = course.moduleList[int(module_index)]
                     if module.checkQuizz_ByIndex(quizz_index):
@@ -509,7 +510,7 @@ class submissionOperations:
                             if module.checkEveryQuizzCompleted_byWhichStudent_And_add_studentName():
                                 print("checkEveryQuizzCompleted_byWhichStudent_And_add_studentName")
 
-                                if course.checkEveryModuleFinished_And_add_studentName(self.root.students):
+                                if course.checkEveryModuleFinished_And_add_studentName(self.root.students, self.root.teachers):
                                     print("checkEveryModuleFinished_And_add_studentName")
                                     
                         
