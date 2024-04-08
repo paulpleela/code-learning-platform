@@ -35,11 +35,6 @@ class Stacked_Certificate(QMainWindow):
         ############################## 0
         self.certificate_list = ListItem(self.username)
         self.stacked.addWidget(self.certificate_list)
-
-        for idx, button in enumerate(self.certificate_list.buttons):
-            def callback(index=idx):
-                return lambda: self.go_to_show_pdf(index, self.certificate_list.name)
-            button.clicked.connect(callback())
         
         ############################## 1
         
@@ -53,9 +48,18 @@ class Stacked_Certificate(QMainWindow):
         QMetaObject.connectSlotsByName(Form)
     
     def go_to_certificate_list(self):
+        self.certificate_list.updateAPI()
+        print(self.certificate_list.buttons)
+        for idx, button in enumerate(self.certificate_list.buttons):
+            def callback(index=idx):
+                return lambda: self.go_to_show_pdf(index, self.certificate_list.name)
+            button.clicked.connect(callback(idx))
+
+            
         self.stacked.setCurrentIndex(0)
         
     def go_to_show_pdf(self, index, data):
+        print("index", index)
         file_path = certificate_generator.setInfo(index, data)
         self.show_pdf.setFilePath(file_path)
         self.stacked.setCurrentIndex(1)

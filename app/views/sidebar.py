@@ -497,9 +497,11 @@ class Sidebar(object):
         self.stackedWidget.removeWidget(self.stackedWidget.widget(2))  # Remove the current page_3
         self.stackedWidget.insertWidget(2, self.page_3)
 
-        self.page_4 = ListItem(username)
+        self.page_4 = Stacked_Certificate(username)
+        
         self.stackedWidget.removeWidget(self.stackedWidget.widget(3))  # Remove the current page_4
         self.stackedWidget.insertWidget(3, self.page_4)
+        self.certificates_btn_2.clicked.connect(self.page_4.go_to_certificate_list)
 
         self.stackedWidget.setCurrentIndex(0)
         self.dashboard_btn_1.setChecked(True) # Toggle UI index selection

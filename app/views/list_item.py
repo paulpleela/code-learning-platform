@@ -20,29 +20,22 @@ from PySide6.QtWidgets import (QApplication, QPushButton, QScrollArea, QSizePoli
 
 from PySide6 import QtCore, QtGui, QtWidgets
 import requests
+
 class ListItem(QMainWindow):
     def __init__(self, username):
         super().__init__()
         self.username = username
-        response = requests.get(f"http://127.0.0.1:8000/certifications/{self.username}")
-        
-        # print("data certifications", data["certifications"])
-
         self.name = []
-        if response.status_code == 200:
-            data = response.json()
-            self.name = data["certifications"]
         self.buttons = []
         self.index = 0
+        self.setupUi()  # Call setupUi here instead of updateAPI
+
+    def setupUi(self):
+        if not self.objectName():
+            self.setObjectName(u"MainWindow")
+        self.resize(801, 551)
         
-        self.setupUi(self)
-        
-    def setupUi(self, Form):
-        if not Form.objectName():
-            Form.setObjectName(u"Form")
-        Form.resize(801, 551)
-        
-        self.scrollArea = QScrollArea(Form)
+        self.scrollArea = QScrollArea(self)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setGeometry(QRect(10, 10, 781, 491))
         self.scrollArea.setWidgetResizable(True)
@@ -51,25 +44,32 @@ class ListItem(QMainWindow):
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 779, 489))
         self.gridLayout = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(u"gridLayout")
-        
-        # for loop making pushButton and Label
-        for _ in range(len(self.name)):
-            button = QPushButton(self.scrollAreaWidgetContents)
-            button.setObjectName(f"pushButton_{self.index + 1}")
-            button.setText(self.name[self.index])
-            self.gridLayout.addWidget(button, self.index, 0, 1, 1)
-            self.buttons.append(button)
-            
-            self.index += 1
-        # makes verticleSpacer
-        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
-        
-        ############################################
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        QMetaObject.connectSlotsByName(Form)
-    # setupUi
+        self.updateAPI()  # Move updateAPI call here
 
+        QMetaObject.connectSlotsByName(self)
 
+    def updateAPI(self):
+        self.buttons = []
+        response = requests.get(f"http://127.0.0.1:8000/certifications/{self.username}")
+
+        if response.status_code == 200:
+            data = response.json()
+            self.name = data["certifications"]
+
+            # for loop making pushButton and Label
+            self.index = 0
+            for _ in range(len(self.name)):
+                button = QPushButton(self.scrollAreaWidgetContents)
+                button.setObjectName(f"pushButton_{self.index + 1}")
+                button.setText(self.name[self.index]["courseName"])
+                self.gridLayout.addWidget(button, self.index, 0, 1, 1)
+                self.buttons.append(button)
+                
+                self.index += 1
+
+            # makes verticalSpacer
+            self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
+            self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)

@@ -72,8 +72,8 @@ def setInfo(index, data):
             '{STUDENT}': (90, 350)
         }
 
-        input_pdf_path = "server/static/certificate/certificate_template.pdf"
-        output_pdf_path = f"server/static/certificate/{code}.pdf"
+        input_pdf_path = "server/static/certificates/certificate_template.pdf"
+        output_pdf_path = f"server/static/certificates/{code}.pdf"
 
         create_new_pdf(input_pdf_path, output_pdf_path, replacements, placeholder_positions)
         
