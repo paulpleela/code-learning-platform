@@ -330,11 +330,20 @@ class ModuleOperations:
             return False  # Operation failed
         
     def update_module(self, course_code, moduleIndex, moduleModel):
-        if hasattr(self.root, 'courses') and course_code in self.root.courses:
-            course = self.root.courses[course_code]
+        try:
+            if hasattr(self.root, 'courses') and course_code in self.root.courses:
+                course = self.root.courses[course_code]
 
-            course.moduleList[moduleIndex].name = moduleModel.name
-            course.moduleList[moduleIndex].dueDate = moduleModel.dueDate
+                course.moduleList[int(moduleIndex)].name = moduleModel.name
+                course.moduleList[int(moduleIndex)].dueDate = moduleModel.dueDate
+            
+                transaction.commit()
+                return True  # Operation succeeded
+            
+        except Exception as e:
+            print("An error occurred:", str(e))
+            return False
+
 
     def delete_module(self, course_code, moduleIndex):
         if hasattr(self.root, 'courses') and course_code in self.root.courses:

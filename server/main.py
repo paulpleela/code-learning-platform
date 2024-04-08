@@ -195,9 +195,10 @@ async def get_moduleByIndex(courseCode: str, moduleIndex: str):
     return module
 
 @app.put("/module/{courseCode}/{moduleIndex}")
-async def update_module(courseCode: str, moduleIndex: str, moduleModel: ModuleModel):
+async def update_module_byIndex(courseCode: str, moduleIndex: str, moduleModel: ModuleModel):
     
-    db_helper.module_operations.update_module(courseCode, moduleIndex, moduleModel)
+    success = db_helper.module_operations.update_module(courseCode, moduleIndex, moduleModel)
+    return {"success": success}
 
 @app.delete("/module/{courseCode}/{moduleIndex}")
 async def delete_module(courseCode:str, moduleIndex: str):
