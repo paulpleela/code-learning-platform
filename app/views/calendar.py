@@ -8,11 +8,12 @@ from PySide6.QtCore import QObject, Slot
 import requests
 
 class CalendarTable(QWidget):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
 
         self.assignments = {}
         self.current_date = QDate.currentDate()
+        self.username = username
 
         self.initUI()
 
@@ -51,14 +52,15 @@ class CalendarTable(QWidget):
 
         self.setLayout(layout)
 
-        self.updateCalendar(None)
+        self.updateCalendar(self.username)
 
     def updateCalendar(self, username):
-        if username != None:
+
+        if self.username != None:
             response = requests.get(f"http://127.0.0.1:8000/calendar/{username}")
 
             if response.status_code == 200:
-                assignments = response.json()["calendar"]
+                self.assignments = response.json()["calendar"]
 
         current_date = self.current_date.addDays(-self.current_date.dayOfWeek())
 
@@ -66,6 +68,7 @@ class CalendarTable(QWidget):
         end_date = current_date.addDays(6).toString("MMM d, yyyy")
         self.title_label.setText(f"{start_date} - {end_date}")
 
+        print(self.assignments)
         # Clear table contents
         self.table.clearContents()
 
@@ -97,12 +100,15 @@ class CalendarTable(QWidget):
             day_number_item.setForeground(QColor("dimgray"))
             self.table.setItem(1, column, day_number_item)
 
-            assignments = self.assignments.get(current_date.toString(Qt.ISODate), [])
-
+            assignments = self.assignments.get(current_date.toString("yyyy-MMM-dd"), [])
+            
             for row, assignment in enumerate(assignments, start=2):
+                assignment_text = f"{assignment[0]}: {assignment[1]}"
+                print(assignment_text)
+                print(assignment_text)
                 if row >= self.table.rowCount():
                     self.table.insertRow(row)
-                assignment_item = QTableWidgetItem(assignment)
+                assignment_item = QTableWidgetItem(assignment_text)
                 assignment_item.setTextAlignment(Qt.AlignCenter)
                 self.table.setItem(row, column, assignment_item)
 
@@ -110,7 +116,7 @@ class CalendarTable(QWidget):
                 cell_rect = self.table.visualRect(self.table.model().index(row, column))
                 cell_width = cell_rect.width()
                 fm = QFontMetrics(self.table.font())
-                text_width = fm.boundingRect(assignment).width()
+                text_width = fm.boundingRect(assignment_text).width()
                 if text_width > cell_width:
                     lines = textwrap.wrap(assignment, width=int(cell_width / fm.averageCharWidth()))
                     assignment_item.setText("\n".join(lines))
@@ -127,15 +133,15 @@ class CalendarTable(QWidget):
         self.table.resizeRowsToContents()
 
     def resizeEvent(self, event):
-        self.updateCalendar(None)
+        self.updateCalendar(self.username)
 
     def prevWeek(self):
         self.current_date = self.current_date.addDays(-7)  
-        self.updateCalendar(None)
+        self.updateCalendar(self.username)
 
     def nextWeek(self):
         self.current_date = self.current_date.addDays(7)  
-        self.updateCalendar(None)
+        self.updateCalendar(self.username)
 
     def handleItemClick(self, item):
         assignment_name = item.text()
@@ -145,9 +151,9 @@ class CalendarTable(QWidget):
 
 
 class Calendar(QMainWindow):
-    def __init__(self):
+    def __init__(self, username):
         super().__init__()
-
+        self.username = username
         self.initUI()
 
     def initUI(self):
@@ -155,7 +161,7 @@ class Calendar(QMainWindow):
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout()
 
-        self.calendar = CalendarTable()
+        self.calendar = CalendarTable(self.username)
 
         layout.addWidget(self.calendar)
 
@@ -166,5 +172,5 @@ class Calendar(QMainWindow):
     @Slot()
     def handle_calendar_resize(self):
         # Call the resizeEvent method of the calendar widget
-        self.calendar.resizeEvent(None)
+        self.calendar.resizeEvent(self.username)
     

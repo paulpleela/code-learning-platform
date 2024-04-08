@@ -310,7 +310,7 @@ class Sidebar(object):
         self.stackedWidget.addWidget(self.page)
         
         #################
-        calendar = Calendar()
+        calendar = Calendar(None)
         self.page_2 = calendar
 
         self.page_2.setObjectName(u"page_2")
@@ -489,7 +489,10 @@ class Sidebar(object):
         else:
             stack_course = Stacked_Course(username)
 
-
+        self.page_2 = Calendar(self.username)
+        self.stackedWidget.removeWidget(self.stackedWidget.widget(1))
+        self.stackedWidget.insertWidget(1, self.page_2)
+        
         self.page_3 = stack_course
         self.stackedWidget.removeWidget(self.stackedWidget.widget(2))  # Remove the current page_3
         self.stackedWidget.insertWidget(2, self.page_3)
