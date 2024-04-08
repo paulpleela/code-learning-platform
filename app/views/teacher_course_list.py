@@ -192,3 +192,4 @@ class Teacher_Course_list(QMainWindow):
             self.delete_buttons[delete] = index
             delete.clicked.connect(self.delete_course)
             self.gridLayout.addWidget(delete, index, 2, 1, 1)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
