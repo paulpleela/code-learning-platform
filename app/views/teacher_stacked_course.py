@@ -371,7 +371,7 @@ class Teacher_Stacked_Course(QMainWindow):
                 self.module_list.gridLayout.addWidget(button, self.module_list.index, 0, 1, 1)
                 button.setText(self.module_list.lineEdit.text())
                 self.module_list.module_buttons.append(button)
-                button.clicked.connect(self.go_to_lesson_quiz_index(len(self.module_list.module_buttons)-1))
+                button.clicked.connect(lambda : self.go_to_lesson_quiz_index(len(self.module_list.module_buttons)-1))
                 
                 edit = QPushButton(self.module_list.scrollAreaWidgetContents)
                 edit.setObjectName(f"edit_{self.module_list.index + 1}")
