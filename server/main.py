@@ -14,9 +14,8 @@ from database import *
 courseCode_generator = CodeGenerator()
 fileCodeGenerator = CodeGenerator()
 
-db_helper = ZODBHelper('mydatabase.fs')
- 
- # Base model for student registration, login, and course creation
+
+# Base model for student registration, login, and course creation
 
 class UserRegister(BaseModel):
     username: str

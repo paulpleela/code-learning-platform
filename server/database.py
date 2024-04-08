@@ -17,7 +17,8 @@ from model.module import *
 from model.quiz import *
 from model.submission import *
 
-
+db_helper = ZODBHelper('mydatabase.fs') # location1 object creation
+ 
 '''
 # ZODB database setup
 storage = FileStorage.FileStorage('mydatabase.fs')
