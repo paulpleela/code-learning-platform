@@ -301,7 +301,16 @@ class Teacher_Stacked_Course(QMainWindow):
         if self.module_rename.lineEdit.text():
             item = self.module_list.gridLayout.itemAtPosition(index , 0).widget()
             item.setText(self.module_rename.lineEdit.text())
-            self.back_from_rename2module()
+
+            deadline = ""
+            if not self.module_rename.no_deadline_checkbox.isChecked():
+                deadline = self.module_rename.deadline_edit.text()
+            print("new deadline", deadline)
+            response = requests.put(f"http://127.0.0.1:8000/module/{self.module_list.cID}/{index}", json={"name": self.module_rename.lineEdit.text(), "dueDate": deadline})
+
+            # Check if the request was successful
+            if response.status_code == 200:
+                self.back_from_rename2module()
        
 #########################################
     def add_course(self):
