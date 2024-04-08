@@ -22,11 +22,13 @@ class Quiz(persistent.Persistent):
       def checkEverySubmissionPassed_byWhichStudent_And_add_studentName(self):
             # return True if none not in the list
             try:
-                  for submission in self.submissionDict.values():
+                  # submissionDict = {"username": submission}
+                  # submission.textcaseResultList = [None, None, None]
+                  for studentName, submission in self.submissionDict.items():
                         if None not in submission.textcaseResultList:
-                              self.which_student_finsished_StatusList.append(submission.userName)
-                              print("Student Status List", self.which_student_finsished_StatusList)
-
+                              if studentName not in self.which_student_finsished_StatusList:
+                                    self.which_student_finsished_StatusList.append(studentName)
+                                    print("Student Status List", self.which_student_finsished_StatusList)
                   return True
             except Exception as e:
                   print("Error in checkEverySubmissionPassed_byWhichStudent_And_add_studentName", str(e))
