@@ -54,7 +54,7 @@ class Student(User, persistent.Persistent):
                   "userName": self.username
                   }
 
-            self.certification.append(certification)
+            self.certificationList.append(certification)
 
       def print_details(self):
             print("Username:", self.username)
