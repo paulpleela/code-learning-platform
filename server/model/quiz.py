@@ -20,10 +20,15 @@ class Quiz(persistent.Persistent):
       # check if every submission.testCaseResultList has none in it, then the quiz is finished
       # and add the student userName to which_student_finsished_StatusList
       def checkEverySubmissionPassed_byWhichStudent_And_add_studentName(self):
-            for student in self.submissionDict:
-                  if all(self.submissionDict[student].textcaseResultList):
-                        self.which_student_finsished_StatusList.append(student)
-            return self.which_student_finsished_StatusList
+            # return True if none not in the list
+            try:
+                  for submission in self.submissionDict.values():
+                        if None not in submission.textcaseResultList:
+                              self.which_student_finsished_StatusList.append(submission.userName)
+                              print("Student Status List", self.which_student_finsished_StatusList)
 
-
-      
+                  return True
+            except Exception as e:
+                  print("Error in checkEverySubmissionPassed_byWhichStudent_And_add_studentName", str(e))
+                  return False
+            

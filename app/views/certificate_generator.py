@@ -1,7 +1,7 @@
 import io
-import PyPDF2
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+import PyPDF2 # type: ignore
+from reportlab.pdfgen import canvas # type: ignore
+from reportlab.lib.pagesizes import A4 # type: ignore
 import random
 import string
 import requests
