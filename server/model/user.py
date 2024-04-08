@@ -51,14 +51,14 @@ class Student(User, persistent.Persistent):
                   "courseName": courseName, 
                   "teacherName": teacherName, 
                   "Date": str(formatted_date),
-                  "userName": self.username
+                  "userName": self.name
                   }
 
             self.certificationList.append(certification)
             self.print_details()
 
       def print_details(self):
-            print("Username:", self.username)
+            print("Username:", self.name)
             print("Role:", self.role)
             print("Enrolled Courses:", self.enrolledCourseList)
             print("Certification List:", self.certificationList)
@@ -78,6 +78,6 @@ class Teacher(User, persistent.Persistent):
                   return False
 
       def print_details(self):
-            print("Username:", self.username)
+            print("Username:", self.name)
             print("Role:", self.role)
             print("Owned Courses:", self.ownedCourseList)
