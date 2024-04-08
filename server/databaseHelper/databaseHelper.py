@@ -570,9 +570,14 @@ class calendarOperations:
                     print("calendarForThatStudent", calendarForThatStudent[module.dueDate])
 
                     # 2024-Apr-06
-                    formattedDate = module.dueDate.strftime("%Y-%b-%d")
-                    print("new formmattedDate: ", formattedDate)
-                    calendarForThatStudent[formattedDate].append((course.Name, module.name, courseCode))
+                    due_date_str = module.dueDate
+
+                    # Parse the string into a datetime object
+                    due_date_obj = datetime.strptime(due_date_str, "%Y-%m-%d")
+
+                    # Format the datetime object as desired
+                    formatted_date = due_date_obj.strftime("%Y-%b-%d")
+                    calendarForThatStudent[formatted_date].append((course.Name, module.name, courseCode))
         return calendarForThatStudent
 
 class dashboardOperations:
