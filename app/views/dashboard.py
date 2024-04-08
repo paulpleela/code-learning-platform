@@ -144,8 +144,9 @@ class Dashboard(QMainWindow):
         self.gridLayout.removeItem(self.verticalSpacer)
         
         self.buttons = []
+        self.buttons = []
         #Update API
-        response = requests.get("http://127.0.0.1:8000/dashboard/checkUser/", params={"username": self.username})
+        response = requests.get(f"http://127.0.0.1:8000/dashboard/checkUser/{self.username}")
         
         if response.status_code == 200:
             data = response.json()
@@ -153,7 +154,8 @@ class Dashboard(QMainWindow):
                 self.updateStudentAPI()
             elif data["role"] == 'teacher':
                 self.updateTeacherAPI()
-        
+                
+        self.index = 0
         # Re-create course buttons
         for _ in range(len(self.name)):
             button = QPushButton(self.scrollAreaWidgetContents)
@@ -163,7 +165,10 @@ class Dashboard(QMainWindow):
             self.buttons.append(button)
             
             bar = QProgressBar(self.scrollAreaWidgetContents)
-            bar.setValue(self.complete[self.index]/self.number_of_total[self.index] * 100)
+            if self.number_of_total[self.index] == 0:
+                bar.setValue(0)
+            else:
+                bar.setValue(self.complete[self.index]/self.number_of_total[self.index] * 100)
             bar.setAlignment(Qt.AlignCenter) 
             bar.setStyleSheet('''   QProgressBar {
                                     border: solid grey;
@@ -176,11 +181,10 @@ class Dashboard(QMainWindow):
                                     border-radius :15px;
                                     }      ''')
             self.gridLayout.addWidget(bar , self.index , 1 ,  1, 1)
-            
+            # print(i)
             self.index += 1
         # makes verticleSpacer
-        self.verticalSpacer = QSpacerItem(20, 378, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.gridLayout.addItem(self.verticalSpacer, self.index, 0, 1, 1)
+        self.gridLayout.addItem(self.verticalSpacer, self.index, 1, 1, 1)
 
 
 
