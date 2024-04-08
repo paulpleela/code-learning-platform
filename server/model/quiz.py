@@ -23,9 +23,9 @@ class Quiz(persistent.Persistent):
             # return True if none not in the list
             try:
                   # submissionDict = {"username": submission}
-                  # submission.testCaseResultList = [None, None, None]
+                  # submission.textcaseResultList = [None, None, None]
                   for studentName, submission in self.submissionDict.items():
-                        if None not in submission.testCaseResultList:
+                        if None not in submission.textcaseResultList:
                               if studentName not in self.which_student_finsished_StatusList:
                                     self.which_student_finsished_StatusList.append(studentName)
                                     print("Student Status List", self.which_student_finsished_StatusList)
