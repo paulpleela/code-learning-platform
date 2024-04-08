@@ -7,7 +7,7 @@ import random
 import string
 from model.user import *
 import bcrypt
-
+import datetime
 '''
 Database stored in ZODB
 
@@ -568,7 +568,11 @@ class calendarOperations:
                     print("module.name", module.name)
                     print("courseCode", courseCode)
                     print("calendarForThatStudent", calendarForThatStudent[module.dueDate])
-                    calendarForThatStudent[module.dueDate].append((course.Name, module.name, courseCode))
+
+                    # 2024-Apr-06
+                    formmattedDate = module.dueDate.strftime("%Y-%b-%d")
+                    print("new formmattedDate: ", formmattedDate)
+                    calendarForThatStudent[formmattedDate].append((course.Name, module.name, courseCode))
         return calendarForThatStudent
 
 class dashboardOperations:

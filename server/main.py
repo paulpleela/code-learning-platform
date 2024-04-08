@@ -35,7 +35,7 @@ class CourseCreated(BaseModel):
 
 class ModuleModel(BaseModel):
     name: str
-    dueDate: str
+    dueDate: str    # date format: "2021 "
 
 class LessonModel(BaseModel):
     name: str
