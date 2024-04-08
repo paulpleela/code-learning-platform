@@ -51,6 +51,7 @@ class MainWindow(QMainWindow):
     ## functions for changing menu page
     def on_dashboard_btn_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(0)
+        self.ui.page.updateUI()
         
 
     def on_calendar_btn_toggled(self):
