@@ -35,18 +35,19 @@ class Course(persistent.Persistent):
             
       
 
-      def checkEveryModuleFinished_And_add_studentName(self, studentObject):
+      def checkEveryModuleFinished_And_add_studentName(self, studentDatbase):
             # if student name is in the module.students_completed, then the student has completed the module and add the student name to the studentStatusList
-            for module in self.moduleList:
-                  for studentName in module.students_completed:
-                        if studentName not in self.studentStatusList:
-                              self.studentStatusList.append(studentName)
-                              print("Student Status List", self.studentStatusList)
-
-                              studentObject.add_certification(self.Name, self.courseTeacherName)
-                              print("Certification List", studentObject.certificationList)
-
-
+            try:
+                  for module in self.moduleList:
+                        for studentName in module.students_completed:
+                              if studentName not in self.studentStatusList:
+                                    self.studentStatusList.append(studentName)
+                                    studentDatbase[str(studentName)].add_certification(self.courseName, self.courseTeacherName, studentName)
+                                    print("Student Status List", self.studentStatusList)
+                  return True
+            except Exception as e:
+                  print("Error in checkEveryModuleFinished_And_add_studentName", str(e))
+                  return False
       '''Module'''
       def add_module(self, module):
             self.moduleList.append(module)

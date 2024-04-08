@@ -504,9 +504,14 @@ class submissionOperations:
                         quizz.submissionDict[userName] = submission
                         # check if student textcaseResultList has all "pass" values, the student pass and 
                         # add the student userName to which_student_finsished_StatusList
-                        quizz.checkEverySubmissionPassed_byWhichStudent_And_add_studentName()
-                        module.checkEveryQuizzCompleted_byWhichStudent_And_add_studentName()
-                        course.checkEveryModuleFinished_And_add_studentName(self.root.students[userName])
+                        if quizz.checkEverySubmissionPassed_byWhichStudent_And_add_studentName():
+                            print("checkEverySubmissionPassed_byWhichStudent_And_add_studentName")
+                            if module.checkEveryQuizzCompleted_byWhichStudent_And_add_studentName():
+                                print("checkEveryQuizzCompleted_byWhichStudent_And_add_studentName")
+
+                                if course.checkEveryModuleFinished_And_add_studentName(self.root.students):
+                                    print("checkEveryModuleFinished_And_add_studentName")
+                                    
                         
 
                         transaction.commit()

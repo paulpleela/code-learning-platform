@@ -23,10 +23,17 @@ class Module(persistent.Persistent):
 
       def checkEveryQuizzCompleted_byWhichStudent_And_add_studentName(self):
             # if student name is in the quiz.which_student_finsished_StatusList, then the student has completed the quiz and add the student name to the students_completed list
-            for quizz in self.quizzList:
-                  for studentName in quizz.which_student_finsished_StatusList:
-                        if studentName not in self.students_completed:
-                              self.students_completed.append(studentName)
+            try:
+                  for quizz in self.quizzList:
+                        for studentName in quizz.which_student_finsished_StatusList:
+                              if studentName not in self.students_completed:
+                                    self.students_completed.append(studentName)
+                                    print("Student Status List", self.students_completed)
+                  return True
+            except Exception as e:
+
+                  print("Error in checkEveryQuizzCompleted_byWhichStudent_And_add_studentName", str(e))
+                  return False
       
       def edit_details(self, moduleName, moduleDescription, moduleDueDate):
             self.Name = moduleName
