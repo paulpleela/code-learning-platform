@@ -26,7 +26,7 @@ class ListItem(QMainWindow):
         self.username = username
         response = requests.get(f"http://127.0.0.1:8000/certifications/{self.username}")
         
-        print("data certifications", data["certifications"])
+        # print("data certifications", data["certifications"])
 
         self.name = []
         if response.status_code == 200:

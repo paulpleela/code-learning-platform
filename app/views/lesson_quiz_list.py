@@ -25,11 +25,13 @@ class Lesson_Quiz_list(QMainWindow):
         super().__init__()
         self.lessons = []
         self.cID = ""
+        self.username = ""
         self.moduleIndex = None
         self.lesson_buttons = []
         self.lesson_index = 0
         
         self.quizzes = []
+        self.quiz_status = []
         self.quiz_buttons = []
         self.quiz_index = 0
         
@@ -154,7 +156,7 @@ class Lesson_Quiz_list(QMainWindow):
         self.lesson_gridLayout.addItem(self.verticalSpacer, self.lesson_index, 0, 1, 1)
             
 
-    def updateQuizUi(self, quizzes):
+    def updateQuizUi(self, quizzes, quiz_status):
         print('update')
         # Clear old Element
         for i in reversed(range(self.quiz_gridLayout.count())):
@@ -167,19 +169,29 @@ class Lesson_Quiz_list(QMainWindow):
         self.quiz_index = 0
         
         # Add new quiz
-        for quiz_name in quizzes:
+        for i in range(len(quizzes)):
             button = QPushButton(self.quiz_widget)
             button.setObjectName(f"quiz_{self.quiz_index + 1}")
-            button.setText(quiz_name)
+            button.setText(quizzes[i])
+
+            label = QLabel(self.gridLayoutWidget)
+            label.setObjectName(f"label_{self.quiz_index + 1}")
+            label.setText("Passed" if self.username in quiz_status[i] else "Not passed")
+            self.quiz_gridLayout.addWidget(label, self.quiz_index, 1, 1, 1)
+
             self.quiz_gridLayout.addWidget(button, self.quiz_index, 0, 1, 1)
             self.quiz_buttons.append(button)
+
+            
             
             self.quiz_index += 1
             
         self.quiz_gridLayout.addItem(self.verticalSpacer_2, self.quiz_index, 0, 1, 1)
 
+
     # setupUi
-    def set_courseCode_moduleIndex(self, courseCode, moduleIndex, lesson_or_quiz):
+    def set_courseCode_moduleIndex(self, username, courseCode, moduleIndex, lesson_or_quiz):
+        self.username = username
         self.cID = courseCode
         self.moduleIndex = moduleIndex
 
@@ -198,5 +210,15 @@ class Lesson_Quiz_list(QMainWindow):
             if response.status_code == 200:
                 data = response.json()
                 quizzes = [quiz_obj["questionName"] for quiz_obj in data["quizzes"]]
-                self.updateQuizUi(quizzes)
+                quiz_status = [quiz_obj["which_student_finsished_StatusList"] for quiz_obj in data["quizzes"]]
+                self.updateQuizUi(quizzes, quiz_status)
                 print("quizdata", data)
+
+    def updateUi(self):
+        response = requests.get(f"http://127.0.0.1:8000/quizzes/{self.cID}/{self.moduleIndex}")
+        if response.status_code == 200:
+            data = response.json()
+            quizzes = [quiz_obj["questionName"] for quiz_obj in data["quizzes"]]
+            quiz_status = [quiz_obj["which_student_finsished_StatusList"] for quiz_obj in data["quizzes"]]
+            self.updateQuizUi(quizzes, quiz_status)
+            

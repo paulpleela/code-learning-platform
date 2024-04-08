@@ -116,8 +116,8 @@ class Stacked_Course(QMainWindow):
     def go_to_lesson_quiz_index(self, index):
         course_code = self.module_list.cID
         self.course_code = course_code
-        self.lq_list.set_courseCode_moduleIndex(course_code, index, "lesson")
-        self.lq_list.set_courseCode_moduleIndex(course_code, index, "quiz")
+        self.lq_list.set_courseCode_moduleIndex(self.username, course_code, index, "lesson")
+        self.lq_list.set_courseCode_moduleIndex(self.username, course_code, index, "quiz")
         
         for button in self.lq_list.lesson_buttons:
             button.clicked.connect(lambda: self.go_to_lesson_index(index))
@@ -138,6 +138,7 @@ class Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(1)
 
     def go_to_lesson_quiz(self):
+        self.lq_list.updateUi()
         self.stacked.setCurrentIndex(1)
         
     def go_to_quiz(self):
@@ -166,6 +167,7 @@ class Stacked_Course(QMainWindow):
         self.stacked.setCurrentIndex(4)
 
     def go_to_module_no_index(self):
+        self.module_list.updateAPI()
         self.stacked.setCurrentIndex(4)
         
     def go_to_show_test_case(self, index):
