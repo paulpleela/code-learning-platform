@@ -565,23 +565,19 @@ class calendarOperations:
                 course = self.root.courses[courseCode]  # get the course object by courseCode
 
                 for module in course.moduleList:    #  moduleList = [module1, module2, module3] list of module objects
-                    if module.dueDate not in calendarForThatStudent:  
-                        print("module.dueDate", module.dueDate)  
-                        calendarForThatStudent[module.dueDate] = []
-                    # add the courseName, moduleName, courseCode to the calendar
-                    print("course.Name", course.Name)
-                    print("module.name", module.name)
-                    print("courseCode", courseCode)
-                    print("calendarForThatStudent", calendarForThatStudent[module.dueDate])
-
                     # 2024-Apr-06
                     due_date_str = module.dueDate
 
                     # Parse the string into a datetime object
-                    due_date_obj = datetime.strptime(due_date_str, "%Y-%m-%d")
+                    due_date_obj = datetime.strptime(due_date_str, "%d-%b-%y")
 
                     # Format the datetime object as desired
                     formatted_date = due_date_obj.strftime("%Y-%b-%d")
+                    
+                    if formatted_date not in calendarForThatStudent:  
+                        print("module.dueDate", module.dueDate)  
+                        calendarForThatStudent[formatted_date] = []
+
                     calendarForThatStudent[formatted_date].append((course.Name, module.name, courseCode))
         return calendarForThatStudent
 
