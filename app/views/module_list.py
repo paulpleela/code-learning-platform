@@ -20,6 +20,8 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QPushButton,
 
 from PySide6 import QtCore, QtGui, QtWidgets
 import requests
+from datetime import datetime
+
 class Module_list(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -122,16 +124,35 @@ class Module_list(QMainWindow):
         
         # Add new modules to the layout
         for i in range(len(self.module)):
+            status = self.status[i] if self.status[i] != "" else "No Deadline"
+            
+            try:
+                date_obj = datetime.strptime(status, "%d-%b-%y")
+                if date_obj < datetime.today():
+                    status = "Overdue"
+            except ValueError:
+                pass
+
+            allow_press = True
+            if status in ["Overdue", "Completed"]:
+                allow_press = False
+
+            label = QLabel(self.scrollAreaWidgetContents)
+            label.setObjectName(f"label_{self.index + 1}")
+            label.setText(status)
+            self.gridLayout.addWidget(label, self.index, 1, 1, 1)
+
             # Add module button
             button = QPushButton(self.scrollAreaWidgetContents)
             button.setObjectName(f"module_{self.index + 1}")
             button.setText(self.module[i])
+            button.setEnabled(allow_press) # Prevent click if overdue
             self.gridLayout.addWidget(button, self.index, 0, 1, 1)
             self.module_buttons.append(button)
 
             label = QLabel(self.scrollAreaWidgetContents)
             label.setObjectName(f"label_{self.index + 1}")
-            label.setText(self.status[i] if self.status[i] != "" else "No Deadline")
+            label.setText(status)
             self.gridLayout.addWidget(label, self.index, 1, 1, 1)
 
             self.index += 1
