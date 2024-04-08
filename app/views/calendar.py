@@ -118,7 +118,7 @@ class CalendarTable(QWidget):
                 fm = QFontMetrics(self.table.font())
                 text_width = fm.boundingRect(assignment_text).width()
                 if text_width > cell_width:
-                    lines = textwrap.wrap(assignment, width=int(cell_width / fm.averageCharWidth()))
+                    lines = textwrap.wrap(assignment_text, width=int(cell_width / fm.averageCharWidth()))
                     assignment_item.setText("\n".join(lines))
 
             if current_date == QDate.currentDate():
