@@ -566,6 +566,8 @@ class calendarOperations:
 
                 for module in course.moduleList:    #  moduleList = [module1, module2, module3] list of module objects
                     # 2024-Apr-06
+                    if module.dueDate == "":
+                        continue
                     due_date_str = module.dueDate
 
                     # Parse the string into a datetime object
