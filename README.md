@@ -1,95 +1,99 @@
-# PyQuizT
+# Code Learning Platform
 
-PyQuizT is a software project developed for the "Software Engineering Principle" course at the Department of Computer Engineering, School of Engineering, KMITL. This project aims to create an interactive quiz management system with a user-friendly interface.
+PyQuiz is a code learning platform designed to create an interactive and practical learning experience. The program allows teachers to create and manage online courses. Students can enroll in courses, access learning materials, and attempt Python coding quizzes (which will automatically be checked against test cases). 
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Dependencies](#dependencies)
-- [License](#license)
-
-## Introduction
-
-PyQuizT is a Python application built with PyQt6 for the graphical user interface and FastAPI for the backend service. The system allows users to create courses, manage quizzes, and view analytics related to quiz performance. It also ensures secure user authentication and data storage.
 
 ## Features
 
-- **User Management:**
-  - Create, join, and own courses.
-  - Manage participants in courses.
-  - Secure user authentication with password hashing.
+### Course Management
 
-- **Quiz Management:**
-  - Create quizzes with different question types.
-  - Set deadlines for quizzes.
-  - Automatically score multiple-choice and checkbox answers.
+* **User Roles:** Users can select a role (either teacher or student) during registration. Teachers can create and manage course content. Students can enroll in courses (with a course code) to access content, complete quizzes, and track their progress.
+* **Course Modules:** Modules within a course allow teachers to organize and manage course content by grouping learning materials and quizzes by topic. Teachers can also set module deadlines, after which learning materials and quizzes will be unavailable to students.
+* **Learning Materials:** Teachers can upload learning materials, including PDF files and MP4 videos, into the course modules. Students can view learning materials directly on the app. 
+* **Coding Quizzes:** Teachers can create Python coding quizzes in the course modules by entering questions and test cases. Students can write and run their code with the built-in code editor. Submitted code will automatically be checked against the test cases, providing instant feedback.
 
-- **Analytics and Statistics:**
-  - View course minimum, maximum, and mean scores.
-  - Display analytical charts for quiz performance.
+### Progress Tracking
 
-- **Data Storage:**
-  - Use ZODB (Zope Object Database) for storing Python objects directly.
-
-- **Cross-Platform Support:**
-  - Developed with PyQt6, ensuring compatibility with Windows, Mac, and Linux.
-
-## Installation
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/your-username/PyQuizT.git
-   cd PyQuizT
-   ```
-
-2. Install dependencies:
-      ```
-      pip install -r requirements.txt
-      ```
-
-## Usage
-Run the application:
-
-      ```
-      python3 main.py
-      ```
+* **Module Deadlines Calendar:** Students can view a weekly calendar of the course modules that will be due. Teachers can see a calendar of their assigned modules' deadlines.
+* **Course Progress Dashboard:** Students can see a summary of their enrolled courses. Each course's progress bar shows the percentage of modules completed.
+* **Course Completion Certificates:** When a student successfully completes all available modules of a course, they will be able to view and download a personalized certificate.
 
 
-## Folder Structure
+## Technologies Used
 
-PyQuizT/
-|-- app/
-|   |-- main.py
-|   |-- views/
-|-- data/
-|-- model/
-|-- utils/
-|-- requirements.txt
-|-- README.md
-|-- .gitignore
-|-- venv/
+* **Python:** Program functionality and logic
+* **PyQt6:** Graphical user interface
+* **FastAPI:** RESTful backend service
+* **ZODB:** Object-oriented database
 
 
-app: Contains the main application code.
-data: Handles data-related functionalities.
-model: Contains classes representing the data model of the application.
-utils: Holds utility functions.
-requirements.txt: Lists required Python packages.
-README.md: Project documentation.
-.gitignore: Specifies files and directories to ignore in version control.
+## Getting Started
 
-## Dependencies
-PyQt6
-FastAPI
-Pydantic
-ZODB
-bcrypt
-QtCharts (PyQt6-QtCharts or PySide6-QtCharts)
-Contributing
-Contributions are welcome! Please follow the CONTRIBUTING.md guidelines.
+### Prerequisites
+
+- [Python](https://www.python.org/) (version 3.8 or higher)
+- [Pip](https://pip.pypa.io/en/stable/installation/)
+
+### Installing and Running the Application
+
+1. Clone this repository:
+
+    ```bash
+    git clone https://github.com/paulpleela/code-learning-platform.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    cd code-learning-platform
+    ```
+    
+3. Set up and activate a virtual environment (Optional):
+
+    ```sh
+    python -m venv venv
+    ```
+    
+    - On Windows:
+
+        ```sh
+        venv\Scripts\activate
+        ```
+
+    - On macOS and Linux:
+
+        ```sh
+        source venv/bin/activate
+        ```
+
+4. Install the required dependencies:
+
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+5. Run the backend server:
+
+    ```bash
+    cd server
+    uvicorn main:app
+    ```  
+
+6. Run the application:
+
+    ```bash
+    cd app
+    python main.py
+    ```  
+
+
+## Contributors
+
+- Parisorn Prasartkul
+- Peeranat Leelawattanapanit
+- Soe Moe Htet
+
 
 ## License
-This project is licensed under the MIT License.
+
+[MIT](https://choosealicense.com/licenses/mit/)
